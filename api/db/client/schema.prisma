@@ -1,0 +1,17 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL_PRISMA")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = "native"
+  output        = "./client"
+}
+
+model ConnectionStatus {
+  id                Int      @id @default(autoincrement())
+  developmentServer Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
