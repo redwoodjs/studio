@@ -1,6 +1,6 @@
-import { Link, routes } from "@redwoodjs/router";
-import { MetaTags } from "@redwoodjs/web";
-import { Title, Grid, Col, Card, Text } from "@tremor/react";
+import { Title, Grid, Col, Card, Text } from '@tremor/react'
+
+import { MetaTags } from '@redwoodjs/web'
 
 const TelemetryDashboardPage = () => {
   return (
@@ -13,7 +13,7 @@ const TelemetryDashboardPage = () => {
       <Title>OpenTelemetry Dashboard</Title>
       <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
 
-      <Grid numItemsLg={6} className="gap-6 mt-6">
+      <Grid numItemsLg={6} className="mt-6 gap-6">
         <Col numColSpanLg={6}>
           <Card className="h-full">
             <div className="h-full" />
@@ -33,7 +33,7 @@ const TelemetryDashboardPage = () => {
         </Col>
       </Grid>
     </>
-  );
-};
+  )
+}
 
-export default TelemetryDashboardPage;
+export default TelemetryDashboardPage

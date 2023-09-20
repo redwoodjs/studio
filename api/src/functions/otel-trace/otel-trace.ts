@@ -1,9 +1,12 @@
-import type { APIGatewayEvent, Context } from "aws-lambda";
-import { and, eq } from "drizzle-orm";
-import { db } from "src/lib/drizzle/db";
-import { OtelTraceAttribute, otelTraceAttributeTable } from "src/lib/drizzle/schema";
+import type { APIGatewayEvent, Context } from 'aws-lambda'
+import { and, eq } from 'drizzle-orm'
 
-import { logger } from "src/lib/logger";
+import { db } from 'src/lib/drizzle/db'
+import {
+  OtelTraceAttribute,
+  otelTraceAttributeTable,
+} from 'src/lib/drizzle/schema'
+import { logger } from 'src/lib/logger'
 
 /**
  * The handler function is your code that processes http request events.
@@ -22,7 +25,6 @@ import { logger } from "src/lib/logger";
  * function, and execution environment.
  */
 export const handler = async (event: APIGatewayEvent, _context: Context) => {
-
   // Some guidance is available from:
   // https://github.com/open-telemetry/opentelemetry-proto/blob/main/docs/specification.md
   // Note the spec for OTLP traces is here:
@@ -36,31 +38,40 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
     const resourceAttributes = resourceSpans[i].resource.attributes
 
     const resourceAttributeIds: string[] = []
-    for(let j = 0; j < resourceAttributes.length; j++) {
+    for (let j = 0; j < resourceAttributes.length; j++) {
       const attribute = resourceAttributes[j]
       const attributeValueType = Object.keys(attribute.value)[0]
 
-      let attributeId = db.select({
-        id: otelTraceAttributeTable.id,
-      }).from(otelTraceAttributeTable).where(
-        and(
-          eq(otelTraceAttributeTable.key, attribute.key),
-          // @ts-expect-error TODO: Fix the typing to match the DB enum for the attributeValueType
-          eq(otelTraceAttributeTable.type, attributeValueType),
-          eq(otelTraceAttributeTable.value, attribute.value[attributeValueType]),
-        )
-      ).get()?.id
-      if(attributeId === undefined){
-        // @ts-expect-error TODO: Fix the typing to match the DB enum for the attributeValueType
-        attributeId = db.insert(otelTraceAttributeTable)
-        .values({
-          key: attribute.key,
-          type: attributeValueType,
-          value: attribute.value[attributeValueType],
-        })
-        .returning({
+      let attributeId = db
+        .select({
           id: otelTraceAttributeTable.id,
-        }).get().id
+        })
+        .from(otelTraceAttributeTable)
+        .where(
+          and(
+            eq(otelTraceAttributeTable.key, attribute.key),
+            // @ts-expect-error TODO: Fix the typing to match the DB enum for the attributeValueType
+            eq(otelTraceAttributeTable.type, attributeValueType),
+            eq(
+              otelTraceAttributeTable.value,
+              attribute.value[attributeValueType]
+            )
+          )
+        )
+        .get()?.id
+      if (attributeId === undefined) {
+        // @ts-expect-error TODO: Fix the typing to match the DB enum for the attributeValueType
+        attributeId = db
+          .insert(otelTraceAttributeTable)
+          .values({
+            key: attribute.key,
+            type: attributeValueType,
+            value: attribute.value[attributeValueType],
+          })
+          .returning({
+            id: otelTraceAttributeTable.id,
+          })
+          .get().id
       }
       resourceAttributeIds.push(attributeId)
     }
@@ -72,8 +83,8 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
   return {
     statusCode: 200,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({}),
-  };
-};
+  }
+}

@@ -18,7 +18,7 @@
 [browser]
   open = true
 [notifications]
-  versionUpdates = ["latest"]
+  versionUpdates = ["canary"]
 
 [experimental.serverFile]
 	enabled = true

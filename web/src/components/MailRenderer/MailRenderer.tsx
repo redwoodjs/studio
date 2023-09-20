@@ -71,7 +71,7 @@ function MailPreview({
 }: {
   html: string | null
   text: string | null
-  error?: any
+  error?: unknown
   additionalTabHeaders?: React.ReactElement
   additionalTabPanels?: React.ReactElement[]
 }) {
@@ -116,9 +116,7 @@ function MailPreview({
     ) ?? ''
 
   if (error) {
-    return (
-      <ErrorPanel error={error} />
-    )
+    return <ErrorPanel error={error} />
   }
 
   return (
@@ -167,8 +165,9 @@ function MailPreview({
             {preprocessedHTML ? (
               <div hidden={selectedTabIndex !== 0} className="overflow-auto">
                 <iframe
+                  title="Mail Preview"
                   ref={iframeRef}
-                  className="border border-gray-600 mx-auto"
+                  className="mx-auto border border-gray-600"
                   width={iframeWidth}
                   height={iframeHeight}
                   srcDoc={preprocessedHTML}
@@ -178,7 +177,7 @@ function MailPreview({
                 />
               </div>
             ) : (
-              <Text className="pt-6 text-center w-full">
+              <Text className="w-full pt-6 text-center">
                 <Italic>No HTML version available</Italic>
               </Text>
             )}
@@ -186,9 +185,9 @@ function MailPreview({
           <TabPanel>
             <Flex className="mt-2 overflow-auto">
               {text ? (
-                <pre className='text-gray-500 dark:text-gray-600'>{text}</pre>
+                <pre className="text-gray-500 dark:text-gray-600">{text}</pre>
               ) : (
-                <Text className="pt-6 text-center w-full">
+                <Text className="w-full pt-6 text-center">
                   <Italic>No text version available</Italic>
                 </Text>
               )}
@@ -197,9 +196,9 @@ function MailPreview({
           <TabPanel>
             <Flex className="mt-2 overflow-auto">
               {html ? (
-                <pre className='text-gray-500 dark:text-gray-600'>{html}</pre>
+                <pre className="text-gray-500 dark:text-gray-600">{html}</pre>
               ) : (
-                <Text className="pt-6 text-center w-full">
+                <Text className="w-full pt-6 text-center">
                   <Italic>No HTML version available</Italic>
                 </Text>
               )}

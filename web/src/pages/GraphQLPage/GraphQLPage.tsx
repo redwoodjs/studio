@@ -12,7 +12,7 @@ const GraphQLPage = () => {
       <Title>GraphQL Schema</Title>
       <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
 
-      <Grid numItemsLg={6} className="gap-6 mt-6">
+      <Grid numItemsLg={6} className="mt-6 gap-6">
         {/* Timeline */}
         <Col numColSpanLg={6}>
           <Card className="h-full">
@@ -22,7 +22,7 @@ const GraphQLPage = () => {
 
         {/* Schema visualisation */}
         <Col numColSpanLg={4}>
-          <Card className="h-full -p-6">
+          <Card className="-p-6 h-full">
             <GraphQlSchemaCell />
           </Card>
         </Col>

@@ -1,10 +1,18 @@
-import ReactFlow, { Background, Controls, MiniMap, addEdge, useEdgesState, useNodesState } from 'reactflow'
+import { useCallback, useEffect } from 'react'
+
+import ReactFlow, {
+  Background,
+  Controls,
+  MiniMap,
+  addEdge,
+  useEdgesState,
+  useNodesState,
+} from 'reactflow'
 import type { FindGraphQLSchemaQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import 'reactflow/dist/style.css'
-import { useCallback, useEffect } from 'react'
 
 export const QUERY = gql`
   query FindGraphQLSchemaQuery {
@@ -27,10 +35,13 @@ export const Failure = ({ error }: CellFailureProps) => (
 export const Success = ({
   graphqlSchema,
 }: CellSuccessProps<FindGraphQLSchemaQuery>) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([])
+  const [edges, setEdges, onEdgesChange] = useEdgesState([])
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
+  const onConnect = useCallback(
+    (params) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges]
+  )
 
   useEffect(() => {
     const definitions = JSON.parse(graphqlSchema.definitions)
@@ -56,21 +67,28 @@ export const Success = ({
       )
       newNodes.push({
         id: `Def-${definitions[i].name.value}`,
-        data: { label: `${definitions[i].name.value} (${definitions[i].kind})` },
+        data: {
+          label: `${definitions[i].name.value} (${definitions[i].kind})`,
+        },
         position: { x: xOffSet, y: yOffSet },
       })
     }
     setNodes(newNodes)
-  }, [graphqlSchema])
-
-
+  }, [graphqlSchema, setNodes])
 
   return (
     <div style={{ width: '100%', height: '640px', padding: '4px' }}>
-      <ReactFlow nodes={nodes} edges={edges} fitView onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        fitView
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+      >
         <Background />
         <Controls />
-        <MiniMap style={{height: 120}} zoomable pannable />
+        <MiniMap style={{ height: 120 }} zoomable pannable />
       </ReactFlow>
     </div>
   )

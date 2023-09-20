@@ -1,5 +1,6 @@
 import { Fragment, useState } from 'react'
 
+import { useQuery } from '@apollo/client'
 import { Dialog, Transition } from '@headlessui/react'
 import {
   XIcon,
@@ -10,13 +11,12 @@ import {
   DatabaseIcon,
   AdjustmentsIcon,
 } from '@heroicons/react/outline'
-import { useQuery } from "@apollo/client"
-
-import { NavLink, routes } from '@redwoodjs/router'
+import { Title } from '@tremor/react'
 import { GetConnectionStatus } from 'types/graphql'
 
+import { NavLink, routes } from '@redwoodjs/router'
+
 import { GraphQLIcon } from 'src/icons/GraphQL'
-import { Title } from '@tremor/react'
 
 // TODO: Move this out into a context so we can warn users on any page that needs the development server
 //       to be running to work correctly
@@ -36,21 +36,18 @@ type SidebarLayoutProps = {
 type TNavigationItem = {
   name: string
   to: string
-  icon: any
+  icon: typeof HomeIcon
 }
 
 const NavigationItem = ({ item }: { item: TNavigationItem }) => {
   return (
-    <div className='flex w-full'>
+    <div className="flex w-full">
       <NavLink
         to={item.to}
-        className="grow text-gray-500 dark:text-gray-600 hover:text-orange-500 dark:hover:bg-gray-950 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+        className="group flex grow gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-500 hover:bg-gray-50 hover:text-orange-500 dark:text-gray-600 dark:hover:bg-gray-950"
         activeClassName="grow text-orange-500 dark:text-orange-500 bg-gray-50 dark:bg-gray-950 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
       >
-        <item.icon
-          className="h-6 w-6 shrink-0"
-          aria-hidden="true"
-        />
+        <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
         {item.name}
       </NavLink>
     </div>
@@ -58,21 +55,39 @@ const NavigationItem = ({ item }: { item: TNavigationItem }) => {
 }
 
 const ConnectionStatusIndicator = ({
-  developmentServer
+  developmentServer,
 }: {
   developmentServer: 'connected' | 'disconnected' | 'unknown'
 }) => {
-  const bgColourDark = developmentServer === 'connected' ? 'bg-green-500' : developmentServer === 'disconnected' ? 'bg-red-500' : 'bg-yellow-500'
-  const bgColourLight = developmentServer === 'connected' ? 'bg-green-400' : developmentServer === 'disconnected' ? 'bg-red-400' : 'bg-yellow-400'
+  const bgColourDark =
+    developmentServer === 'connected'
+      ? 'bg-green-500'
+      : developmentServer === 'disconnected'
+      ? 'bg-red-500'
+      : 'bg-yellow-500'
+  const bgColourLight =
+    developmentServer === 'connected'
+      ? 'bg-green-400'
+      : developmentServer === 'disconnected'
+      ? 'bg-red-400'
+      : 'bg-yellow-400'
 
   return (
-    <div className='grow text-gray-500 dark:text-gray-600 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center w-full'>
+    <div className="group flex w-full grow items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-500 dark:text-gray-600">
       <span className="relative flex h-3 w-3">
-        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${bgColourLight} opacity-75`}></span>
-        <span className={`relative inline-flex rounded-full h-3 w-3 ${bgColourDark}`}></span>
+        <span
+          className={`absolute inline-flex h-full w-full animate-ping rounded-full ${bgColourLight} opacity-75`}
+        ></span>
+        <span
+          className={`relative inline-flex h-3 w-3 rounded-full ${bgColourDark}`}
+        ></span>
       </span>
       <span>
-        {developmentServer === 'connected' ? 'Connected' : developmentServer === 'disconnected' ? 'Disconnected' : 'Unknown'}
+        {developmentServer === 'connected'
+          ? 'Connected'
+          : developmentServer === 'disconnected'
+          ? 'Disconnected'
+          : 'Unknown'}
       </span>
     </div>
   )
@@ -88,21 +103,21 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
     {
       name: 'GraphQL Schema',
       to: routes.graphql(),
-      icon: GraphQLIcon
+      icon: GraphQLIcon,
     },
   ]
   const databaseNavigation: TNavigationItem[] = [
     {
       name: 'Prisma Schema',
       to: routes.prisma(),
-      icon: DatabaseIcon
+      icon: DatabaseIcon,
     },
   ]
   const telemetryNavigation: TNavigationItem[] = [
     {
       name: 'Dashboard',
       to: routes.telemetryDashboard(),
-      icon: HomeIcon
+      icon: HomeIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
@@ -110,12 +125,27 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
     { name: 'Templates', to: routes.mailerTemplatePreview(), icon: MailIcon },
   ]
   const utilitiesNavigation: TNavigationItem[] = [
-    { name: 'OG Tag Preview', to: routes.ogTagPreview(), icon: AdjustmentsIcon },
+    {
+      name: 'OG Tag Preview',
+      to: routes.ogTagPreview(),
+      icon: AdjustmentsIcon,
+    },
   ]
 
-  const { data: connectionStatusData , loading: connectionStatusLoading, error: connectionStatusError } = useQuery<GetConnectionStatus>(CONNECTION_STATUS_QUERY)
+  const {
+    data: connectionStatusData,
+    loading: connectionStatusLoading,
+    error: connectionStatusError,
+  } = useQuery<GetConnectionStatus>(CONNECTION_STATUS_QUERY)
 
-  const developmentServerStatus = (connectionStatusLoading || connectionStatusError || connectionStatusData === undefined) ? 'unknown' : connectionStatusData.connectionStatus.developmentServer ? 'connected' : 'disconnected'
+  const developmentServerStatus =
+    connectionStatusLoading ||
+    connectionStatusError ||
+    connectionStatusData === undefined
+      ? 'unknown'
+      : connectionStatusData.connectionStatus.developmentServer
+      ? 'connected'
+      : 'disconnected'
 
   return (
     <>
@@ -173,16 +203,14 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     </div>
                   </Transition.Child>
                   {/* Sidebar component, swap this element with another sidebar if you like */}
-                  <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:bg-gray-900 px-6 pb-2">
+                  <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2 dark:bg-gray-900">
                     <div className="flex h-16 shrink-0 items-center">
                       <img
                         className="h-8 w-auto"
                         src="https://redwoodjs.com/images/logo.svg"
                         alt="RedwoodJS"
                       />
-                      <Title className='pl-4'>
-                        RedwoodJS Studio
-                      </Title>
+                      <Title className="pl-4">RedwoodJS Studio</Title>
                     </div>
                     <nav className="flex flex-1 flex-col">
                       <ul className="flex flex-1 flex-col gap-y-7">
@@ -255,12 +283,14 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                             ))}
                           </ul>
                         </li>
-                        <li className="mt-auto mb-6">
+                        <li className="mb-6 mt-auto">
                           <div className="text-xs font-semibold leading-6 text-gray-400">
                             Development Server
                           </div>
                           <ul className="-mx-2 mt-2 space-y-1">
-                            <ConnectionStatusIndicator developmentServer={developmentServerStatus} />
+                            <ConnectionStatusIndicator
+                              developmentServer={developmentServerStatus}
+                            />
                           </ul>
                         </li>
                       </ul>
@@ -274,16 +304,14 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
 
         {/* Static sidebar for desktop */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-          <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-6">
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:border-gray-800 dark:bg-gray-900">
             <div className="flex h-16 shrink-0 items-center">
               <img
                 className="h-8 w-auto"
                 src="https://redwoodjs.com/images/logo.svg"
                 alt="RedwoodJS"
               />
-              <Title className='pl-4'>
-                RedwoodJS Studio
-              </Title>
+              <Title className="pl-4">RedwoodJS Studio</Title>
             </div>
             <nav className="flex flex-1 flex-col">
               <ul className="flex flex-1 flex-col gap-y-4">
@@ -356,12 +384,14 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     ))}
                   </ul>
                 </li>
-                <li className='mt-auto mb-6'>
+                <li className="mb-6 mt-auto">
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
                     Development Server
                   </div>
                   <ul className="-mx-2 mt-2 space-y-1">
-                    <ConnectionStatusIndicator developmentServer={developmentServerStatus} />
+                    <ConnectionStatusIndicator
+                      developmentServer={developmentServerStatus}
+                    />
                   </ul>
                 </li>
               </ul>
@@ -369,14 +399,17 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
           </div>
         </div>
 
-        <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-white dark:bg-gray-900 px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+        <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm dark:bg-gray-900 sm:px-6 lg:hidden">
           <button
             type="button"
             className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
-            <MenuIcon className="h-6 w-6 text-gray-500 dark:text-gray-600" aria-hidden="true" />
+            <MenuIcon
+              className="h-6 w-6 text-gray-500 dark:text-gray-600"
+              aria-hidden="true"
+            />
           </button>
           {/* <div className="flex-1 text-sm font-semibold leading-6 text-gray-900">
             TODO: Page title?

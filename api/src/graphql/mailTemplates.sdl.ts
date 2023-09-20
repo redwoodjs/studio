@@ -25,10 +25,15 @@ export const schema = gql`
 
   type Query {
     mailTemplates: [MailTemplate!]! @skipAuth
-    mailRenderedTemplate(templateId: ID!, componentId: ID!, rendererId: ID!, props: String!): MailTemplateRendered! @skipAuth
+    mailRenderedTemplate(
+      templateId: ID!
+      componentId: ID!
+      rendererId: ID!
+      props: String!
+    ): MailTemplateRendered! @skipAuth
   }
 
   type Mutation {
     resyncMailTemplate(rawTemplateDistPath: String!): Boolean! @skipAuth
   }
-`;
+`

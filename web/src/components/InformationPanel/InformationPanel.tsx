@@ -3,10 +3,10 @@ import React from 'react'
 import { InformationCircleIcon } from '@heroicons/react/outline'
 import { Callout } from '@tremor/react'
 
-export default function InformationPanel({ message }: { message: any }) {
+export default function InformationPanel({ message }: { message: unknown }) {
   return (
     <Callout
-      className="w-full min-h-12"
+      className="min-h-12 w-full"
       title="Information notice"
       icon={InformationCircleIcon}
       color="cyan"

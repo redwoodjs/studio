@@ -608,7 +608,6 @@ export declare namespace DMMF {
         relationOnDelete?: string;
         relationName?: string;
         documentation?: string;
-        [key: string]: any;
     }
     export interface FieldDefault {
         name: string;
@@ -644,25 +643,24 @@ export declare namespace DMMF {
         isRequired: boolean;
         isList: boolean;
     }
-    export type ArgType = string | InputType | SchemaEnum;
-    export interface SchemaArgInputType {
+    export type TypeRef<AllowedLocations extends FieldLocation> = {
         isList: boolean;
-        type: ArgType;
-        location: FieldLocation;
+        type: string;
+        location: AllowedLocations;
         namespace?: FieldNamespace;
-    }
+    };
+    export type InputTypeRef = TypeRef<'scalar' | 'inputObjectTypes' | 'enumTypes' | 'fieldRefTypes'>;
     export interface SchemaArg {
         name: string;
         comment?: string;
         isNullable: boolean;
         isRequired: boolean;
-        inputTypes: SchemaArgInputType[];
+        inputTypes: InputTypeRef[];
         deprecation?: Deprecation;
     }
     export interface OutputType {
         name: string;
         fields: SchemaField[];
-        fieldMap?: Record<string, SchemaField>;
     }
     export interface SchemaField {
         name: string;
@@ -672,23 +670,7 @@ export declare namespace DMMF {
         deprecation?: Deprecation;
         documentation?: string;
     }
-    export type TypeRefCommon = {
-        isList: boolean;
-        namespace?: FieldNamespace;
-    };
-    export type TypeRefScalar = TypeRefCommon & {
-        location: 'scalar';
-        type: string;
-    };
-    export type TypeRefOutputObject = TypeRefCommon & {
-        location: 'outputObjectTypes';
-        type: OutputType | string;
-    };
-    export type TypeRefEnum = TypeRefCommon & {
-        location: 'enumTypes';
-        type: SchemaEnum | string;
-    };
-    export type OutputTypeRef = TypeRefScalar | TypeRefOutputObject | TypeRefEnum;
+    export type OutputTypeRef = TypeRef<'scalar' | 'outputObjectTypes' | 'enumTypes'>;
     export interface Deprecation {
         sinceVersion: string;
         reason: string;
@@ -705,14 +687,13 @@ export declare namespace DMMF {
             source?: string;
         };
         fields: SchemaArg[];
-        fieldMap?: Record<string, SchemaArg>;
     }
     export interface FieldRefType {
         name: string;
         allowTypes: FieldRefAllowType[];
         fields: SchemaArg[];
     }
-    export type FieldRefAllowType = TypeRefScalar | TypeRefEnum;
+    export type FieldRefAllowType = TypeRef<'scalar' | 'enumTypes'>;
     export interface ModelMapping {
         model: string;
         plural: string;
@@ -755,65 +736,38 @@ export declare namespace DMMF {
     }
 }
 
-export declare interface DMMFClass extends DMMFDatamodelHelper, DMMFMappingsHelper, DMMFSchemaHelper {
-}
-
-export declare class DMMFClass {
-    constructor(dmmf: DMMF.Document);
-}
-
-declare class DMMFDatamodelHelper implements Pick<DMMF.Document, 'datamodel'> {
-    datamodel: DMMF.Datamodel;
-    datamodelEnumMap: Dictionary<DMMF.DatamodelEnum>;
-    modelMap: Dictionary<DMMF.Model>;
-    typeMap: Dictionary<DMMF.Model>;
-    typeAndModelMap: Dictionary<DMMF.Model>;
-    constructor({ datamodel }: Pick<DMMF.Document, 'datamodel'>);
-    private getDatamodelEnumMap;
-    private getModelMap;
-    private getTypeMap;
-    private getTypeModelMap;
-}
-
-declare class DMMFMappingsHelper implements Pick<DMMF.Document, 'mappings'> {
-    mappings: DMMF.Mappings;
-    mappingsMap: Dictionary<DMMF.ModelMapping>;
-    constructor({ mappings }: Pick<DMMF.Document, 'mappings'>);
-    private getMappingsMap;
-    getOtherOperationNames(): string[];
-}
-
-declare class DMMFSchemaHelper implements Pick<DMMF.Document, 'schema'> {
-    schema: DMMF.Schema;
-    queryType: DMMF.OutputType;
-    mutationType: DMMF.OutputType;
-    outputTypes: {
+export declare class DMMFClass implements DMMF.Document {
+    document: DMMF.Document;
+    private compositeNames;
+    private inputTypesByName;
+    readonly typeAndModelMap: Dictionary<DMMF.Model>;
+    readonly mappingsMap: Dictionary<DMMF.ModelMapping>;
+    readonly outputTypeMap: NamespacedTypeMap<DMMF.OutputType>;
+    readonly rootFieldMap: Dictionary<DMMF.SchemaField>;
+    constructor(document: DMMF.Document);
+    get datamodel(): DMMF.Datamodel;
+    get mappings(): DMMF.Mappings;
+    get schema(): DMMF.Schema;
+    get inputObjectTypes(): {
+        model?: DMMF.InputType[] | undefined;
+        prisma: DMMF.InputType[];
+    };
+    get outputObjectTypes(): {
         model: DMMF.OutputType[];
         prisma: DMMF.OutputType[];
     };
-    outputTypeMap: NamespacedTypeMap<DMMF.OutputType>;
-    inputObjectTypes: {
-        model?: DMMF.InputType[];
-        prisma: DMMF.InputType[];
-    };
-    inputTypeMap: NamespacedTypeMap<DMMF.InputType>;
-    enumMap: NamespacedTypeMap<DMMF.SchemaEnum>;
-    rootFieldMap: Dictionary<DMMF.SchemaField>;
-    constructor({ schema }: Pick<DMMF.Document, 'schema'>);
-    get [Symbol.toStringTag](): string;
-    outputTypeToMergedOutputType: (outputType: DMMF.OutputType) => DMMF.OutputType;
-    private resolveOutputTypes;
-    private resolveOutputTypesInNamespace;
-    private resolveInputTypes;
-    private resolveNamespaceInputTypes;
-    private resolveFieldArgumentTypes;
-    private resolveFieldArgumentTypesInNamespace;
-    private getOutputTypes;
-    private getEnumMap;
-    hasEnumInNamespace(enumName: string, namespace: 'prisma' | 'model'): boolean;
-    private getMergedOutputTypeMap;
-    private getInputTypeMap;
-    getRootFieldMap(): Dictionary<DMMF.SchemaField>;
+    isComposite(modelOrTypeName: string): boolean;
+    getOtherOperationNames(): string[];
+    hasEnumInNamespace(enumName: string, namespace: DMMF.FieldNamespace): boolean;
+    resolveInputObjectType(ref: DMMF.InputTypeRef): DMMF.InputType | undefined;
+    resolveOutputObjectType(ref: DMMF.OutputTypeRef): DMMF.OutputType | undefined;
+    private buildModelMap;
+    private buildTypeMap;
+    private buildTypeModelMap;
+    private buildMappingsMap;
+    private buildMergedOutputTypeMap;
+    private buildRootFieldMap;
+    private buildInputTypesMap;
 }
 
 /** Client */

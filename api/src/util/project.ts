@@ -1,31 +1,33 @@
-import path from "node:path"
-import fs from "node:fs"
+import fs from 'node:fs'
+import path from 'node:path'
 
-import { getConfig, getConfigPath, getPaths } from "@redwoodjs/project-config"
+import { getConfig, getConfigPath, getPaths } from '@redwoodjs/project-config'
 
-import { importFresh } from "./import"
+import { importFresh } from './import'
 
 // --- General wrappers around project config ---
 
-export function getStudioConfig(){
+export function getStudioConfig() {
   return getConfig(getConfigPath(__dirname))
 }
 
-export function getStudioPaths(){
+export function getStudioPaths() {
   return getPaths(path.dirname(getConfigPath(__dirname)))
 }
 
-export function getUserProjectConfig(){
+export function getUserProjectConfig() {
   return getConfig(getConfigPath(path.join(getStudioPaths().base, '..')))
 }
 
-export function getUserProjectPaths(){
-  return getPaths(path.dirname(getConfigPath(path.join(getStudioPaths().base, '..'))))
+export function getUserProjectPaths() {
+  return getPaths(
+    path.dirname(getConfigPath(path.join(getStudioPaths().base, '..')))
+  )
 }
 
-export function getStudioStatePath(){
+export function getStudioStatePath() {
   const statePath = path.join(getUserProjectPaths().generated.base, 'studio')
-  if(!fs.existsSync(statePath)){
+  if (!fs.existsSync(statePath)) {
     fs.mkdirSync(statePath)
   }
   return statePath
@@ -33,9 +35,13 @@ export function getStudioStatePath(){
 
 // --- More specific targets ---
 
-export async function getUserProjectMailer(): Promise<any | null>{
-  const distMailerPath = path.join(getUserProjectPaths().api.dist, 'lib', 'mailer.js')
-  if(!fs.existsSync(distMailerPath)){
+export async function getUserProjectMailer(): Promise<unknown | null> {
+  const distMailerPath = path.join(
+    getUserProjectPaths().api.dist,
+    'lib',
+    'mailer.js'
+  )
+  if (!fs.existsSync(distMailerPath)) {
     return null
   }
   return (await importFresh(distMailerPath)).mailer

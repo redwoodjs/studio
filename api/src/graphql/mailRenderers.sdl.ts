@@ -14,4 +14,4 @@ export const schema = gql`
   type Mutation {
     resyncMailRenderers: Boolean! @skipAuth
   }
-`;
+`

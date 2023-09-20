@@ -9,4 +9,4 @@ export const schema = gql`
   type Query {
     ogTagPreview(url: String!, customUserAgent: String): OGTagPreview! @skipAuth
   }
-`;
+`

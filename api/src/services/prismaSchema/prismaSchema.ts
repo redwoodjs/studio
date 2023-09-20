@@ -1,11 +1,11 @@
-import fs from 'node:fs'
 import crypto from 'node:crypto'
-
-import { getUserProjectPaths } from 'src/util/project'
-import type { QueryResolvers } from 'types/graphql'
+import fs from 'node:fs'
 
 import { transformDMMF } from 'prisma-json-schema-generator/dist/generator/transformDMMF'
+import type { QueryResolvers } from 'types/graphql'
+
 import { getPrismaDMMF } from 'src/util/database'
+import { getUserProjectPaths } from 'src/util/project'
 
 export const prismaSchema: QueryResolvers['prismaSchema'] = async () => {
   // Get the schema location
@@ -20,6 +20,6 @@ export const prismaSchema: QueryResolvers['prismaSchema'] = async () => {
 
   return {
     id: schemaHash,
-    schema: jsonSchema
+    schema: jsonSchema,
   }
 }

@@ -1,8 +1,8 @@
-import { Link, routes } from "@redwoodjs/router";
-import { MetaTags } from "@redwoodjs/web";
-import { Title, Grid, Col, Card, Text } from "@tremor/react";
+import { Title, Grid, Col, Card, Text } from '@tremor/react'
 
-import PrismaSchemaCell from "src/components/PrismaSchemaCell";
+import { MetaTags } from '@redwoodjs/web'
+
+import PrismaSchemaCell from 'src/components/PrismaSchemaCell'
 
 const PrismaPage = () => {
   return (
@@ -12,7 +12,7 @@ const PrismaPage = () => {
       <Title>Prisma Schema</Title>
       <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
 
-      <Grid numItemsLg={6} className="gap-6 mt-6">
+      <Grid numItemsLg={6} className="mt-6 gap-6">
         {/* Timeline */}
         <Col numColSpanLg={6}>
           <Card className="h-full">
@@ -22,7 +22,7 @@ const PrismaPage = () => {
 
         {/* Schema visualisation */}
         <Col numColSpanLg={4}>
-          <Card className="h-full -p-6">
+          <Card className="-p-6 h-full">
             <PrismaSchemaCell />
           </Card>
         </Col>
@@ -35,7 +35,7 @@ const PrismaPage = () => {
         </Col>
       </Grid>
     </>
-  );
-};
+  )
+}
 
-export default PrismaPage;
+export default PrismaPage

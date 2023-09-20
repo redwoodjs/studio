@@ -1,12 +1,12 @@
 import { liveQueryStore } from '@redwoodjs/realtime'
 
-import { db } from "src/lib/db"
+import { db } from 'src/lib/db'
 
 const STATUS_CHECK_INTERVAL_MS = 2000
 let statusInterval: NodeJS.Timeout | null = null
 
 export function startConnectionWatching() {
-  if(statusInterval) {
+  if (statusInterval) {
     stopConnectionWatching()
   }
 
@@ -32,7 +32,7 @@ export function startConnectionWatching() {
 }
 
 export function stopConnectionWatching() {
-  if(!statusInterval) {
+  if (!statusInterval) {
     return
   }
 

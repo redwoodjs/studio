@@ -14,4 +14,4 @@ export const schema = gql`
   type Query {
     mailInboxEntries(source: String!): [MailInboxEntry!]! @skipAuth
   }
-`;
+`

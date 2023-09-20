@@ -3,6 +3,6 @@ export const standard = (/* vars, { ctx, req } */) => ({
   graphqlSchema: {
     id: '',
     ast: '',
-    definitions: ''
+    definitions: '',
   },
 })

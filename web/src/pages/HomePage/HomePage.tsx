@@ -10,7 +10,7 @@ const HomePage = () => {
       <Title>Dashboard</Title>
       <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
 
-      <Grid numItemsLg={6} className="gap-6 mt-6">
+      <Grid numItemsLg={6} className="mt-6 gap-6">
         {/* Main section */}
         <Col numColSpanLg={4}>
           <Card className="h-full">

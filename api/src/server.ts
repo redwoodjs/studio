@@ -1,11 +1,11 @@
+import fs from 'node:fs'
 import path from 'node:path'
-import fs from "node:fs"
 
 import chalk from 'chalk'
 import { config } from 'dotenv-defaults'
+import { migrate } from 'drizzle-orm/better-sqlite3/migrator'
 import execa from 'execa'
 import Fastify from 'fastify'
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator'
 import { SMTPServer } from 'smtp-server'
 
 import {
@@ -21,14 +21,14 @@ import directives from 'src/directives/**/*.{js,ts}'
 import sdls from 'src/graphql/**/*.sdl.{js,ts}'
 import services from 'src/services/**/*.{js,ts}'
 
-import { logger } from 'src/lib/logger'
 import { db as drizzleDB } from 'src/lib/drizzle/db'
+import { logger } from 'src/lib/logger'
 import { realtime } from 'src/lib/realtime'
 
-import { startWatchers } from './util/fsWatching'
-import { getStudioStatePath } from './util/project'
-import { handleMail } from './util/mail'
 import { startConnectionWatching } from './util/connectionWatching'
+import { startWatchers } from './util/fsWatching'
+import { handleMail } from './util/mail'
+import { getStudioStatePath } from './util/project'
 
 async function serve() {
   logger.info('Starting RedwoodJS Studio')
@@ -38,18 +38,19 @@ async function serve() {
 
   // Create the ./.redwood/studio directory if it doesn't exist
   const studioStateDirectory = getStudioStatePath()
-  if(!fs.existsSync(studioStateDirectory)) {
+  if (!fs.existsSync(studioStateDirectory)) {
     fs.mkdirSync(studioStateDirectory)
   }
 
   // Set the DATABASE_URLs for studio
   // TODO: Have the redwood cli set this env var when execa runs this file
-  process.env.DATABASE_URL_PRISMA = `file:${path.resolve(path.join(
-    studioStateDirectory,
-    'studio-prisma.sqlite'
-  ))}`
+  process.env.DATABASE_URL_PRISMA = `file:${path.resolve(
+    path.join(studioStateDirectory, 'studio-prisma.sqlite')
+  )}`
   // TODO: Have the redwood cli set this env var when execa runs this file
-  process.env.DATABASE_URL_DRIZZLE = path.resolve(path.join(studioStateDirectory, 'studio-drizzle.sqlite'))
+  process.env.DATABASE_URL_DRIZZLE = path.resolve(
+    path.join(studioStateDirectory, 'studio-drizzle.sqlite')
+  )
 
   // Execute prisma migrate
   // 'rw build' should have generated the prisma client already
@@ -67,7 +68,12 @@ async function serve() {
   // Execute migrations for drizzle
   logger.info('Migrating local Drizzle database')
   migrate(drizzleDB, {
-    migrationsFolder: path.join(getPaths().api.dist, 'lib', 'drizzle', 'migrations'),
+    migrationsFolder: path.join(
+      getPaths().api.dist,
+      'lib',
+      'drizzle',
+      'migrations'
+    ),
   })
 
   // Load config
@@ -124,7 +130,9 @@ async function serve() {
   fastify.listen({ port })
   fastify.ready(() => {
     logger.info('Studio is up and running!')
-    logger.info(`To access the Studio, visit ${chalk.green(`http://localhost:${port}`)}`)
+    logger.info(
+      `To access the Studio, visit ${chalk.green(`http://localhost:${port}`)}`
+    )
   })
 
   // Cleanup (async will not be resolved!)

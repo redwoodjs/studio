@@ -1,9 +1,9 @@
 // See https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/constructor
 // for options.
 
-import { PrismaClient } from '../../db/client'
-
 import { emitLogLevels, handlePrismaLogging } from '@redwoodjs/api/logger'
+
+import { PrismaClient } from '../../db/client'
 
 import { logger } from './logger'
 
