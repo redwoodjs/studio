@@ -3,7 +3,6 @@ import path from 'node:path'
 
 import chalk from 'chalk'
 import { config } from 'dotenv-defaults'
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator'
 import execa from 'execa'
 import Fastify from 'fastify'
 import { SMTPServer } from 'smtp-server'
@@ -21,7 +20,6 @@ import directives from 'src/directives/**/*.{js,ts}'
 import sdls from 'src/graphql/**/*.sdl.{js,ts}'
 import services from 'src/services/**/*.{js,ts}'
 
-import { db as drizzleDB } from 'src/lib/drizzle/db'
 import { logger } from 'src/lib/logger'
 import { realtime } from 'src/lib/realtime'
 
@@ -42,39 +40,39 @@ async function serve() {
     fs.mkdirSync(studioStateDirectory)
   }
 
-  // Set the DATABASE_URLs for studio
+  // Set the DATABASE_URL for studio
   // TODO: Have the redwood cli set this env var when execa runs this file
-  process.env.DATABASE_URL_PRISMA = `file:${path.resolve(
-    path.join(studioStateDirectory, 'studio-prisma.sqlite')
+  process.env.RWSTUDIO_DATABASE_URL = `file:${path.resolve(
+    path.join(studioStateDirectory, 'prisma.sqlite')
   )}`
-  // TODO: Have the redwood cli set this env var when execa runs this file
-  process.env.DATABASE_URL_DRIZZLE = path.resolve(
-    path.join(studioStateDirectory, 'studio-drizzle.sqlite')
-  )
+  // // TODO: Have the redwood cli set this env var when execa runs this file
+  // process.env.DATABASE_URL_DRIZZLE = path.resolve(
+  //   path.join(studioStateDirectory, 'studio-drizzle.sqlite')
+  // )
 
   // Execute prisma migrate
   // 'rw build' should have generated the prisma client already
   logger.info('Migrating local Prisma database')
   await execa.command(
-    `npx prisma migrate dev --schema ${path.join(
+    `npx prisma migrate deploy --schema ${path.join(
       __dirname,
       '../db/schema.prisma'
-    )} --skip-seed --name ${Date.now()} --skip-generate`,
+    )}`,
     {
       stdio: 'inherit',
     }
   )
 
   // Execute migrations for drizzle
-  logger.info('Migrating local Drizzle database')
-  migrate(drizzleDB, {
-    migrationsFolder: path.join(
-      getPaths().api.dist,
-      'lib',
-      'drizzle',
-      'migrations'
-    ),
-  })
+  // logger.info('Migrating local Drizzle database')
+  // migrate(drizzleDB, {
+  //   migrationsFolder: path.join(
+  //     getPaths().api.dist,
+  //     'lib',
+  //     'drizzle',
+  //     'migrations'
+  //   ),
+  // })
 
   // Load config
   const redwoodProjectPaths = getPaths()
@@ -121,8 +119,7 @@ async function serve() {
     hideSTARTTLS: true,
     onData: handleMail,
   })
-  // TODO: Allow this port to be configurable
-  smtpServer.listen(4319, undefined, () => {
+  smtpServer.listen(port + 1, undefined, () => {
     logger.info('Listening for mail...')
   })
 

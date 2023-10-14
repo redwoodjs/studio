@@ -1,6 +1,6 @@
 import { Buffer } from 'buffer'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import {
   CodeIcon,
@@ -28,6 +28,8 @@ import {
   TableHeaderCell,
   TableRow,
   Button,
+  TabPanels,
+  TabPanel,
 } from '@tremor/react'
 import { GetMailInbox } from 'types/graphql'
 
@@ -37,17 +39,20 @@ import { MetaTags } from '@redwoodjs/web'
 import MailRenderer from 'src/components/MailRenderer/MailRenderer'
 
 type MailSource = 'SMTP' | 'API'
-type SelectedMailMapping = Record<MailSource, string | null>
 
 const MAIL_INBOX_QUERY = gql`
-  query GetMailInbox($source: String!) @live {
-    mailInboxEntries(source: $source) {
+  query GetMailInbox @live {
+    smtp: mailSMTPInboxEntries {
       id
-      api
       smtp
       envelope
-      text
+      plaintext
       html
+      createdAt
+    }
+    api: mailAPIInboxEntries {
+      id
+      api
       createdAt
     }
   }
@@ -59,120 +64,102 @@ const SMTPMailTable = ({
   selectedMailId,
   setSelectedMailId,
 }: {
-  mails
-  selectedMailId: SelectedMailMapping
-  setSelectedMailId: (selectedMailId: SelectedMailMapping) => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  mails: any[]
+  selectedMailId: string
+  setSelectedMailId: (selectedMailId: string) => void
 }) => {
+  const formatAddress = (address) => {
+    return address.name
+      ? `${address.name} <${address.address}>`
+      : address.address
+  }
+
   return (
     <Table className="mt-3 max-h-[40vh]">
-      {mails.length === 0 ? (
-        <TableBody>
-          <TableRow>
-            <TableCell className="text-center">
-              <Text>No mails found</Text>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      ) : (
-        <>
-          <TableHead>
-            <TableHeaderCell>Timestamp</TableHeaderCell>
-            <TableHeaderCell>Subject</TableHeaderCell>
-            <TableHeaderCell>From</TableHeaderCell>
-            <TableHeaderCell>To</TableHeaderCell>
-            <TableHeaderCell>Features</TableHeaderCell>
-          </TableHead>
-          <TableBody>
-            {mails?.map((mail) => {
-              const to =
-                mail.smtp.to?.value?.map((entry) => {
-                  return entry.name
-                    ? `${entry.name} <${entry.address}>`
-                    : entry.address
-                }) ?? []
-              const from =
-                mail.smtp?.from?.value?.map((entry) => {
-                  return entry.name
-                    ? `${entry.name} <${entry.address}>`
-                    : entry.address
-                }) ?? []
-              const cc =
-                mail.smtp?.cc?.value?.map((entry) => {
-                  return entry.name
-                    ? `${entry.name} <${entry.address}>`
-                    : entry.address
-                }) ?? []
-              const bcc = mail.envelope?.rcptTo
-                ?.filter((entry) => {
-                  return (
-                    !to.includes(entry.address) && !cc.includes(entry.address)
-                  )
-                })
-                .map((entry) => {
-                  return entry.address
-                })
+      <TableHead>
+        <TableHeaderCell>Timestamp</TableHeaderCell>
+        <TableHeaderCell>Subject</TableHeaderCell>
+        <TableHeaderCell>From</TableHeaderCell>
+        <TableHeaderCell>To</TableHeaderCell>
+        <TableHeaderCell>Features</TableHeaderCell>
+      </TableHead>
+      <TableBody>
+        {mails?.map((mail) => {
+          const to =
+            mail.smtp.to?.value?.map((entry) => formatAddress(entry)) ?? []
+          const from =
+            mail.smtp?.from?.value?.map((entry) => formatAddress(entry)) ?? []
+          const cc =
+            mail.smtp?.cc?.value?.map((entry) => formatAddress(entry)) ?? []
+          const bcc =
+            mail.envelope?.rcptTo
+              ?.filter((entry) => {
+                return (
+                  !to.includes(entry.address) && !cc.includes(entry.address)
+                )
+              })
+              .map((entry) => {
+                return entry.address
+              }) ?? []
 
-              const attachments = mail.smtp?.attachments ?? []
+          const attachments = mail.smtp?.attachments ?? []
 
-              return (
-                <TableRow
-                  key={mail.id}
-                  className={
-                    mail.id === selectedMailId['SMTP']
-                      ? 'cursor-pointer bg-gray-300 dark:bg-gray-800'
-                      : 'cursor-pointer'
-                  }
-                  onClick={() =>
-                    setSelectedMailId({ ...selectedMailId, ['SMTP']: mail.id })
-                  }
+          return (
+            <TableRow
+              key={mail.id}
+              className={
+                mail.id === selectedMailId
+                  ? 'cursor-pointer bg-gray-300 dark:bg-gray-800'
+                  : 'cursor-pointer'
+              }
+              onClick={() => setSelectedMailId(mail.id)}
+            >
+              <TableCell>{mail.createdAt.toLocaleString()}</TableCell>
+              <TableCell>{mail.smtp?.subject}</TableCell>
+              <TableCell className="truncate">
+                {from.map((entry) => (
+                  <span key={mail.id}>{entry}</span>
+                ))}
+              </TableCell>
+              <TableCell className="truncate">
+                {to.map((entry) => (
+                  <span key={mail.id}>{entry}</span>
+                ))}
+              </TableCell>
+              <TableCell>
+                <Flex
+                  justifyContent="start"
+                  alignItems="center"
+                  className="space-x-1"
                 >
-                  <TableCell>{mail.createdAt.toLocaleString()}</TableCell>
-                  <TableCell>{mail.smtp?.subject}</TableCell>
-                  <TableCell className="truncate">
-                    {from.map((entry) => (
-                      <span key={mail.id}>{entry}</span>
-                    ))}
-                  </TableCell>
-                  <TableCell className="truncate">
-                    {to.map((entry) => (
-                      <span key={mail.id}>{entry}</span>
-                    ))}
-                  </TableCell>
-                  <TableCell>
-                    <Flex
-                      justifyContent="start"
-                      alignItems="center"
-                      className="space-x-1"
-                    >
-                      {attachments.length > 0 && (
-                        <div>
-                          <Badge icon={PaperClipIcon} tooltip="Attachment">
-                            x{attachments.length}
-                          </Badge>
-                        </div>
-                      )}
-                      {bcc.length > 0 && (
-                        <div>
-                          <Badge icon={DocumentDuplicateIcon} tooltip="Bcc">
-                            x{bcc.length}
-                          </Badge>
-                        </div>
-                      )}
-                      {cc.length > 0 && (
-                        <div>
-                          <Badge icon={DocumentDuplicateSolidIcon} tooltip="Cc">
-                            x{cc.length}
-                          </Badge>
-                        </div>
-                      )}
-                    </Flex>
-                  </TableCell>
-                </TableRow>
-              )
-            })}
-          </TableBody>
-        </>
-      )}
+                  {attachments.length > 0 && (
+                    <div>
+                      <Badge icon={PaperClipIcon} tooltip="Attachment">
+                        x{attachments.length}
+                      </Badge>
+                    </div>
+                  )}
+                  {bcc.length > 0 && (
+                    <div>
+                      <Badge icon={DocumentDuplicateIcon} tooltip="Bcc">
+                        x{bcc.length}
+                      </Badge>
+                    </div>
+                  )}
+                  {cc.length > 0 && (
+                    <div>
+                      <Badge icon={DocumentDuplicateSolidIcon} tooltip="Cc">
+                        x{cc.length}
+                      </Badge>
+                    </div>
+                  )}
+                </Flex>
+              </TableCell>
+            </TableRow>
+          )
+        })}
+      </TableBody>
     </Table>
   )
 }
@@ -193,41 +180,16 @@ function downloadAttachment(attachment) {
 const MailerInboxPage = () => {
   const [selectedMailSource, setSelectedMailSource] =
     useState<MailSource>('SMTP')
-  const [selectedMailMapping, setSelectedMailMapping] =
-    useState<SelectedMailMapping>({
-      SMTP: null,
-      API: null,
-    })
+  const [selectedSMTPMailId, setSelectedSMTPMailId] = useState<string>('')
 
-  const mailRenderedTemplateQuery = useQuery<GetMailInbox>(MAIL_INBOX_QUERY, {
-    variables: {
-      source: selectedMailSource,
-    },
-  })
+  const mailRenderedTemplateQuery = useQuery<GetMailInbox>(MAIL_INBOX_QUERY)
 
-  useEffect(() => {
-    // If the id doesn't exist, reset it
-    if (
-      mailRenderedTemplateQuery.data?.mailInboxEntries !== undefined &&
-      selectedMailMapping[selectedMailSource] !== null
-    ) {
-      if (
-        mailRenderedTemplateQuery.data.mailInboxEntries.find(
-          (mail) => mail.id === selectedMailMapping[selectedMailSource]
-        ) === undefined
-      ) {
-        setSelectedMailMapping({
-          ...selectedMailMapping,
-          [selectedMailSource]: null,
-        })
-      }
-    }
-  }, [mailRenderedTemplateQuery.data, selectedMailMapping, selectedMailSource])
+  const smtpMails = mailRenderedTemplateQuery.data?.smtp ?? []
 
-  const mails = mailRenderedTemplateQuery.data?.mailInboxEntries ?? []
-  const selectedMail = mails.find(
-    (mail) => mail.id === selectedMailMapping[selectedMailSource]
-  )
+  const selectedMail =
+    selectedMailSource === 'SMTP'
+      ? smtpMails.find((mail) => mail.id === selectedSMTPMailId)
+      : undefined
 
   return (
     <>
@@ -237,7 +199,7 @@ const MailerInboxPage = () => {
       <Text>
         Studio can be used as a mail handler during development - allowing you
         to get starting implementing and sending mail without deciding on or
-        configuring a more complex handler.
+        configuring a more complex production handler.
       </Text>
 
       <Grid numItemsLg={6} className="mt-6 gap-6">
@@ -253,18 +215,25 @@ const MailerInboxPage = () => {
                 <Tab icon={MailIcon}>SMTP</Tab>
                 <Tab icon={CodeIcon}>API</Tab>
               </TabList>
+              <TabPanels>
+                <TabPanel>
+                  {smtpMails.length === 0 ? (
+                    <Text className="pt-6 text-center">No mail</Text>
+                  ) : (
+                    <SMTPMailTable
+                      mails={smtpMails}
+                      selectedMailId={selectedSMTPMailId}
+                      setSelectedMailId={setSelectedSMTPMailId}
+                    />
+                  )}
+                </TabPanel>
+                <TabPanel>
+                  <Text className="pt-6 text-center">
+                    Visualisation of API mail is not yet supported
+                  </Text>
+                </TabPanel>
+              </TabPanels>
             </TabGroup>
-            {selectedMailSource === 'SMTP' ? (
-              <SMTPMailTable
-                mails={mails}
-                selectedMailId={selectedMailMapping}
-                setSelectedMailId={setSelectedMailMapping}
-              />
-            ) : (
-              <Text className="pt-6 text-center">
-                Visualisation of API mail is not yet implemented
-              </Text>
-            )}
           </Card>
         </Col>
 
@@ -272,7 +241,7 @@ const MailerInboxPage = () => {
         <Col numColSpanLg={6}>
           <MailRenderer
             html={selectedMail?.html}
-            text={selectedMail?.text}
+            text={selectedMail?.plaintext}
             additionalTabHeaders={
               <>
                 <Tab icon={TableIcon}>Metadata</Tab>
@@ -286,22 +255,27 @@ const MailerInboxPage = () => {
                 justifyContent="start"
                 key="_metadataPanelTab"
               >
-                <div className="w-full overflow-auto">
-                  <pre className="text-gray-500 dark:text-gray-600">
-                    {JSON.stringify(
-                      {
-                        ...selectedMail?.smtp,
-                        html: undefined,
-                        text: undefined,
-                        textAsHtml: undefined,
-                        attachments: undefined,
-                        envelope: selectedMail?.envelope,
-                      },
-                      undefined,
-                      2
-                    )}
-                  </pre>
-                </div>
+                {selectedMail?.smtp === undefined ||
+                selectedMail?.envelope === undefined ? (
+                  <Text className="w-full pt-6 text-center">No metadata</Text>
+                ) : (
+                  <div className="w-full overflow-auto">
+                    <pre className="text-gray-500 dark:text-gray-600">
+                      {JSON.stringify(
+                        {
+                          ...selectedMail?.smtp,
+                          html: undefined,
+                          text: undefined,
+                          textAsHtml: undefined,
+                          attachments: undefined,
+                          envelope: selectedMail?.envelope,
+                        },
+                        undefined,
+                        2
+                      )}
+                    </pre>
+                  </div>
+                )}
               </Flex>,
               <Flex
                 className="mt-2 w-full overflow-auto"
@@ -310,7 +284,9 @@ const MailerInboxPage = () => {
                 key="_attachmentsPanelTab"
               >
                 {(selectedMail?.smtp.attachments.length ?? 0) === 0 ? (
-                  <Text className="mt-2 w-full text-start">No attachments</Text>
+                  <Text className="w-full pt-6 text-center">
+                    No attachments
+                  </Text>
                 ) : (
                   <Table className="w-full">
                     <TableHead>

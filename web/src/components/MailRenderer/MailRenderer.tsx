@@ -23,7 +23,6 @@ import {
   TabList,
   TabPanel,
   TabPanels,
-  Italic,
 } from '@tremor/react'
 
 import ErrorPanel from '../ErrorPanel/ErrorPanel'
@@ -178,7 +177,7 @@ function MailPreview({
               </div>
             ) : (
               <Text className="w-full pt-6 text-center">
-                <Italic>No HTML version available</Italic>
+                No HTML version available
               </Text>
             )}
           </TabPanel>
@@ -188,7 +187,7 @@ function MailPreview({
                 <pre className="text-gray-500 dark:text-gray-600">{text}</pre>
               ) : (
                 <Text className="w-full pt-6 text-center">
-                  <Italic>No text version available</Italic>
+                  No text version available
                 </Text>
               )}
             </Flex>
@@ -199,7 +198,7 @@ function MailPreview({
                 <pre className="text-gray-500 dark:text-gray-600">{html}</pre>
               ) : (
                 <Text className="w-full pt-6 text-center">
-                  <Italic>No HTML version available</Italic>
+                  No HTML version available
                 </Text>
               )}
             </Flex>

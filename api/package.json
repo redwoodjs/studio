@@ -9,12 +9,13 @@
     "@babel/parser": "7.22.16",
     "@babel/traverse": "7.22.17",
     "@babel/types": "7.22.17",
+    "@graphql-inspector/core": "5.0.1",
     "@prisma/internals": "5.2.0",
-    "@redwoodjs/api": "7.0.0-canary.348",
-    "@redwoodjs/fastify": "7.0.0-canary.348",
-    "@redwoodjs/graphql-server": "7.0.0-canary.348",
-    "@redwoodjs/project-config": "7.0.0-canary.348",
-    "@redwoodjs/realtime": "7.0.0-canary.348",
+    "@redwoodjs/api": "7.0.0-canary.666",
+    "@redwoodjs/fastify": "7.0.0-canary.666",
+    "@redwoodjs/graphql-server": "7.0.0-canary.666",
+    "@redwoodjs/project-config": "7.0.0-canary.666",
+    "@redwoodjs/realtime": "7.0.0-canary.666",
     "better-sqlite3": "8.6.0",
     "chalk": "4.1.2",
     "chokidar": "3.5.3",
@@ -33,6 +34,7 @@
     "@types/better-sqlite3": "7.6.4",
     "@types/mailparser": "3.4.0",
     "@types/smtp-server": "3.5.7",
-    "drizzle-kit": "0.19.13"
+    "drizzle-kit": "0.19.13",
+    "ts-proto": "^1.162.1"
   }
 }

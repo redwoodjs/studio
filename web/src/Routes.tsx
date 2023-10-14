@@ -12,7 +12,8 @@ const Routes = () => {
 
         <Route path="/prisma" page={PrismaPage} name="prisma" />
 
-        <Route path="/telemetry-dashboard" page={TelemetryDashboardPage} name="telemetryDashboard" />
+        <Route path="/opentelemetry/traces" page={OpenTelemetryTracesPage} name="opentelemetryTraces" />
+        <Route path="/opentelemetry/spans" page={OpenTelemetrySpansPage} name="opentelemetrySpans" />
 
         <Route path="/mailer-inbox" page={MailerInboxPage} name="mailerInbox" />
         <Route path="/mailer-template-preview" page={MailerTemplatePreviewPage} name="mailerTemplatePreview" />

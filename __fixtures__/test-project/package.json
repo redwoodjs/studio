@@ -1,0 +1,53 @@
+{
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "api",
+      "web"
+    ]
+  },
+  "devDependencies": {
+    "@babel/parser": "7.22.16",
+    "@babel/traverse": "7.22.17",
+    "@babel/types": "7.22.17",
+    "@graphql-inspector/core": "5.0.1",
+    "@prisma/internals": "5.2.0",
+    "@redwoodjs/api": "7.0.0-canary.666",
+    "@redwoodjs/core": "7.0.0-canary.666",
+    "@redwoodjs/fastify": "7.0.0-canary.666",
+    "@redwoodjs/graphql-server": "7.0.0-canary.666",
+    "@redwoodjs/project-config": "7.0.0-canary.666",
+    "@redwoodjs/realtime": "7.0.0-canary.666",
+    "better-sqlite3": "8.6.0",
+    "chalk": "4.1.2",
+    "chokidar": "3.5.3",
+    "dotenv-defaults": "5.0.2",
+    "drizzle-orm": "0.28.6",
+    "fast-glob": "3.3.1",
+    "fastify": "4.21.0",
+    "ioredis": "5",
+    "mailparser": "3.6.5",
+    "nanoid": "3.3.6",
+    "open-graph-scraper": "6.2.2",
+    "prisma-json-schema-generator": "4.0.0",
+    "smtp-server": "3.13.0"
+  },
+  "eslintConfig": {
+    "extends": "@redwoodjs/eslint-config",
+    "root": true
+  },
+  "engines": {
+    "node": "=18.x",
+    "yarn": ">=1.15"
+  },
+  "prisma": {
+    "seed": "yarn rw exec seed"
+  },
+  "packageManager": "yarn@3.6.3",
+  "resolutions": {
+    "@types/react": "18.2.14"
+  },
+  "scripts": {
+    "start-studio": "node ./.redwood-studio/api/dist/server.js | rw-log-formatter"
+  }
+}

@@ -10,6 +10,8 @@ import {
   InboxIcon,
   DatabaseIcon,
   AdjustmentsIcon,
+  CubeIcon,
+  CubeTransparentIcon,
 } from '@heroicons/react/outline'
 import { Title } from '@tremor/react'
 import { GetConnectionStatus } from 'types/graphql'
@@ -87,7 +89,7 @@ const ConnectionStatusIndicator = ({
           ? 'Connected'
           : developmentServer === 'disconnected'
           ? 'Disconnected'
-          : 'Unknown'}
+          : 'Please Reload'}
       </span>
     </div>
   )
@@ -115,9 +117,14 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   ]
   const telemetryNavigation: TNavigationItem[] = [
     {
-      name: 'Dashboard',
-      to: routes.telemetryDashboard(),
-      icon: HomeIcon,
+      name: 'Traces',
+      to: routes.opentelemetryTraces(),
+      icon: CubeTransparentIcon,
+    },
+    {
+      name: 'Spans',
+      to: routes.opentelemetrySpans(),
+      icon: CubeIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
@@ -207,7 +214,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     <div className="flex h-16 shrink-0 items-center">
                       <img
                         className="h-8 w-auto"
-                        src="https://redwoodjs.com/images/logo.svg"
+                        src="/mark.svg"
                         alt="RedwoodJS"
                       />
                       <Title className="pl-4">RedwoodJS Studio</Title>
@@ -306,11 +313,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:border-gray-800 dark:bg-gray-900">
             <div className="flex h-16 shrink-0 items-center">
-              <img
-                className="h-8 w-auto"
-                src="https://redwoodjs.com/images/logo.svg"
-                alt="RedwoodJS"
-              />
+              <img className="h-8 w-auto" src="/mark.svg" alt="RedwoodJS" />
               <Title className="pl-4">RedwoodJS Studio</Title>
             </div>
             <nav className="flex flex-1 flex-col">
