@@ -1,12 +1,19 @@
+import crypto from 'node:crypto'
+
 import type { APIGatewayEvent, Context } from 'aws-lambda'
-import { and, eq } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 
 import { db } from 'src/lib/drizzle/db'
 import {
-  OtelTraceAttribute,
   otelTraceAttributeTable,
+  otelTraceResourceAttributeTable,
+  otelTraceResourceTable,
+  otelTraceSpanAttributeTable,
+  otelTraceSpanEventAttributeTable,
+  otelTraceSpanEventTable,
+  otelTraceSpanScopeTable,
+  otelTraceSpanTable,
 } from 'src/lib/drizzle/schema'
-import { logger } from 'src/lib/logger'
 
 /**
  * The handler function is your code that processes http request events.
@@ -35,48 +42,14 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
 
   const resourceSpans = data.resourceSpans ?? []
   for (let i = 0; i < resourceSpans.length; i++) {
-    const resourceAttributes = resourceSpans[i].resource.attributes
-
-    const resourceAttributeIds: string[] = []
-    for (let j = 0; j < resourceAttributes.length; j++) {
-      const attribute = resourceAttributes[j]
-      const attributeValueType = Object.keys(attribute.value)[0]
-
-      let attributeId = db
-        .select({
-          id: otelTraceAttributeTable.id,
-        })
-        .from(otelTraceAttributeTable)
-        .where(
-          and(
-            eq(otelTraceAttributeTable.key, attribute.key),
-            // @ts-expect-error TODO: Fix the typing to match the DB enum for the attributeValueType
-            eq(otelTraceAttributeTable.type, attributeValueType),
-            eq(
-              otelTraceAttributeTable.value,
-              attribute.value[attributeValueType]
-            )
-          )
-        )
-        .get()?.id
-      if (attributeId === undefined) {
-        // @ts-expect-error TODO: Fix the typing to match the DB enum for the attributeValueType
-        attributeId = db
-          .insert(otelTraceAttributeTable)
-          .values({
-            key: attribute.key,
-            type: attributeValueType,
-            value: attribute.value[attributeValueType],
-          })
-          .returning({
-            id: otelTraceAttributeTable.id,
-          })
-          .get().id
+    const resourceId = getResourceId(resourceSpans[i].resource.attributes)
+    for (let j = 0; j < resourceSpans[i].scopeSpans.length; j++) {
+      const scopeId = getSpanScopeId(resourceSpans[i].scopeSpans[j].scope)
+      const spans = resourceSpans[i].scopeSpans[j].spans
+      for (let k = 0; k < spans.length; k++) {
+        insertSpan(resourceId, scopeId, spans[k])
       }
-      resourceAttributeIds.push(attributeId)
     }
-
-    const scopeSpans = resourceSpans[i].scopeSpans
   }
 
   // TODO: Currently we always responde with a "full success" but we should respond dynamically based on how we got on
@@ -87,4 +60,219 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
     },
     body: JSON.stringify({}),
   }
+}
+
+function hashObject(obj: unknown): string {
+  return crypto.createHash('md5').update(JSON.stringify(obj)).digest('hex')
+}
+
+// TODO: Type the attribute parameter
+function getAttributeId(attribute: any): string {
+  const key = attribute.key
+  const value = Object.values(attribute.value)[0]
+  const type = Object.keys(attribute)[0]
+  const hash = hashObject(attribute)
+
+  const existingAttributeId = db
+    .select({
+      id: otelTraceAttributeTable.id,
+    })
+    .from(otelTraceAttributeTable)
+    .where(eq(otelTraceAttributeTable.hash, hash))
+    .get()?.id
+  if (existingAttributeId) {
+    return existingAttributeId
+  }
+
+  // @ts-expect-error - TODO: Have to type this to match the DB enum
+  const newAttributeId = db
+    .insert(otelTraceAttributeTable)
+    .values({
+      key,
+      value,
+      type,
+      hash,
+    })
+    .returning({
+      id: otelTraceAttributeTable.id,
+    })
+    .get().id
+  if (newAttributeId) {
+    return newAttributeId
+  } else {
+    throw new Error(
+      'Encountered an error while creating a new attribute for OTel trace ingestion'
+    )
+  }
+}
+
+// TODO: Type the resourceAttributes parameter
+function getResourceId(resourceAttributes: any[]): string {
+  // Compute the hash of the attributes for quick lookup of an existing resource
+  const resourceAttributeHash = hashObject(resourceAttributes)
+
+  // Find an existing based on the hash
+  const existingResourceId = db
+    .select({
+      id: otelTraceResourceTable.id,
+    })
+    .from(otelTraceResourceTable)
+    .where(eq(otelTraceResourceTable.attriubuteHash, resourceAttributeHash))
+    .get()?.id
+  if (existingResourceId) {
+    return existingResourceId
+  }
+
+  // Create a new resource by finding the reference to all the attributes and creating a new resource
+  const attributeIds: string[] = []
+  for (const attribute of resourceAttributes) {
+    attributeIds.push(getAttributeId(attribute))
+  }
+
+  // Insert the new resource
+  const newResourceId = db
+    .insert(otelTraceResourceTable)
+    .values({
+      attriubuteHash: resourceAttributeHash,
+    })
+    .returning({
+      id: otelTraceResourceTable.id,
+    })
+    .get()?.id
+  if (!newResourceId) {
+    throw new Error(
+      'Encountered an error while creating a new resource for OTel trace ingestion'
+    )
+  }
+
+  // Insert the relationships between the resource and the attributes
+  if (attributeIds.length > 0) {
+    db.insert(otelTraceResourceAttributeTable)
+      .values(
+        attributeIds.map((id) => ({
+          attributeId: id,
+          resourceId: newResourceId,
+        }))
+      )
+      .run()
+  }
+
+  return newResourceId
+}
+
+// TODO: Type the spanScope parameter
+function getSpanScopeId(spanScope: any): string {
+  // Compute the hash of the scope for quick lookup of an existing entry
+  const spanScopeHash = hashObject(spanScope)
+
+  // Find an existing based on the hash
+  const existingSpanScopeId = db
+    .select({
+      id: otelTraceSpanScopeTable.id,
+    })
+    .from(otelTraceSpanScopeTable)
+    .where(eq(otelTraceSpanScopeTable.hash, spanScopeHash))
+    .get()?.id
+  if (existingSpanScopeId) {
+    return existingSpanScopeId
+  }
+
+  // TODO: Span scopes can have custom attributes, but we don't currently record them
+
+  // Insert the new span scope
+  const newSpanScopeId = db
+    .insert(otelTraceSpanScopeTable)
+    .values({
+      name: spanScope.name,
+      version: spanScope.version,
+      hash: spanScopeHash,
+    })
+    .returning({
+      id: otelTraceSpanScopeTable.id,
+    })
+    .get()?.id
+  if (!newSpanScopeId) {
+    throw new Error(
+      'Encountered an error while creating a new span scope for OTel trace ingestion'
+    )
+  }
+
+  return newSpanScopeId
+}
+
+// TODO: Type the span parameter
+function insertSpan(resourceId: string, spanScopeId: string, span: any) {
+  // Insert the span
+  const spanId = db
+    .insert(otelTraceSpanTable)
+    .values({
+      resourceId,
+      scopeId: spanScopeId,
+      traceId: span.traceId,
+      spanId: span.spanId,
+      // traceState,
+      parentSpanId: span.parentSpanId,
+      // flags,
+      name: span.name,
+      kind: span.kind,
+      startTime: span.startTimeUnixNano,
+      endTime: span.endTimeUnixNano,
+      statusCode: span.status?.code,
+      statusMessage: span.status?.message,
+
+      type: spanTypeId,
+    })
+    .returning({
+      id: otelTraceSpanTable.id,
+    })
+    .get()?.id
+
+  // Insert all the span attributes
+  const attributeIds: string[] = []
+  for (const attribute of span.attributes) {
+    attributeIds.push(getAttributeId(attribute))
+  }
+  if (attributeIds.length > 0) {
+    db.insert(otelTraceSpanAttributeTable)
+      .values(
+        attributeIds.map((id) => ({
+          attributeId: id,
+          spanId: spanId,
+        }))
+      )
+      .run()
+  }
+
+  // Insert all the span events
+  for (const event of span.events) {
+    const eventId = db
+      .insert(otelTraceSpanEventTable)
+      .values({
+        spanId,
+        name: event.name,
+        time: event.timeUnixNano,
+      })
+      .returning({
+        id: otelTraceSpanEventTable.id,
+      })
+      .get()?.id
+
+    // Insert all the span event attributes
+    const attributeIds: string[] = []
+    for (const attribute of event.attributes) {
+      attributeIds.push(getAttributeId(attribute))
+    }
+    if (attributeIds.length > 0) {
+      db.insert(otelTraceSpanEventAttributeTable)
+        .values(
+          attributeIds.map((id) => ({
+            attributeId: id,
+            eventId: eventId,
+          }))
+        )
+        .run()
+    }
+  }
+
+  // TODO: Support span links
 }

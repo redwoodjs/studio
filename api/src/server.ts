@@ -22,6 +22,7 @@ import sdls from 'src/graphql/**/*.sdl.{js,ts}'
 import services from 'src/services/**/*.{js,ts}'
 
 import { db as drizzleDB } from 'src/lib/drizzle/db'
+import { seed as drizzleSeed } from 'src/lib/drizzle/seed'
 import { logger } from 'src/lib/logger'
 import { realtime } from 'src/lib/realtime'
 
@@ -75,6 +76,8 @@ async function serve() {
       'migrations'
     ),
   })
+  logger.info('Seeding local Drizzle database')
+  await drizzleSeed()
 
   // Load config
   const redwoodProjectPaths = getPaths()

@@ -1,13 +1,13 @@
-import fs from 'fs-extra'
 import path from 'path'
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { dirname } from 'path'
+import { fileURLToPath } from 'url'
 
 import execa from 'execa'
+import fs from 'fs-extra'
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
-async function main(){
+async function main() {
   const cwd = __dirname
   const hr = '~'.repeat(process.stdout.columns)
 
@@ -21,22 +21,36 @@ async function main(){
   const packagedDir = path.join(cwd, '.packaged')
   if (fs.existsSync(packagedDir)) {
     fs.rmSync(packagedDir, { recursive: true, force: true })
-  }else{
+  } else {
     fs.mkdirSync(packagedDir)
   }
   console.log(' - api dist')
-  fs.copySync(path.join(cwd, 'api', 'dist'), path.join(packagedDir, 'api', 'dist'))
+  fs.copySync(
+    path.join(cwd, 'api', 'dist'),
+    path.join(packagedDir, 'api', 'dist')
+  )
   console.log(' - web dist')
-  fs.copySync(path.join(cwd, 'web', 'dist'), path.join(packagedDir, 'web', 'dist'))
+  fs.copySync(
+    path.join(cwd, 'web', 'dist'),
+    path.join(packagedDir, 'web', 'dist')
+  )
   console.log(' - db')
   fs.copySync(path.join(cwd, 'api', 'db'), path.join(packagedDir, 'api', 'db'))
   console.log(' - redwood.toml')
-  fs.copySync(path.join(cwd, 'redwood.toml'), path.join(packagedDir, 'redwood.toml'))
+  fs.copySync(
+    path.join(cwd, 'redwood.toml'),
+    path.join(packagedDir, 'redwood.toml')
+  )
   console.log(' - api dist/lib/drizzle/migrations')
-  fs.copySync(path.join(cwd, 'api', 'src', 'lib', 'drizzle', 'migrations'), path.join(packagedDir, 'api', 'dist', 'lib', 'drizzle', 'migrations'))
+  fs.copySync(
+    path.join(cwd, 'api', 'src', 'lib', 'drizzle', 'migrations'),
+    path.join(packagedDir, 'api', 'dist', 'lib', 'drizzle', 'migrations')
+  )
 
   console.log(' - package.json')
-  const currentProjectRedwoodVersion = fs.readJSONSync(path.join(cwd, '..', 'rw-test-studio', 'package.json')).devDependencies['@redwoodjs/core']
+  const currentProjectRedwoodVersion = fs.readJSONSync(
+    path.join(cwd, '..', 'rw-test-studio', 'package.json')
+  ).devDependencies['@redwoodjs/core']
   const deps = {
     ...fs.readJSONSync(path.join(cwd, 'api', 'package.json')).dependencies,
   }
@@ -55,11 +69,15 @@ async function main(){
       devDeps[dep] = currentProjectRedwoodVersion
     }
   }
-  fs.writeJSONSync(path.join(packagedDir, 'package.json'), {
-    name: '@redwoodjs/studio',
-    dependencies: deps,
-    devDependencies: devDeps,
-  }, { spaces: 2 })
+  fs.writeJSONSync(
+    path.join(packagedDir, 'package.json'),
+    {
+      name: '@redwoodjs/studio',
+      dependencies: deps,
+      devDependencies: devDeps,
+    },
+    { spaces: 2 }
+  )
 
   console.log(`${hr}\nCopying files to project...\n${hr}`)
   const outputDir = path.join(cwd, '..', 'rw-test-studio', '.redwood-studio')
@@ -73,13 +91,17 @@ async function main(){
   console.log(`${hr}\nUpdating package.json\n${hr}`)
   const pkgJsonPath = path.join(cwd, '..', 'rw-test-studio', 'package.json')
   const pkgJson = fs.readJSONSync(pkgJsonPath)
-  fs.writeJSONSync(pkgJsonPath, {
-    ...pkgJson,
-    devDependencies: {
-      ...pkgJson.devDependencies,
-      ...deps,
+  fs.writeJSONSync(
+    pkgJsonPath,
+    {
+      ...pkgJson,
+      devDependencies: {
+        ...pkgJson.devDependencies,
+        ...deps,
+      },
     },
-  }, { spaces: 2 })
+    { spaces: 2 }
+  )
 
   console.log(`${hr}\nRuning yarn\n${hr}`)
   await execa('yarn', [], {

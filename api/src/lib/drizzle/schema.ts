@@ -4,6 +4,11 @@ import type { ParsedMail } from 'mailparser'
 import { customAlphabet } from 'nanoid'
 import type { SMTPServerEnvelope } from 'smtp-server'
 
+// TODO: I gave all tables an `id` column which is an automatically generated nanoid
+//       This may not be the best approach as you end up with some double id's like
+//       span.id and span.spanId. That could be confusing when we lookup a span by
+//       id and get confused about which id we're talking about.
+
 // TODO: Can we have these `updatedAt` automatically updated when a row is updated?
 
 // NOTE: The '-' character is not included because it can make copy-pasting the ID more difficult
@@ -164,10 +169,12 @@ export const otelTraceAttributeTable = sqliteTable(
         'bytesValue',
       ],
     }).notNull(),
+    hash: text('hash').unique().notNull(),
   },
   (table) => {
     return {
       keyIndex: index('otel_trace_attribute_key_index').on(table.key),
+      hashIndex: index('otel_trace_attribute_hash_index').on(table.hash),
     }
   }
 )
@@ -182,6 +189,7 @@ export const otelTraceAttributeRelations = relations(
   otelTraceAttributeTable,
   ({ many }) => ({
     attributeToResources: many(otelTraceResourceAttributeTable),
+    attributeToEvents: many(otelTraceSpanEventAttributeTable),
   })
 )
 
@@ -191,13 +199,13 @@ export const otelTraceResourceTable = sqliteTable(
   'otel_trace_resource',
   {
     id: text('id').primaryKey().$defaultFn(nanoid),
-    attributes: text('attributes', { mode: 'json' }).notNull(),
+    attriubuteHash: text('attribute_hash').unique().notNull(),
   },
   (table) => {
     return {
-      attributesIndex: index('otel_trace_resource_attributes_index').on(
-        table.attributes
-      ),
+      attributesHashIndex: index(
+        'otel_trace_resource_attributes_hash_index'
+      ).on(table.attriubuteHash),
     }
   }
 )
@@ -247,3 +255,189 @@ export const otelTraceResourceAttributeRelations = relations(
     }),
   })
 )
+
+// --- OpenTelemetry Trace Span Scope ---
+
+export const otelTraceSpanScopeTable = sqliteTable(
+  'otel_trace_span_scope',
+  {
+    id: text('id').primaryKey().$defaultFn(nanoid),
+    hash: text('hash').unique().notNull(),
+    name: text('name').notNull(),
+    version: text('version'),
+  },
+  (table) => {
+    return {
+      hashIndex: index('otel_trace_span_scope_hash_index').on(table.hash),
+    }
+  }
+)
+export type OtelTraceSpanScope = InferSelectModel<
+  typeof otelTraceSpanScopeTable
+>
+export type InsertOtelTraceSpanScope = InferInsertModel<
+  typeof otelTraceSpanScopeTable
+>
+
+// --- OpenTelemetry Trace Span ---
+
+export const otelTraceSpanTable = sqliteTable(
+  'otel_trace_span',
+  {
+    id: text('id').primaryKey().$defaultFn(nanoid),
+    resourceId: text('resource_id').notNull(),
+    scopeId: text('scope_id').notNull(),
+    traceId: text('trace_id').notNull(),
+    spanId: text('span_id').notNull().unique(),
+    traceState: text('trace_state'), // ?
+    parentSpanId: text('parent_span_id'),
+    flags: text('flags'), // ?
+    name: text('name').notNull(),
+    kind: integer('kind', { mode: 'number' }).notNull(),
+    startTime: text('start_time_unix_nano').notNull(),
+    endTime: text('end_time_unix_nano').notNull(),
+    statusCode: integer('status_code', { mode: 'number' }),
+    statusMessage: text('status_message'),
+    type: text('type')
+      .notNull()
+      .references(() => otelTraceSpanTypeTable.id, { onDelete: 'cascade' }),
+  },
+  (table) => {
+    return {
+      traceIdIndex: index('otel_trace_span_trace_id_index').on(table.traceId),
+      spanIdIndex: index('otel_trace_span_span_id_index').on(table.spanId),
+      parentSpanIdIndex: index('otel_trace_span_parent_span_id_index').on(
+        table.parentSpanId
+      ),
+      startTimeIndex: index('otel_trace_span_start_time_unix_nano_index').on(
+        table.startTime
+      ),
+      endTimeIndex: index('otel_trace_span_end_time_unix_nano_index').on(
+        table.endTime
+      ),
+      statusCodeIndex: index('otel_trace_span_status_code_index').on(
+        table.statusCode
+      ),
+      // TODO: Add index for name?
+      // TODO: Add index for kind?
+    }
+  }
+)
+export type OtelTraceSpan = InferSelectModel<typeof otelTraceSpanTable>
+export type InsertOtelTraceSpan = InferInsertModel<typeof otelTraceSpanTable>
+
+export const otelTraceSpanRelations = relations(
+  otelTraceSpanTable,
+  ({ many }) => ({
+    spanToAttributes: many(otelTraceSpanAttributeTable),
+    spanToEvents: many(otelTraceSpanEventTable),
+  })
+)
+
+// --- OpenTelemetry Trace Span Event ---
+
+export const otelTraceSpanEventTable = sqliteTable('otel_trace_span_event', {
+  id: text('id').primaryKey().$defaultFn(nanoid),
+  spanId: text('span_id')
+    .notNull()
+    .references(() => otelTraceSpanTable.id, {
+      onDelete: 'cascade',
+    }),
+  time: text('time_unix_nano').notNull(),
+  name: text('name').notNull(),
+})
+export type OtelTraceSpanEvent = InferSelectModel<
+  typeof otelTraceSpanEventTable
+>
+export type InsertOtelTraceSpanEvent = InferInsertModel<
+  typeof otelTraceSpanEventTable
+>
+
+export const otelTraceSpanEventRelations = relations(
+  otelTraceSpanEventTable,
+  ({ many }) => ({
+    eventToAttributes: many(otelTraceSpanEventAttributeTable),
+  })
+)
+
+// --- OpenTelemetry Trace Event-Attribute ---
+
+export const otelTraceSpanEventAttributeTable = sqliteTable(
+  'otel_trace_span_event_attribute',
+  {
+    id: text('id').primaryKey().$defaultFn(nanoid),
+    eventId: text('event_id')
+      .notNull()
+      .references(() => otelTraceSpanEventTable.id, { onDelete: 'cascade' }),
+    attributeId: text('attribute_id')
+      .notNull()
+      .references(() => otelTraceAttributeTable.id, { onDelete: 'cascade' }),
+  }
+)
+export type OtelTraceSpanEventAttribute = InferSelectModel<
+  typeof otelTraceSpanEventAttributeTable
+>
+export type InsertOtelTraceSpanEventAttribute = InferInsertModel<
+  typeof otelTraceSpanEventAttributeTable
+>
+
+export const otelTraceSpanEventAttributeRelations = relations(
+  otelTraceSpanEventAttributeTable,
+  ({ one }) => ({
+    event: one(otelTraceSpanEventTable, {
+      fields: [otelTraceSpanEventAttributeTable.eventId],
+      references: [otelTraceSpanEventTable.id],
+    }),
+    attribute: one(otelTraceAttributeTable, {
+      fields: [otelTraceSpanEventAttributeTable.attributeId],
+      references: [otelTraceAttributeTable.id],
+    }),
+  })
+)
+
+// --- OpenTelemetry Trace Span-Attribute ---
+
+export const otelTraceSpanAttributeTable = sqliteTable(
+  'otel_trace_span_attribute',
+  {
+    id: text('id').primaryKey().$defaultFn(nanoid),
+    spanId: text('span_id')
+      .notNull()
+      .references(() => otelTraceSpanTable.id, { onDelete: 'cascade' }),
+    attributeId: text('attribute_id')
+      .notNull()
+      .references(() => otelTraceAttributeTable.id, { onDelete: 'cascade' }),
+  }
+)
+export type OtelTraceSpanAttribute = InferSelectModel<
+  typeof otelTraceSpanAttributeTable
+>
+export type InsertOtelTraceSpanAttribute = InferInsertModel<
+  typeof otelTraceSpanAttributeTable
+>
+
+export const otelTraceSpanAttributeRelations = relations(
+  otelTraceSpanAttributeTable,
+  ({ one }) => ({
+    span: one(otelTraceSpanTable, {
+      fields: [otelTraceSpanAttributeTable.spanId],
+      references: [otelTraceSpanTable.id],
+    }),
+    attribute: one(otelTraceAttributeTable, {
+      fields: [otelTraceSpanAttributeTable.attributeId],
+      references: [otelTraceAttributeTable.id],
+    }),
+  })
+)
+
+// --- OpenTelemetry Trace Span Type ---
+
+export const otelTraceSpanTypeTable = sqliteTable('otel_trace_span_type', {
+  id: text('id').primaryKey().$defaultFn(nanoid),
+  name: text('name').notNull().unique(),
+  colour: text('colour').notNull(),
+})
+export type OtelTraceSpanType = InferSelectModel<typeof otelTraceSpanTypeTable>
+export type InsertOtelTraceSpanType = InferInsertModel<
+  typeof otelTraceSpanTypeTable
+>

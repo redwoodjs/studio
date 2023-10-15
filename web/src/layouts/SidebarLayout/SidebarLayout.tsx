@@ -10,6 +10,7 @@ import {
   InboxIcon,
   DatabaseIcon,
   AdjustmentsIcon,
+  CubeIcon,
 } from '@heroicons/react/outline'
 import { Title } from '@tremor/react'
 import { GetConnectionStatus } from 'types/graphql'
@@ -113,11 +114,11 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
       icon: DatabaseIcon,
     },
   ]
-  const telemetryNavigation: TNavigationItem[] = [
+  const opentelemetryNavigation: TNavigationItem[] = [
     {
-      name: 'Dashboard',
-      to: routes.telemetryDashboard(),
-      icon: HomeIcon,
+      name: 'Spans',
+      to: routes.openTelemetrySpans(),
+      icon: CubeIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
@@ -252,7 +253,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                             OpenTelemetry
                           </div>
                           <ul className="-mx-2 mt-2 space-y-1">
-                            {telemetryNavigation.map((item) => (
+                            {opentelemetryNavigation.map((item) => (
                               <li key={item.name}>
                                 <NavigationItem item={item} />
                               </li>
@@ -353,7 +354,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     OpenTelemetry
                   </div>
                   <ul className="-mx-2 mt-2 space-y-1">
-                    {telemetryNavigation.map((item) => (
+                    {opentelemetryNavigation.map((item) => (
                       <li key={item.name}>
                         <NavigationItem item={item} />
                       </li>

@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "5ad5509d-d2ef-4c5b-81ec-ea07c6a18471",
+  "id": "654a1123-6464-4200-bb24-8ba59bcb25c4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "mail_inbox_entry": {
@@ -322,13 +322,34 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "hash": {
+          "name": "hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {
+        "otel_trace_attribute_hash_unique": {
+          "name": "otel_trace_attribute_hash_unique",
+          "columns": [
+            "hash"
+          ],
+          "isUnique": true
+        },
         "otel_trace_attribute_key_index": {
           "name": "otel_trace_attribute_key_index",
           "columns": [
             "key"
+          ],
+          "isUnique": false
+        },
+        "otel_trace_attribute_hash_index": {
+          "name": "otel_trace_attribute_hash_index",
+          "columns": [
+            "hash"
           ],
           "isUnique": false
         }
@@ -404,8 +425,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "attributes": {
-          "name": "attributes",
+        "attribute_hash": {
+          "name": "attribute_hash",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -413,10 +434,391 @@
         }
       },
       "indexes": {
-        "otel_trace_resource_attributes_index": {
-          "name": "otel_trace_resource_attributes_index",
+        "otel_trace_resource_attribute_hash_unique": {
+          "name": "otel_trace_resource_attribute_hash_unique",
           "columns": [
-            "attributes"
+            "attribute_hash"
+          ],
+          "isUnique": true
+        },
+        "otel_trace_resource_attributes_hash_index": {
+          "name": "otel_trace_resource_attributes_hash_index",
+          "columns": [
+            "attribute_hash"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "otel_trace_span_attribute": {
+      "name": "otel_trace_span_attribute",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "span_id": {
+          "name": "span_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "attribute_id": {
+          "name": "attribute_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "otel_trace_span_attribute_span_id_otel_trace_span_id_fk": {
+          "name": "otel_trace_span_attribute_span_id_otel_trace_span_id_fk",
+          "tableFrom": "otel_trace_span_attribute",
+          "tableTo": "otel_trace_span",
+          "columnsFrom": [
+            "span_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "otel_trace_span_attribute_attribute_id_otel_trace_attribute_id_fk": {
+          "name": "otel_trace_span_attribute_attribute_id_otel_trace_attribute_id_fk",
+          "tableFrom": "otel_trace_span_attribute",
+          "tableTo": "otel_trace_attribute",
+          "columnsFrom": [
+            "attribute_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "otel_trace_span_event_attribute": {
+      "name": "otel_trace_span_event_attribute",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "attribute_id": {
+          "name": "attribute_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "otel_trace_span_event_attribute_event_id_otel_trace_span_event_id_fk": {
+          "name": "otel_trace_span_event_attribute_event_id_otel_trace_span_event_id_fk",
+          "tableFrom": "otel_trace_span_event_attribute",
+          "tableTo": "otel_trace_span_event",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "otel_trace_span_event_attribute_attribute_id_otel_trace_attribute_id_fk": {
+          "name": "otel_trace_span_event_attribute_attribute_id_otel_trace_attribute_id_fk",
+          "tableFrom": "otel_trace_span_event_attribute",
+          "tableTo": "otel_trace_attribute",
+          "columnsFrom": [
+            "attribute_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "otel_trace_span_event": {
+      "name": "otel_trace_span_event",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "span_id": {
+          "name": "span_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "time_unix_nano": {
+          "name": "time_unix_nano",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "otel_trace_span_event_span_id_otel_trace_span_id_fk": {
+          "name": "otel_trace_span_event_span_id_otel_trace_span_id_fk",
+          "tableFrom": "otel_trace_span_event",
+          "tableTo": "otel_trace_span",
+          "columnsFrom": [
+            "span_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "otel_trace_span_scope": {
+      "name": "otel_trace_span_scope",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "hash": {
+          "name": "hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "version": {
+          "name": "version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "otel_trace_span_scope_hash_unique": {
+          "name": "otel_trace_span_scope_hash_unique",
+          "columns": [
+            "hash"
+          ],
+          "isUnique": true
+        },
+        "otel_trace_span_scope_hash_index": {
+          "name": "otel_trace_span_scope_hash_index",
+          "columns": [
+            "hash"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "otel_trace_span": {
+      "name": "otel_trace_span",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "resource_id": {
+          "name": "resource_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "scope_id": {
+          "name": "scope_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "trace_id": {
+          "name": "trace_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "span_id": {
+          "name": "span_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "trace_state": {
+          "name": "trace_state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "parent_span_id": {
+          "name": "parent_span_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "flags": {
+          "name": "flags",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "start_time_unix_nano": {
+          "name": "start_time_unix_nano",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "end_time_unix_nano": {
+          "name": "end_time_unix_nano",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status_code": {
+          "name": "status_code",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "status_message": {
+          "name": "status_message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "otel_trace_span_span_id_unique": {
+          "name": "otel_trace_span_span_id_unique",
+          "columns": [
+            "span_id"
+          ],
+          "isUnique": true
+        },
+        "otel_trace_span_trace_id_index": {
+          "name": "otel_trace_span_trace_id_index",
+          "columns": [
+            "trace_id"
+          ],
+          "isUnique": false
+        },
+        "otel_trace_span_span_id_index": {
+          "name": "otel_trace_span_span_id_index",
+          "columns": [
+            "span_id"
+          ],
+          "isUnique": false
+        },
+        "otel_trace_span_parent_span_id_index": {
+          "name": "otel_trace_span_parent_span_id_index",
+          "columns": [
+            "parent_span_id"
+          ],
+          "isUnique": false
+        },
+        "otel_trace_span_start_time_unix_nano_index": {
+          "name": "otel_trace_span_start_time_unix_nano_index",
+          "columns": [
+            "start_time_unix_nano"
+          ],
+          "isUnique": false
+        },
+        "otel_trace_span_end_time_unix_nano_index": {
+          "name": "otel_trace_span_end_time_unix_nano_index",
+          "columns": [
+            "end_time_unix_nano"
+          ],
+          "isUnique": false
+        },
+        "otel_trace_span_status_code_index": {
+          "name": "otel_trace_span_status_code_index",
+          "columns": [
+            "status_code"
           ],
           "isUnique": false
         }
