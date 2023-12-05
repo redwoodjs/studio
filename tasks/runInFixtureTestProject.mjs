@@ -49,7 +49,7 @@ async function main() {
   )
   console.log(' - package.json')
   const currentProjectRedwoodVersion = fs.readJSONSync(
-    path.join(studioDirectory, '..', 'rw-test-studio', 'package.json')
+    path.join(studioDirectory, '__fixtures__', 'test-project', 'package.json')
   ).devDependencies['@redwoodjs/core']
   const deps = {
     ...fs.readJSONSync(path.join(studioDirectory, 'api', 'package.json'))
