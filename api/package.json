@@ -2,9 +2,6 @@
   "name": "api",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
-    "drizzle-gm": "drizzle-kit generate:sqlite"
-  },
   "dependencies": {
     "@babel/parser": "7.22.16",
     "@babel/traverse": "7.22.17",
@@ -20,7 +17,6 @@
     "chalk": "4.1.2",
     "chokidar": "3.5.3",
     "dotenv-defaults": "5.0.2",
-    "drizzle-orm": "0.28.6",
     "fast-glob": "3.3.1",
     "fastify": "4.21.0",
     "ioredis": "5",
@@ -34,7 +30,6 @@
     "@types/better-sqlite3": "7.6.4",
     "@types/mailparser": "3.4.0",
     "@types/smtp-server": "3.5.7",
-    "drizzle-kit": "0.19.13",
     "ts-proto": "^1.162.1"
   }
 }

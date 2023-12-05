@@ -45,10 +45,6 @@ async function serve() {
   process.env.RWSTUDIO_DATABASE_URL = `file:${path.resolve(
     path.join(studioStateDirectory, 'prisma.sqlite')
   )}`
-  // // TODO: Have the redwood cli set this env var when execa runs this file
-  // process.env.DATABASE_URL_DRIZZLE = path.resolve(
-  //   path.join(studioStateDirectory, 'studio-drizzle.sqlite')
-  // )
 
   // Execute prisma migrate
   // 'rw build' should have generated the prisma client already
@@ -62,17 +58,6 @@ async function serve() {
       stdio: 'inherit',
     }
   )
-
-  // Execute migrations for drizzle
-  // logger.info('Migrating local Drizzle database')
-  // migrate(drizzleDB, {
-  //   migrationsFolder: path.join(
-  //     getPaths().api.dist,
-  //     'lib',
-  //     'drizzle',
-  //     'migrations'
-  //   ),
-  // })
 
   // Load config
   const redwoodProjectPaths = getPaths()
