@@ -8,7 +8,7 @@ import {
   HomeIcon,
   MailIcon,
   InboxIcon,
-  DatabaseIcon,
+  // DatabaseIcon,
   AdjustmentsIcon,
   CubeIcon,
   CubeTransparentIcon,
@@ -18,7 +18,7 @@ import { GetConnectionStatus } from 'types/graphql'
 
 import { NavLink, routes } from '@redwoodjs/router'
 
-import { GraphQLIcon } from 'src/icons/GraphQL'
+// import { GraphQLIcon } from 'src/icons/GraphQL'
 
 // TODO: Move this out into a context so we can warn users on any page that needs the development server
 //       to be running to work correctly
@@ -101,20 +101,20 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   const navigation: TNavigationItem[] = [
     { name: 'Dashboard', to: routes.home(), icon: HomeIcon },
   ]
-  const graphqlNavigation: TNavigationItem[] = [
-    {
-      name: 'GraphQL Schema',
-      to: routes.graphql(),
-      icon: GraphQLIcon,
-    },
-  ]
-  const databaseNavigation: TNavigationItem[] = [
-    {
-      name: 'Prisma Schema',
-      to: routes.prisma(),
-      icon: DatabaseIcon,
-    },
-  ]
+  // const graphqlNavigation: TNavigationItem[] = [
+  //   {
+  //     name: 'GraphQL Schema',
+  //     to: routes.graphql(),
+  //     icon: GraphQLIcon,
+  //   },
+  // ]
+  // const databaseNavigation: TNavigationItem[] = [
+  //   {
+  //     name: 'Prisma Schema',
+  //     to: routes.prisma(),
+  //     icon: DatabaseIcon,
+  //   },
+  // ]
   const telemetryNavigation: TNavigationItem[] = [
     {
       name: 'Traces',
@@ -131,7 +131,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
     { name: 'Inbox', to: routes.mailerInbox(), icon: InboxIcon },
     { name: 'Templates', to: routes.mailerTemplatePreview(), icon: MailIcon },
   ]
-  const utilitiesNavigation: TNavigationItem[] = [
+  const ssrNavigation: TNavigationItem[] = [
     {
       name: 'OG Tag Preview',
       to: routes.ogTagPreview(),
@@ -230,7 +230,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                             ))}
                           </ul>
                         </li>
-                        <li>
+                        {/* <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
                             GraphQL
                           </div>
@@ -241,8 +241,8 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                               </li>
                             ))}
                           </ul>
-                        </li>
-                        <li>
+                        </li> */}
+                        {/* <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
                             Database
                           </div>
@@ -253,7 +253,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                               </li>
                             ))}
                           </ul>
-                        </li>
+                        </li> */}
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
                             OpenTelemetry
@@ -280,10 +280,10 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                         </li>
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
-                            Utilities
+                            SSR
                           </div>
                           <ul className="-mx-2 mt-2 space-y-1">
-                            {utilitiesNavigation.map((item) => (
+                            {ssrNavigation.map((item) => (
                               <li key={item.name}>
                                 <NavigationItem item={item} />
                               </li>
@@ -327,7 +327,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     ))}
                   </ul>
                 </li>
-                <li>
+                {/* <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
                     GraphQL
                   </div>
@@ -338,8 +338,8 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                       </li>
                     ))}
                   </ul>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
                     Database
                   </div>
@@ -350,7 +350,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                       </li>
                     ))}
                   </ul>
-                </li>
+                </li> */}
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
                     OpenTelemetry
@@ -377,10 +377,10 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                 </li>
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
-                    Utilities
+                    SSR
                   </div>
                   <ul className="-mx-2 mt-2 space-y-1">
-                    {utilitiesNavigation.map((item) => (
+                    {ssrNavigation.map((item) => (
                       <li key={item.name}>
                         <NavigationItem item={item} />
                       </li>

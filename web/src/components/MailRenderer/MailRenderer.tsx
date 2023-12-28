@@ -176,7 +176,7 @@ function MailPreview({
                 />
               </div>
             ) : (
-              <Text className="w-full pt-6 text-center">
+              <Text className="w-full pt-4 text-center">
                 No HTML version available
               </Text>
             )}
@@ -186,7 +186,7 @@ function MailPreview({
               {text ? (
                 <pre className="text-gray-500 dark:text-gray-600">{text}</pre>
               ) : (
-                <Text className="w-full pt-6 text-center">
+                <Text className="w-full pt-4 text-center">
                   No text version available
                 </Text>
               )}
@@ -197,7 +197,7 @@ function MailPreview({
               {html ? (
                 <pre className="text-gray-500 dark:text-gray-600">{html}</pre>
               ) : (
-                <Text className="w-full pt-6 text-center">
+                <Text className="w-full pt-4 text-center">
                   No HTML version available
                 </Text>
               )}

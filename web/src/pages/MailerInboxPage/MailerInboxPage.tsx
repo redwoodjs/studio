@@ -218,7 +218,7 @@ const MailerInboxPage = () => {
               <TabPanels>
                 <TabPanel>
                   {smtpMails.length === 0 ? (
-                    <Text className="pt-6 text-center">No mail</Text>
+                    <Text className="pt-4 text-center">No mail</Text>
                   ) : (
                     <SMTPMailTable
                       mails={smtpMails}
@@ -228,7 +228,7 @@ const MailerInboxPage = () => {
                   )}
                 </TabPanel>
                 <TabPanel>
-                  <Text className="pt-6 text-center">
+                  <Text className="pt-4 text-center">
                     Visualisation of API mail is not yet supported
                   </Text>
                 </TabPanel>
@@ -257,7 +257,7 @@ const MailerInboxPage = () => {
               >
                 {selectedMail?.smtp === undefined ||
                 selectedMail?.envelope === undefined ? (
-                  <Text className="w-full pt-6 text-center">No metadata</Text>
+                  <Text className="w-full pt-4 text-center">No metadata</Text>
                 ) : (
                   <div className="w-full overflow-auto">
                     <pre className="text-gray-500 dark:text-gray-600">
@@ -284,7 +284,7 @@ const MailerInboxPage = () => {
                 key="_attachmentsPanelTab"
               >
                 {(selectedMail?.smtp.attachments.length ?? 0) === 0 ? (
-                  <Text className="w-full pt-6 text-center">
+                  <Text className="w-full pt-4 text-center">
                     No attachments
                   </Text>
                 ) : (

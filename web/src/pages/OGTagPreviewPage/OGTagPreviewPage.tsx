@@ -50,7 +50,7 @@ function isValidHttpUrl(possibleURL: string) {
 }
 
 const OgTagPreviewPage = () => {
-  const [url, setUrl] = useState('')
+  const [url, setUrl] = useState('http://localhost:8910/')
   const [customUserAgent, setCustomUserAgent] = useState<string | null>(null)
 
   const [getOGTagPreview, ogTagPreviewQuery] =
@@ -152,7 +152,8 @@ const OgTagPreviewPage = () => {
                     <div className="h-full w-full overflow-x-auto">
                       <pre className="text-gray-500 dark:text-gray-600">
                         {JSON.stringify(
-                          ogTagPreviewQuery.data?.ogTagPreview.result,
+                          ogTagPreviewQuery.data?.ogTagPreview.result ??
+                            'No data',
                           undefined,
                           2
                         )}
@@ -161,7 +162,7 @@ const OgTagPreviewPage = () => {
                   </TabPanel>
                   <TabPanel>
                     <Flex flexDirection="col">
-                      <div className="pt-6">
+                      <div className="pt-4">
                         <Text>Not yet implemented...</Text>
                       </div>
                     </Flex>

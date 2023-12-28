@@ -8,9 +8,11 @@ const Routes = () => {
       <Set wrap={SidebarLayout}>
         <Route path="/" page={HomePage} name="home" />
 
-        <Route path="/graphql" page={GraphQLPage} name="graphql" />
+        {/* TODO: Implement functionality and restore the route */}
+        {/* <Route path="/graphql" page={GraphQLPage} name="graphql" /> */}
 
-        <Route path="/prisma" page={PrismaPage} name="prisma" />
+        {/* TODO: Implement functionality and restore the route */}
+        {/* <Route path="/prisma" page={PrismaPage} name="prisma" /> */}
 
         <Route path="/opentelemetry/traces" page={OpenTelemetryTracesPage} name="opentelemetryTraces" />
         <Route path="/opentelemetry/spans" page={OpenTelemetrySpansPage} name="opentelemetrySpans" />
