@@ -13,11 +13,11 @@
     "@opentelemetry/semantic-conventions": "^1.17.1",
     "@prisma/instrumentation": "^5.4.2",
     "@react-email/components": "^0.0.7",
-    "@redwoodjs/api": "7.0.0-canary.666",
-    "@redwoodjs/auth-dbauth-api": "7.0.0-canary.666",
-    "@redwoodjs/graphql-server": "7.0.0-canary.666",
-    "@redwoodjs/mailer-core": "7.0.0-canary.666",
-    "@redwoodjs/mailer-handler-studio": "7.0.0-canary.666",
-    "@redwoodjs/mailer-renderer-react-email": "7.0.0-canary.666"
+    "@redwoodjs/api": "7.0.0-canary.785",
+    "@redwoodjs/auth-dbauth-api": "7.0.0-canary.785",
+    "@redwoodjs/graphql-server": "7.0.0-canary.785",
+    "@redwoodjs/mailer-core": "7.0.0-canary.785",
+    "@redwoodjs/mailer-handler-studio": "7.0.0-canary.785",
+    "@redwoodjs/mailer-renderer-react-email": "7.0.0-canary.785"
   }
 }
