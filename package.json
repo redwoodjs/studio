@@ -29,6 +29,7 @@
   },
   "packageManager": "yarn@3.6.1",
   "scripts": {
+    "studio:migrate": "node ./tasks/migrate.mjs",
     "studio:package": "node ./tasks/package.mjs"
   }
 }

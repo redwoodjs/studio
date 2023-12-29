@@ -97,6 +97,8 @@ model OTelTraceResource {
 
 model OTelTraceSpan {
   id            String               @id @default(nanoid(24))
+  typeId        String
+  type          OTelTraceSpanType    @relation(fields: [typeId], references: [id])
   traceId       String
   traceState    String?
   spanId        String               @unique
@@ -118,6 +120,7 @@ model OTelTraceSpan {
   createdAt     DateTime             @default(now())
   updatedAt     DateTime             @updatedAt
 
+  @@index([typeId])
   @@index([traceId])
   @@index([spanId])
   @@index([parentId])
@@ -166,4 +169,13 @@ model OTelTraceScope {
   updatedAt  DateTime             @updatedAt
 
   @@unique([name, version])
+}
+
+model OTelTraceSpanType {
+  id        String          @id @default(nanoid(24))
+  name      String          @unique
+  colour    String          @unique
+  spans     OTelTraceSpan[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
 }

@@ -141,6 +141,9 @@ async function main() {
       dependencies: {
         ...apiDependencies,
       },
+      prisma: {
+        seed: './api/dist/lib/seed.js',
+      },
     },
     { spaces: 2 }
   )

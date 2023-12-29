@@ -76,6 +76,7 @@ CREATE TABLE "OTelTraceResource" (
 -- CreateTable
 CREATE TABLE "OTelTraceSpan" (
     "id" TEXT NOT NULL PRIMARY KEY,
+    "typeId" TEXT NOT NULL,
     "traceId" TEXT NOT NULL,
     "traceState" TEXT,
     "spanId" TEXT NOT NULL,
@@ -91,6 +92,7 @@ CREATE TABLE "OTelTraceSpan" (
     "resourceId" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "OTelTraceSpan_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES "OTelTraceSpanType" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "OTelTraceSpan_scopeId_fkey" FOREIGN KEY ("scopeId") REFERENCES "OTelTraceScope" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "OTelTraceSpan_resourceId_fkey" FOREIGN KEY ("resourceId") REFERENCES "OTelTraceResource" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
@@ -124,6 +126,14 @@ CREATE TABLE "OTelTraceScope" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "version" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "OTelTraceSpanType" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
@@ -199,6 +209,9 @@ CREATE INDEX "OTelTraceResource_attributesHash_idx" ON "OTelTraceResource"("attr
 CREATE UNIQUE INDEX "OTelTraceSpan_spanId_key" ON "OTelTraceSpan"("spanId");
 
 -- CreateIndex
+CREATE INDEX "OTelTraceSpan_typeId_idx" ON "OTelTraceSpan"("typeId");
+
+-- CreateIndex
 CREATE INDEX "OTelTraceSpan_traceId_idx" ON "OTelTraceSpan"("traceId");
 
 -- CreateIndex
@@ -230,6 +243,9 @@ CREATE INDEX "OTelTraceLink_linkedSpanId_idx" ON "OTelTraceLink"("linkedSpanId")
 
 -- CreateIndex
 CREATE UNIQUE INDEX "OTelTraceScope_name_version_key" ON "OTelTraceScope"("name", "version");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "OTelTraceSpanType_name_key" ON "OTelTraceSpanType"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_OTelTraceAttributeToOTelTraceResource_AB_unique" ON "_OTelTraceAttributeToOTelTraceResource"("A", "B");
