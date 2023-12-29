@@ -77,6 +77,7 @@ CREATE TABLE "OTelTraceResource" (
 CREATE TABLE "OTelTraceSpan" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "typeId" TEXT NOT NULL,
+    "brief" TEXT,
     "traceId" TEXT NOT NULL,
     "traceState" TEXT,
     "spanId" TEXT NOT NULL,
@@ -134,6 +135,7 @@ CREATE TABLE "OTelTraceScope" (
 CREATE TABLE "OTelTraceSpanType" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
+    "colour" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
@@ -246,6 +248,9 @@ CREATE UNIQUE INDEX "OTelTraceScope_name_version_key" ON "OTelTraceScope"("name"
 
 -- CreateIndex
 CREATE UNIQUE INDEX "OTelTraceSpanType_name_key" ON "OTelTraceSpanType"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "OTelTraceSpanType_colour_key" ON "OTelTraceSpanType"("colour");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_OTelTraceAttributeToOTelTraceResource_AB_unique" ON "_OTelTraceAttributeToOTelTraceResource"("A", "B");

@@ -6185,7 +6185,7 @@ __metadata:
     smtp-server: 3.13.0
   bin:
     rw-studio: ./api/dist/server.js
-  checksum: de9665fd04d27bd72b81678500302eccbd29ba526fe3da4acba5cdb38c4e65318b12089ddb042e3dec88fb8c9551895c68cfe7ee9bda061c276d967721ed5d59
+  checksum: a9f8dd5c14dc0c02ec12370526439a80f90d9a12f84aaab0754aed5e3f8ed4b347b64f3785d8978be7f1ce775ca9e94eaa2483f48391fa5f21b919ab1d4535c0
   languageName: node
   linkType: hard
 
@@ -20948,7 +20948,7 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@redwoodjs/core": 7.0.0-canary.785
-    "@redwoodjs/studio": ./../../packaged.tgz
+    "@redwoodjs/studio": 7.0.0-canary.785
   languageName: unknown
   linkType: soft
 

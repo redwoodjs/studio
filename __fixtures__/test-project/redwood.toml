@@ -22,4 +22,4 @@
 
 [experimental.opentelemetry]
 	enabled = true
-	apiSdk = "/Users/jgmw/Development/redwood/rw-studio/__fixtures__/test-project/api/src/opentelemetry.ts"
+	apiSdk = "/Users/jgmw/Development/redwood/rw-studio/__fixtures__/test-project/api/dist/opentelemetry.js"

@@ -7,6 +7,7 @@ import { liveQueryStore } from '@redwoodjs/realtime'
 import { db, generateTypicalValues } from 'src/lib/db'
 import { logger } from 'src/lib/logger'
 // NOTE: These types aren't perfect but they're better than 'any' everywhere
+import { detectSpanTypeAndBrief } from 'src/lib/opentelemetry'
 import {
   InstrumentationScope,
   KeyValue,
@@ -218,8 +219,14 @@ async function createSpan(span: Span, resourceId: string, scopeId: string) {
     }
   }
 
+  const { typeId: spanTypeId, brief: spanBrief } = await detectSpanTypeAndBrief(
+    { name: span.name, attributes: span.attributes }
+  )
+
   await db.oTelTraceSpan.create({
     data: {
+      typeId: spanTypeId,
+      brief: spanBrief,
       traceId: span.traceId as unknown as string,
       traceState: span.traceState,
       spanId: span.spanId as unknown as string,
@@ -260,6 +267,7 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
   // https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/trace/v1/trace.proto
 
   const { resourceSpans } = JSON.parse(event.body) as TracesData
+  let spanCount = 0
   for (let i = 0; i < resourceSpans.length; i++) {
     const resourceId = await createResource(resourceSpans[i].resource)
     const scopeSpans = resourceSpans[i].scopeSpans
@@ -268,10 +276,12 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
       const spans = scopeSpans[j].spans
       for (let k = 0; k < spans.length; k++) {
         await createSpan(spans[k], resourceId, scopeId)
+        spanCount++
       }
       logger.debug(`Ingested ${spans.length} OpenTelemetry spans`)
     }
   }
+  logger.info(`Ingested ${spanCount} OpenTelemetry resource spans...`)
 
   // Invalidate the appropriate queries
   await liveQueryStore?.invalidate('Query.otelSpans')

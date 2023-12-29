@@ -99,6 +99,7 @@ model OTelTraceSpan {
   id            String               @id @default(nanoid(24))
   typeId        String
   type          OTelTraceSpanType    @relation(fields: [typeId], references: [id])
+  brief         String?
   traceId       String
   traceState    String?
   spanId        String               @unique
