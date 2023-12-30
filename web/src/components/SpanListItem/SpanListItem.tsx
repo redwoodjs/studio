@@ -1,6 +1,8 @@
 import { CubeIcon, CubeTransparentIcon } from '@heroicons/react/outline'
 import { Badge, Button, Card, Divider, Flex, Text, Title } from '@tremor/react'
 
+import { Link, routes } from '@redwoodjs/router'
+
 const StatusBadge = ({ statusCode }: { statusCode: number }) => {
   // https://opentelemetry.io/docs/specs/otel/trace/api/#set-status
   if (statusCode === 0) {
@@ -56,7 +58,14 @@ const SpanListItem = ({ data }) => {
             <Divider className="my-2" />
             <Flex flexDirection="row" justifyContent="between">
               <div>
-                <Badge>{data.type.name}</Badge>
+                <Badge
+                  style={{
+                    backgroundColor: `#${data.type.colour}`,
+                    color: '#fff',
+                  }}
+                >
+                  {data.type.name}
+                </Badge>
               </div>
               <div>
                 <Text>
@@ -70,15 +79,19 @@ const SpanListItem = ({ data }) => {
         </div>
         <div>
           <Flex flexDirection="col" className="gap-2">
-            <Button className="p-2">
-              <CubeTransparentIcon
-                className="h-6 w-6 shrink-0"
-                aria-hidden="true"
-              />
-            </Button>
-            <Button className="p-2">
-              <CubeIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
-            </Button>
+            <Link to={routes.opentelemetryTrace({ id: data.traceId })}>
+              <Button className="p-2">
+                <CubeTransparentIcon
+                  className="h-6 w-6 shrink-0"
+                  aria-hidden="true"
+                />
+              </Button>
+            </Link>
+            <Link to={routes.opentelemetrySpan({ id: data.spanId })}>
+              <Button className="p-2">
+                <CubeIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
+              </Button>
+            </Link>
           </Flex>
         </div>
       </Flex>
