@@ -180,7 +180,9 @@ export const otelSpanAncestors: QueryResolvers['otelSpanAncestors'] = async ({
     FROM span_hierarchy;`) as {
     spanId: string
   }[]
-  const ancestorIDs = rawAncestorIDs.map((ancestor) => ancestor.spanId)
+  const ancestorIDs = rawAncestorIDs
+    .map((ancestor) => ancestor.spanId)
+    .filter((ancestor) => ancestor !== id)
 
   const rawData = await db.oTelTraceSpan.findMany({
     where: {
@@ -189,7 +191,7 @@ export const otelSpanAncestors: QueryResolvers['otelSpanAncestors'] = async ({
       },
     },
     orderBy: {
-      startTimeNano: 'desc',
+      startTimeNano: 'asc',
     },
     include: {
       attributes: true,
@@ -279,9 +281,9 @@ export const otelSpanDescendants: QueryResolvers['otelSpanDescendants'] =
   `) as {
         spanId: string
       }[]
-    const descendantIDs = rawDescendantIDs.map(
-      (descendant) => descendant.spanId
-    )
+    const descendantIDs = rawDescendantIDs
+      .map((descendant) => descendant.spanId)
+      .filter((descendant) => descendant !== id)
 
     const rawData = await db.oTelTraceSpan.findMany({
       where: {

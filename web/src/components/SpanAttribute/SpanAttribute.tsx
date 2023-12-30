@@ -9,12 +9,18 @@ export const SpanAttribute = ({
   value: any
   type: string
 }) => {
-  let valueComp = <pre>{value}</pre>
+  let valueComp = (
+    <pre className="text-sm text-tremor-content dark:text-dark-tremor-content">
+      {value}
+    </pre>
+  )
 
   try {
     const parsed = JSON.parse(value)
     valueComp = (
-      <pre className="text-sm">{JSON.stringify(parsed, undefined, 2)}</pre>
+      <pre className="text-sm text-tremor-content dark:text-dark-tremor-content">
+        {JSON.stringify(parsed, undefined, 2)}
+      </pre>
     )
   } catch (_error) {
     // We don't care

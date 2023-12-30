@@ -1,13 +1,27 @@
+import { useContext } from 'react'
+
 import { CubeTransparentIcon } from '@heroicons/react/outline'
-import { Grid, Col, Card, Text, Title, Flex, Button } from '@tremor/react'
+import {
+  Grid,
+  Col,
+  Card,
+  Text,
+  Title,
+  Flex,
+  Button,
+  Switch,
+} from '@tremor/react'
 import type { FindSpanQuery, FindSpanQueryVariables } from 'types/graphql'
 
 import { Link, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
+import { SpanGenericToggleContext } from 'src/context/SpanGenericToggleContext'
+
 import SpanAncestorsCell from '../SpanAncestorsCell'
 import { SpanAttribute } from '../SpanAttribute/SpanAttribute'
 import SpanDescendantsCell from '../SpanDescendantsCell'
+import { SpanEvent } from '../SpanEvent/SpanEvent'
 import { SpanMetadata } from '../SpanMetadata/SpanMetadata'
 import { SpanResource } from '../SpanResource/SpanResource'
 
@@ -43,6 +57,17 @@ export const QUERY = gql`
       }
       statusCode
       statusMessage
+      events {
+        id
+        name
+        attributes {
+          id
+          key
+          value
+          type
+        }
+        startTimeNano
+      }
       createdAt
     }
   }
@@ -61,6 +86,7 @@ export const Failure = ({
 export const Success = ({
   span,
 }: CellSuccessProps<FindSpanQuery, FindSpanQueryVariables>) => {
+  const { show, setShow } = useContext(SpanGenericToggleContext)
   return (
     <>
       <Flex flexDirection="row" className="gap-x-4">
@@ -111,11 +137,27 @@ export const Success = ({
           <Col numColSpan={1} numColSpanLg={1}>
             <div className="space-y-4">
               <Card>
-                <Title>Ancestors</Title>
+                <Flex flexDirection="row" justifyContent="between">
+                  <Title>Ancestors</Title>
+                  <Switch
+                    id="switch"
+                    name="switch"
+                    checked={show.ancestors}
+                    onChange={(v) => setShow({ ...show, ancestors: v })}
+                  />
+                </Flex>
                 <SpanAncestorsCell id={span.spanId} />
               </Card>
               <Card>
-                <Title>Descendants</Title>
+                <Flex flexDirection="row" justifyContent="between">
+                  <Title>Descendants</Title>
+                  <Switch
+                    id="switch"
+                    name="switch"
+                    checked={show.descendants}
+                    onChange={(v) => setShow({ ...show, descendants: v })}
+                  />
+                </Flex>
                 <SpanDescendantsCell id={span.spanId} />
               </Card>
             </div>
@@ -140,7 +182,25 @@ export const Success = ({
           </Card>
           <Card>
             <Title>Events</Title>
-            <pre className="text-xs">{JSON.stringify({}, undefined, 2)}</pre>
+            <Flex
+              flexDirection="col"
+              className="gap-2"
+              justifyContent="start"
+              alignItems="start"
+            >
+              {span.events.length > 0 ? (
+                span.events.map((event) => (
+                  <SpanEvent
+                    key={event.startTimeNano + event.name}
+                    name={event.name}
+                    attributes={event.attributes}
+                    startTimeNano={event.startTimeNano}
+                  />
+                ))
+              ) : (
+                <Text>No events...</Text>
+              )}
+            </Flex>
           </Card>
         </Grid>
       </Flex>
