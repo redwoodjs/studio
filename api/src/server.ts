@@ -59,6 +59,12 @@ async function serve() {
     }
   )
 
+  // Execute the prisma seed
+  logger.info('Running any seeding of the Prisma database')
+  await execa.command(`node ${path.join(__dirname, 'lib', 'seed.js')}`, {
+    stdio: 'inherit',
+  })
+
   // Load config
   const redwoodProjectPaths = getPaths()
   const redwoodConfig = getConfig()
