@@ -19,6 +19,8 @@ export const schema = gql`
 
   type OTelTraceSpan {
     id: String!
+    type: OTelTraceSpanType!
+    brief: String
     traceId: String!
     traceState: String
     spanId: String!
@@ -35,6 +37,14 @@ export const schema = gql`
     statusCode: Int
     scope: OTelTraceScope!
     resource: OTelTraceResource!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+  }
+
+  type OTelTraceSpanType {
+    id: String!
+    name: String!
+    colour: String!
     createdAt: DateTime!
     updatedAt: DateTime!
   }

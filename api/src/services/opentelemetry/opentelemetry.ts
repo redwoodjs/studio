@@ -29,6 +29,7 @@ export const otelSpans: QueryResolvers['otelSpans'] = async () => {
           attributes: true,
         },
       },
+      type: true,
     },
   })
 

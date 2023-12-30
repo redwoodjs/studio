@@ -12,29 +12,16 @@ const SPANS_QUERY = gql`
       id
       traceId
       spanId
-      parentId
       name
-      kind
+      brief
+      type {
+        id
+        name
+        colour
+      }
       startTimeNano
       endTimeNano
-      attributes {
-        id
-        key
-        value
-        type
-        hash
-      }
-      resource {
-        id
-        attributes {
-          id
-          key
-          value
-          type
-          hash
-        }
-        attributesHash
-      }
+      statusCode
     }
   }
 `
