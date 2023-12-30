@@ -166,6 +166,23 @@ async function main() {
   if (!verbose) {
     spinner.succeed('Archive created!')
   }
+
+  // Yarn install in the test-project
+  const testProjectPath = path.join(
+    __dirname,
+    '..',
+    '__fixtures__',
+    'test-project'
+  )
+  if (!verbose) {
+    spinner.start('Running yarn...')
+  }
+  $.cwd = testProjectPath
+  await $`yarn`
+  $.cwd = undefined
+  if (!verbose) {
+    spinner.succeed("Yarn'd")
+  }
 }
 
 main().catch((err) => {
