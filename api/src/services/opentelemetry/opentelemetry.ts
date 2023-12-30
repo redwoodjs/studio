@@ -1,5 +1,7 @@
 import { OTelTraceSpan, QueryResolvers } from 'types/graphql'
 
+import { ValidationError } from '@redwoodjs/graphql-server'
+
 import { db } from 'src/lib/db'
 
 export const otelSpans: QueryResolvers['otelSpans'] = async () => {
@@ -81,6 +83,285 @@ export const otelSpans: QueryResolvers['otelSpans'] = async () => {
 
   return completeData
 }
+
+export const otelSpan: QueryResolvers['otelSpan'] = async ({ id }) => {
+  const originalData = await db.oTelTraceSpan.findUnique({
+    where: {
+      spanId: id,
+    },
+    include: {
+      attributes: true,
+      events: {
+        include: {
+          attributes: true,
+        },
+      },
+      links: {
+        include: {
+          attributes: true,
+        },
+      },
+      scope: {
+        include: {
+          attributes: true,
+        },
+      },
+      resource: {
+        include: {
+          attributes: true,
+        },
+      },
+      type: true,
+    },
+  })
+
+  if (originalData === null) {
+    throw new ValidationError('No span with that ID found')
+  }
+
+  const attributes =
+    (await db.$queryRaw`SELECT id, [value] FROM OTelTraceAttribute;`) as {
+      id: string
+      value: string
+    }[]
+  const attributeValueMap = new Map<string, string>()
+  for (let i = 0; i < attributes.length; i++) {
+    attributeValueMap.set(attributes[i].id, attributes[i].value)
+  }
+
+  const completeData = {
+    ...originalData,
+    startTimeNano: originalData.startTimeNano.toString(),
+    endTimeNano: originalData.endTimeNano.toString(),
+    attributes: originalData.attributes.map((attribute) => ({
+      ...attribute,
+      value: JSON.parse(attributeValueMap.get(attribute.id)),
+    })),
+    events: originalData.events.map((event) => ({
+      ...event,
+      startTimeNano: event.startTimeNano.toString(),
+      attributes: event.attributes.map((attribute) => ({
+        ...attribute,
+        value: JSON.parse(attributeValueMap.get(attribute.id)),
+      })),
+    })),
+    links: originalData.links.map((link) => ({
+      ...link,
+      attributes: link.attributes.map((attribute) => ({
+        ...attribute,
+        value: JSON.parse(attributeValueMap.get(attribute.id)),
+      })),
+    })),
+    resource: {
+      ...originalData.resource,
+      attributes: originalData.resource.attributes.map((attribute) => ({
+        ...attribute,
+        value: JSON.parse(attributeValueMap.get(attribute.id)),
+      })),
+    },
+  }
+
+  return completeData
+}
+
+export const otelSpanAncestors: QueryResolvers['otelSpanAncestors'] = async ({
+  id,
+}) => {
+  const rawAncestorIDs = (await db.$queryRaw`WITH RECURSIVE span_hierarchy AS (
+      SELECT spanId, parentId
+      FROM OTelTraceSpan
+      WHERE spanId = ${id}
+      UNION ALL
+      SELECT s.spanId, s.parentId
+      FROM OTelTraceSpan s
+      JOIN span_hierarchy sh ON s.spanId = sh.parentId
+    )
+    SELECT spanId
+    FROM span_hierarchy;`) as {
+    spanId: string
+  }[]
+  const ancestorIDs = rawAncestorIDs.map((ancestor) => ancestor.spanId)
+
+  const rawData = await db.oTelTraceSpan.findMany({
+    where: {
+      spanId: {
+        in: ancestorIDs,
+      },
+    },
+    orderBy: {
+      startTimeNano: 'desc',
+    },
+    include: {
+      attributes: true,
+      events: {
+        include: {
+          attributes: true,
+        },
+      },
+      links: {
+        include: {
+          attributes: true,
+        },
+      },
+      scope: {
+        include: {
+          attributes: true,
+        },
+      },
+      resource: {
+        include: {
+          attributes: true,
+        },
+      },
+      type: true,
+    },
+  })
+
+  const attributes =
+    (await db.$queryRaw`SELECT id, [value] FROM OTelTraceAttribute;`) as {
+      id: string
+      value: string
+    }[]
+  const attributeValueMap = new Map<string, string>()
+  for (let i = 0; i < attributes.length; i++) {
+    attributeValueMap.set(attributes[i].id, attributes[i].value)
+  }
+
+  const completeData = rawData.map((data) => ({
+    ...data,
+    startTimeNano: data.startTimeNano.toString(),
+    endTimeNano: data.endTimeNano.toString(),
+    attributes: data.attributes.map((attribute) => ({
+      ...attribute,
+      value: JSON.parse(attributeValueMap.get(attribute.id)),
+    })),
+    events: data.events.map((event) => ({
+      ...event,
+      startTimeNano: event.startTimeNano.toString(),
+      attributes: event.attributes.map((attribute) => ({
+        ...attribute,
+        value: JSON.parse(attributeValueMap.get(attribute.id)),
+      })),
+    })),
+    links: data.links.map((link) => ({
+      ...link,
+      attributes: link.attributes.map((attribute) => ({
+        ...attribute,
+        value: JSON.parse(attributeValueMap.get(attribute.id)),
+      })),
+    })),
+    resource: {
+      ...data.resource,
+      attributes: data.resource.attributes.map((attribute) => ({
+        ...attribute,
+        value: JSON.parse(attributeValueMap.get(attribute.id)),
+      })),
+    },
+  }))
+
+  return completeData
+}
+
+export const otelSpanDescendants: QueryResolvers['otelSpanDescendants'] =
+  async ({ id }) => {
+    const rawDescendantIDs =
+      (await db.$queryRaw`WITH RECURSIVE span_hierarchy AS (
+        SELECT spanId, parentId
+        FROM OTelTraceSpan
+        WHERE spanId = ${id}
+        UNION ALL
+        SELECT s.spanId, s.parentId
+        FROM OTelTraceSpan s
+        JOIN span_hierarchy sh ON s.parentId = sh.spanId
+      )
+      SELECT spanId
+      FROM span_hierarchy;
+  `) as {
+        spanId: string
+      }[]
+    const descendantIDs = rawDescendantIDs.map(
+      (descendant) => descendant.spanId
+    )
+
+    const rawData = await db.oTelTraceSpan.findMany({
+      where: {
+        spanId: {
+          in: descendantIDs,
+        },
+      },
+      orderBy: {
+        startTimeNano: 'asc',
+      },
+      include: {
+        attributes: true,
+        events: {
+          include: {
+            attributes: true,
+          },
+        },
+        links: {
+          include: {
+            attributes: true,
+          },
+        },
+        scope: {
+          include: {
+            attributes: true,
+          },
+        },
+        resource: {
+          include: {
+            attributes: true,
+          },
+        },
+        type: true,
+      },
+    })
+
+    const attributes =
+      (await db.$queryRaw`SELECT id, [value] FROM OTelTraceAttribute;`) as {
+        id: string
+        value: string
+      }[]
+    const attributeValueMap = new Map<string, string>()
+    for (let i = 0; i < attributes.length; i++) {
+      attributeValueMap.set(attributes[i].id, attributes[i].value)
+    }
+
+    const completeData = rawData.map((data) => ({
+      ...data,
+      startTimeNano: data.startTimeNano.toString(),
+      endTimeNano: data.endTimeNano.toString(),
+      attributes: data.attributes.map((attribute) => ({
+        ...attribute,
+        value: JSON.parse(attributeValueMap.get(attribute.id)),
+      })),
+      events: data.events.map((event) => ({
+        ...event,
+        startTimeNano: event.startTimeNano.toString(),
+        attributes: event.attributes.map((attribute) => ({
+          ...attribute,
+          value: JSON.parse(attributeValueMap.get(attribute.id)),
+        })),
+      })),
+      links: data.links.map((link) => ({
+        ...link,
+        attributes: link.attributes.map((attribute) => ({
+          ...attribute,
+          value: JSON.parse(attributeValueMap.get(attribute.id)),
+        })),
+      })),
+      resource: {
+        ...data.resource,
+        attributes: data.resource.attributes.map((attribute) => ({
+          ...attribute,
+          value: JSON.parse(attributeValueMap.get(attribute.id)),
+        })),
+      },
+    }))
+
+    return completeData
+  }
 
 export const otelTraceIds: QueryResolvers['otelTraceIds'] = async () => {
   return await db.oTelTraceSpan

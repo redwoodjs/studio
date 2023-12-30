@@ -81,6 +81,9 @@ export const schema = gql`
 
   type Query {
     otelSpans: [OTelTraceSpan!]! @skipAuth
+    otelSpan(id: String!): OTelTraceSpan @skipAuth
+    otelSpanAncestors(id: String!): [OTelTraceSpan!]! @skipAuth
+    otelSpanDescendants(id: String!): [OTelTraceSpan!]! @skipAuth
     otelTraceIds: [String!]! @skipAuth
   }
 `
