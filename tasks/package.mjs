@@ -178,7 +178,7 @@ async function main() {
   await $`yarn`
   $.cwd = undefined
   if (!verbose) {
-    spinner.succeed("Yarn'd")
+    spinner.succeed("Yarn'd!")
   }
 }
 
