@@ -6039,7 +6039,7 @@ __metadata:
 
 "@redwoodjs/studio@file:./../../packaged.tgz::locator=root-workspace-0b6124%40workspace%3A.":
   version: 0.0.0
-  resolution: "@redwoodjs/studio@file:./../../packaged.tgz#./../../packaged.tgz::hash=cdda66&locator=root-workspace-0b6124%40workspace%3A."
+  resolution: "@redwoodjs/studio@file:./../../packaged.tgz#./../../packaged.tgz::hash=630dc0&locator=root-workspace-0b6124%40workspace%3A."
   dependencies:
     "@babel/parser": "npm:7.22.16"
     "@babel/traverse": "npm:7.22.17"
@@ -6065,7 +6065,7 @@ __metadata:
     smtp-server: "npm:3.13.0"
   bin:
     rw-studio: ./api/dist/server.js
-  checksum: dbf842056a4ba3f3df7ccb9f6ae18bc2f0ca53e4f2f2ed9ce8c28a7e2496266bd46429b82792d0bd781f9ae3d00ba0a40cdba840c87b3245e705720bddc74e8f
+  checksum: f3ccda1b9fd13a6d7f8a2d15d03f27ad442f36682f6c0d217377716d6410eafefe9c2fbc45ef884f04535b7b32fb56feb6adbcb64f2630eba80701f706315850
   languageName: node
   linkType: hard
 

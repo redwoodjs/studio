@@ -1,3 +1,4 @@
+import * as otel from '@opentelemetry/api'
 import type {
   QueryResolvers,
   MutationResolvers,
@@ -7,6 +8,10 @@ import type {
 import { db } from 'src/lib/db'
 
 export const posts: QueryResolvers['posts'] = () => {
+  otel.trace.getActiveSpan().addEvent('posts query', { foo: 'bar' })
+  otel.trace
+    .getActiveSpan()
+    .addEvent('blah', { foo: 'bar', baz: 'qux', quux: 'quuz' })
   return db.post.findMany()
 }
 
