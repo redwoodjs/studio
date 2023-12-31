@@ -90,6 +90,7 @@ export const schema = gql`
     otelSpanAncestors(id: String!): [OTelTraceSpan!]! @skipAuth
     otelSpanDescendants(id: String!): [OTelTraceSpan!]! @skipAuth
     otelTraces: [OTelTrace!]! @skipAuth
+    otelTrace(id: String!): OTelTrace @skipAuth
   }
 
   type Mutation {

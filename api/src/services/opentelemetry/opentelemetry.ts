@@ -425,3 +425,14 @@ export const otelTraces: QueryResolvers['otelTraces'] = async (args, obj) => {
     return aStartTime < bStartTime ? -1 : aStartTime > bStartTime ? 1 : 0
   })
 }
+
+// NOTE: This is very inefficient
+export const otelTrace = async ({ id }) => {
+  const spans = await otelSpans()
+  // @ts-expect-error ???
+  const traceSpans = spans.filter((span) => span.traceId === id)
+  return {
+    id,
+    spans: traceSpans,
+  }
+}

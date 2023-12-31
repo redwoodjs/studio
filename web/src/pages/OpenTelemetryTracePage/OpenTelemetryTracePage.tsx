@@ -1,31 +1,18 @@
-import { Title, Text, Flex } from '@tremor/react'
-// import { GetSpans } from 'types/graphql'
+import { useState } from 'react'
 
 import { MetaTags } from '@redwoodjs/web'
 
-// const SPANS_QUERY = gql`
-//   # Have as a live query
-//   query GetSpans {
-//     otelSpans {
-//       id
-//       traceId
-//       spanId
-//       name
-//       brief
-//       type {
-//         id
-//         name
-//         colour
-//       }
-//       startTimeNano
-//       endTimeNano
-//       statusCode
-//     }
-//   }
-// `
+import TraceCell from 'src/components/TraceCell'
+import {
+  SpanGenericToggleContext,
+  SpanGenericToggleContextType,
+} from 'src/context/SpanGenericToggleContext'
 
 const OpenTelemetryTracePage = ({ id }: { id: string }) => {
-  // const spansQuery = useQuery<GetSpans>(SPANS_QUERY)
+  const [show, setShow] = useState<SpanGenericToggleContextType['show']>({
+    ancestors: false,
+    descendants: false,
+  })
 
   return (
     <>
@@ -33,13 +20,14 @@ const OpenTelemetryTracePage = ({ id }: { id: string }) => {
         title="OpenTelemetryTrace"
         description="OpenTelemetryTrace page"
       />
-
-      <Title>OpenTelemetry Trace</Title>
-      <Text>ID: {id}</Text>
-
-      <Flex className="mt-6 space-y-6" flexDirection="col">
-        <div></div>
-      </Flex>
+      <SpanGenericToggleContext.Provider
+        value={{
+          show,
+          setShow,
+        }}
+      >
+        <TraceCell id={id} />
+      </SpanGenericToggleContext.Provider>
     </>
   )
 }
