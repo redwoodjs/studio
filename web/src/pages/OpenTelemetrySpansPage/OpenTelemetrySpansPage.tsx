@@ -1,7 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { CogIcon } from '@heroicons/react/outline'
-import { Title, Card, Text, Flex, Button, Divider } from '@tremor/react'
+import {
+  Title,
+  Card,
+  Text,
+  Flex,
+  Button,
+  Divider,
+  TextInput,
+} from '@tremor/react'
 import {
   GetSpans,
   RetypeSpansMutation,
@@ -51,6 +59,8 @@ const OpenTelemetrySpansPage = () => {
   const spansQuery = useQuery<GetSpans>(SPANS_QUERY)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [showModal, setShowModal] = useState(false)
+  const [nameFilter, setNameFilter] = useState('')
+  const [typeFilter, setTypeFilter] = useState('')
 
   const spans = spansQuery.data?.otelSpans ?? []
 
@@ -157,11 +167,34 @@ const OpenTelemetrySpansPage = () => {
 
       <Flex className="mt-6 space-y-6" flexDirection="col">
         <Card className="w-full">
-          <Text>Filtering/Searching...</Text>
+          <Text>Filtering</Text>
+          <Flex flexDirection="row" justifyContent="between" className="gap-4">
+            <TextInput
+              placeholder="Name"
+              value={nameFilter}
+              onChange={(e) => {
+                setNameFilter(e.currentTarget.value)
+              }}
+            />
+            <TextInput
+              placeholder="Type"
+              value={typeFilter}
+              onChange={(e) => {
+                setTypeFilter(e.currentTarget.value)
+              }}
+            />
+          </Flex>
         </Card>
-        {spans.map((span) => (
-          <SpanListItem key={span.id} data={span} />
-        ))}
+        {spans
+          .filter((span) => !nameFilter || span.name.includes(nameFilter))
+          .filter(
+            (span) =>
+              !typeFilter ||
+              span.type.name.toLowerCase().includes(typeFilter.toLowerCase())
+          )
+          .map((span) => (
+            <SpanListItem key={span.id} data={span} />
+          ))}
       </Flex>
     </>
   )
