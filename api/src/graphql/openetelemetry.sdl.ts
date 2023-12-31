@@ -79,12 +79,17 @@ export const schema = gql`
     updatedAt: DateTime!
   }
 
+  type OTelTrace {
+    id: String!
+    spans: [OTelTraceSpan!]!
+  }
+
   type Query {
     otelSpans: [OTelTraceSpan!]! @skipAuth
     otelSpan(id: String!): OTelTraceSpan @skipAuth
     otelSpanAncestors(id: String!): [OTelTraceSpan!]! @skipAuth
     otelSpanDescendants(id: String!): [OTelTraceSpan!]! @skipAuth
-    otelTraceIds: [String!]! @skipAuth
+    otelTraces: [OTelTrace!]! @skipAuth
   }
 
   type Mutation {

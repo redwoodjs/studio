@@ -1,21 +1,33 @@
-import { Title, Card, Text, Flex } from '@tremor/react'
-import { GetTraceIds } from 'types/graphql'
+import { Title, Text, Flex } from '@tremor/react'
+import { GetTraces } from 'types/graphql'
 
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
-import SpanListItem from 'src/components/SpanListItem/SpanListItem'
+import TraceListItem from 'src/components/TraceListItem/TraceListItem'
 
 const TRACES_QUERY = gql`
-  # Have as a live query
-  query GetTraceIds {
-    otelTraceIds
+  query GetTraces {
+    traces: otelTraces {
+      id
+      spans {
+        id
+        name
+        brief
+        startTimeNano
+        endTimeNano
+        statusCode
+        type {
+          name
+          colour
+        }
+      }
+    }
   }
 `
 
 const OpenTelemetryTracesPage = () => {
-  const tracesQuery = useQuery<GetTraceIds>(TRACES_QUERY)
-
-  const traces = tracesQuery.data?.otelTraceIds ?? []
+  const tracesQuery = useQuery<GetTraces>(TRACES_QUERY)
+  const traces = tracesQuery.data?.traces ?? []
 
   return (
     <>
@@ -24,15 +36,16 @@ const OpenTelemetryTracesPage = () => {
         description="OpenTelemetryTraces page"
       />
 
-      <Title>OpenTelemetry Traces</Title>
-      <Text>Each individual OpenTelemetry trace ingested.</Text>
+      <Flex flexDirection="row" justifyContent="between">
+        <div>
+          <Title>OpenTelemetry Traces</Title>
+          <Text>Each individual OpenTelemetry trace ingested.</Text>
+        </div>
+      </Flex>
 
       <Flex className="mt-6 space-y-6" flexDirection="col">
-        <Card className="w-full">
-          <Text>Filtering/Searching...</Text>
-        </Card>
-        {traces.map((traceId) => (
-          <SpanListItem key={traceId} data={{ traceId }} />
+        {traces.map((trace) => (
+          <TraceListItem key={trace.id} id={trace.id} spans={trace.spans} />
         ))}
       </Flex>
     </>

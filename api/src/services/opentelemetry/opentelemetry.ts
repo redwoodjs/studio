@@ -367,20 +367,6 @@ export const otelSpanDescendants: QueryResolvers['otelSpanDescendants'] =
     return completeData
   }
 
-export const otelTraceIds: QueryResolvers['otelTraceIds'] = async () => {
-  return await db.oTelTraceSpan
-    .findMany({
-      select: {
-        traceId: true,
-      },
-      orderBy: {
-        startTimeNano: 'desc',
-      },
-      distinct: ['traceId'],
-    })
-    .then((traceIds) => traceIds.map((traceId) => traceId.traceId))
-}
-
 export const otelTruncateSpans: MutationResolvers['otelTruncateSpans'] =
   async () => {
     try {
@@ -411,3 +397,31 @@ export const otelRetypeSpans: MutationResolvers['otelRetypeSpans'] =
     }
     return true
   }
+
+const bigIntMin = (...args: bigint[]) => args.reduce((m, e) => (e < m ? e : m))
+export const otelTraces: QueryResolvers['otelTraces'] = async (args, obj) => {
+  const spans = await otelSpans(args, obj)
+  const traceIds = new Set<string>()
+  for (let i = 0; i < spans.length; i++) {
+    // @ts-expect-error ???
+    traceIds.add(spans[i].traceId)
+  }
+  const traces = []
+  for (const traceId of traceIds) {
+    // @ts-expect-error ???
+    const traceSpans = spans.filter((span) => span.traceId === traceId)
+    traces.push({
+      id: traceId,
+      spans: traceSpans,
+    })
+  }
+  return traces.sort((a, b) => {
+    const aStartTime = bigIntMin(
+      ...a.spans.map((span) => BigInt(span.startTimeNano))
+    )
+    const bStartTime = bigIntMin(
+      ...b.spans.map((span) => BigInt(span.startTimeNano))
+    )
+    return aStartTime < bStartTime ? -1 : aStartTime > bStartTime ? 1 : 0
+  })
+}
