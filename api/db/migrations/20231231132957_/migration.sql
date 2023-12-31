@@ -106,7 +106,7 @@ CREATE TABLE "OTelTraceEvent" (
     "spanId" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
-    CONSTRAINT "OTelTraceEvent_spanId_fkey" FOREIGN KEY ("spanId") REFERENCES "OTelTraceSpan" ("spanId") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "OTelTraceEvent_spanId_fkey" FOREIGN KEY ("spanId") REFERENCES "OTelTraceSpan" ("spanId") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -119,7 +119,7 @@ CREATE TABLE "OTelTraceLink" (
     "linkedSpanId" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
-    CONSTRAINT "OTelTraceLink_linkedSpanId_fkey" FOREIGN KEY ("linkedSpanId") REFERENCES "OTelTraceSpan" ("spanId") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "OTelTraceLink_linkedSpanId_fkey" FOREIGN KEY ("linkedSpanId") REFERENCES "OTelTraceSpan" ("spanId") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable

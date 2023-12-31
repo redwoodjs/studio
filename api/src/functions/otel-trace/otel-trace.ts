@@ -46,10 +46,11 @@ function convertLongToBigInt({
 type LongType = Parameters<typeof convertLongToBigInt>[0]
 
 async function createAttribute(attribute: KeyValue) {
+  const hash = getMD5Hash(attribute)
   let attributeId = (
     await db.oTelTraceAttribute.findUnique({
       where: {
-        hash: getMD5Hash(attribute),
+        hash,
       },
       select: {
         id: true,
@@ -73,11 +74,11 @@ async function createAttribute(attribute: KeyValue) {
       ${id},
       ${createdAt},
       ${updatedAt},
-      ${getMD5Hash(attribute)},
+      ${hash},
       ${attribute.key},
       ${attributeValue},
       ${attributeType.replace('Value', '')}
-    )`
+    ) ON CONFLICT ([hash]) DO NOTHING;`
     if (affectedRows !== 1) {
       throw new Error('Failed to create attribute')
     }
@@ -110,7 +111,7 @@ async function createResource(
   // Create the resource
   const resourceRow = await db.oTelTraceResource.create({
     data: {
-      attributesHash: getMD5Hash(resource.attributes),
+      attributesHash: resourceAttributesHash,
       attributes: {
         connect: attributeIds.map((id) => ({ id })),
       },

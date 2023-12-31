@@ -1,8 +1,10 @@
-import { OTelTraceSpan, QueryResolvers } from 'types/graphql'
+import { MutationResolvers, OTelTraceSpan, QueryResolvers } from 'types/graphql'
 
 import { ValidationError } from '@redwoodjs/graphql-server'
 
 import { db } from 'src/lib/db'
+import { logger } from 'src/lib/logger'
+import { retypeSpan } from 'src/lib/opentelemetry'
 
 export const otelSpans: QueryResolvers['otelSpans'] = async () => {
   const incompleteData = await db.oTelTraceSpan.findMany({
@@ -378,3 +380,34 @@ export const otelTraceIds: QueryResolvers['otelTraceIds'] = async () => {
     })
     .then((traceIds) => traceIds.map((traceId) => traceId.traceId))
 }
+
+export const otelTruncateSpans: MutationResolvers['otelTruncateSpans'] =
+  async () => {
+    try {
+      await db.oTelTraceSpan.deleteMany()
+      // NOTE: We may also want to delete all attributes, events, links, scopes, etc.
+    } catch (error) {
+      logger.error(error)
+      return false
+    }
+    return true
+  }
+
+export const otelRetypeSpans: MutationResolvers['otelRetypeSpans'] =
+  async () => {
+    try {
+      // This is very inefficient and it's not atomic
+      const ids = await db.oTelTraceSpan.findMany({
+        select: {
+          id: true,
+        },
+      })
+      for (let i = 0; i < ids.length; i++) {
+        await retypeSpan({ id: ids[i].id })
+      }
+    } catch (error) {
+      logger.error(error)
+      return false
+    }
+    return true
+  }

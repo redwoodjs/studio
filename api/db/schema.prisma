@@ -136,7 +136,7 @@ model OTelTraceEvent {
   name          String
   attributes    OTelTraceAttribute[]
   spanId        String
-  span          OTelTraceSpan        @relation(fields: [spanId], references: [spanId])
+  span          OTelTraceSpan        @relation(fields: [spanId], references: [spanId], onDelete: Cascade)
   createdAt     DateTime             @default(now())
   updatedAt     DateTime             @updatedAt
 
@@ -151,7 +151,7 @@ model OTelTraceLink {
   attributes   OTelTraceAttribute[]
   flags        Int?
   linkedSpanId String
-  span         OTelTraceSpan        @relation(fields: [linkedSpanId], references: [spanId])
+  span         OTelTraceSpan        @relation(fields: [linkedSpanId], references: [spanId], onDelete: Cascade)
   createdAt    DateTime             @default(now())
   updatedAt    DateTime             @updatedAt
 

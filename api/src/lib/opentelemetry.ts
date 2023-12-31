@@ -1,6 +1,8 @@
 import { KeyValue } from 'src/types/typescript/opentelemetry/proto/common/v1/common'
 import { getUserProjectPaths } from 'src/util/project'
 
+import { db } from './db'
+
 export async function detectSpanTypeAndBrief({
   name,
   attributes,
@@ -114,6 +116,54 @@ export async function detectSpanTypeAndBrief({
   return {
     typeId: 'GENERIC',
   }
+}
+
+// This is awfully inefficient
+export async function retypeSpan({ id }: { id: string }) {
+  const span = await db.oTelTraceSpan.findUnique({
+    where: { id },
+    include: {
+      attributes: true,
+    },
+  })
+  if (!span) {
+    throw new Error(`Span not found: ${id}`)
+  }
+
+  // Convert back to KeyValue[] format
+  const attributes =
+    (await db.$queryRaw`SELECT id, [value] FROM OTelTraceAttribute;`) as {
+      id: string
+      value: string
+    }[]
+  const attributeValueMap = new Map<string, string>()
+  for (let i = 0; i < attributes.length; i++) {
+    attributeValueMap.set(attributes[i].id, attributes[i].value)
+  }
+  const convertedSpanAttributes = span.attributes.map((attribute) => ({
+    key: attribute.key,
+    value: {
+      // NOTE: Only handles string values for now, but this is fine as long as
+      // detectSpanTypeAndBrief also only handles string values
+      stringValue: attributeValueMap.get(attribute.id) ?? '',
+    },
+  }))
+
+  const { typeId, brief } = await detectSpanTypeAndBrief({
+    name: span.name,
+    attributes: convertedSpanAttributes,
+  })
+  await db.oTelTraceSpan.update({
+    where: { id },
+    data: {
+      type: {
+        connect: {
+          id: typeId,
+        },
+      },
+      brief,
+    },
+  })
 }
 
 function getRelativeCodeFilepath(filepath: string) {

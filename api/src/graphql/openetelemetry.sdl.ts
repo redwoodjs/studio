@@ -86,4 +86,9 @@ export const schema = gql`
     otelSpanDescendants(id: String!): [OTelTraceSpan!]! @skipAuth
     otelTraceIds: [String!]! @skipAuth
   }
+
+  type Mutation {
+    otelTruncateSpans: Boolean! @skipAuth
+    otelRetypeSpans: Boolean! @skipAuth
+  }
 `
