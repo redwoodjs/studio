@@ -1,15 +1,22 @@
 import { Mailer } from '@redwoodjs/mailer-core'
-import { StudioMailHandler } from '@redwoodjs/mailer-handler-studio'
+import { NodemailerMailHandler } from '@redwoodjs/mailer-handler-nodemailer'
 import { ReactEmailRenderer } from '@redwoodjs/mailer-renderer-react-email'
 
-import { logger } from './logger'
+import { logger } from 'src/lib/logger'
 
 export const mailer = new Mailer({
   handling: {
     handlers: {
-      studio: new StudioMailHandler(),
+      // TODO: Update this handler config or switch it out for a different handler completely
+      nodemailer: new NodemailerMailHandler({
+        transport: {
+          host: 'localhost',
+          port: 4319,
+          secure: false,
+        },
+      }),
     },
-    default: 'studio',
+    default: 'nodemailer',
   },
 
   rendering: {
@@ -17,10 +24,6 @@ export const mailer = new Mailer({
       reactEmail: new ReactEmailRenderer(),
     },
     default: 'reactEmail',
-  },
-
-  development: {
-    handler: 'studio',
   },
 
   logger,
