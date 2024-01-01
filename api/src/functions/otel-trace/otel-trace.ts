@@ -79,9 +79,6 @@ async function createAttribute(attribute: KeyValue) {
       ${attributeValue},
       ${attributeType.replace('Value', '')}
     ) ON CONFLICT ([hash]) DO NOTHING;`
-    if (affectedRows !== 1) {
-      throw new Error('Failed to create attribute')
-    }
     attributeId = id
   }
   return attributeId
