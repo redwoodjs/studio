@@ -427,7 +427,8 @@ export const otelTraces: QueryResolvers['otelTraces'] = async (args, obj) => {
 }
 
 // NOTE: This is very inefficient
-export const otelTrace = async ({ id }) => {
+// @ts-expect-error ???
+export const otelTrace: QueryResolvers['otelTrace'] = async ({ id }) => {
   const spans = await otelSpans()
   // @ts-expect-error ???
   const traceSpans = spans.filter((span) => span.traceId === id)
@@ -436,3 +437,36 @@ export const otelTrace = async ({ id }) => {
     spans: traceSpans,
   }
 }
+
+const buildTreeEntry = (spanId, spans) => {
+  const span = spans.find((span) => span.spanId === spanId)
+  const children = spans.filter((span) => span.parentId === spanId)
+  if (children.length === 0) {
+    return {
+      name: span.name,
+      durationMilli:
+        Number(BigInt(span.endTimeNano) - BigInt(span.startTimeNano)) /
+        1_000_000,
+    }
+  }
+  return {
+    name: span.name,
+    children: children.map((child) => buildTreeEntry(child.spanId, spans)),
+    durationMilli:
+      Number(BigInt(span.endTimeNano) - BigInt(span.startTimeNano)) / 1_000_000,
+  }
+}
+
+export const otelTraceTreeMapData: QueryResolvers['otelTraceTreeMapData'] =
+  async ({ id }, obj) => {
+    const trace = await otelTrace({ id }, obj)
+    const _rootSpans = trace.spans.filter((span) => span.parentId === null)
+    const data = {
+      name: trace.id,
+      children: [],
+    }
+    for (let i = 0; i < _rootSpans.length; i++) {
+      data.children.push(buildTreeEntry(_rootSpans[i].spanId, trace.spans))
+    }
+    return data
+  }

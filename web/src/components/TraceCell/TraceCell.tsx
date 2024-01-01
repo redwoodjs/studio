@@ -9,7 +9,6 @@ import {
   Title,
   Flex,
   Switch,
-  ProgressBar,
   Tab,
   TabGroup,
   TabList,
@@ -28,7 +27,7 @@ import { SpanGenericToggleContext } from 'src/context/SpanGenericToggleContext'
 import { LinkingIcon } from '../LinkingIcon/LinkingIcon'
 import { SpanLink } from '../SpanLink/SpanLink'
 import TraceTimeline from '../TraceTimeline/TraceTimeline'
-import TreeMapChart from '../TreeMapChart/TreeMapChart'
+import TraceTreeMap from '../TraceTreeMap/TraceTreeMap'
 
 export const QUERY = gql`
   query FindTraceQuery($id: String!) {
@@ -48,6 +47,7 @@ export const QUERY = gql`
         endTimeNano
       }
     }
+    traceTreeMapData: otelTraceTreeMapData(id: $id)
   }
 `
 
@@ -61,6 +61,7 @@ export const Failure = ({ error }: CellFailureProps<FindTraceQuery>) => (
 
 export const Success = ({
   trace,
+  traceTreeMapData,
 }: CellSuccessProps<FindTraceQuery, FindTraceQueryVariables>) => {
   const { show, setShow } = useContext(SpanGenericToggleContext)
 
@@ -98,18 +99,20 @@ export const Success = ({
             <Card className="overflow-x-scroll">
               <TabGroup>
                 <TabList>
-                  <Tab icon={MapIcon}>Map</Tab>
                   <Tab icon={ClockIcon}>Timeline</Tab>
+                  <Tab icon={MapIcon}>Map</Tab>
                 </TabList>
                 <TabPanels>
                   <TabPanel>
                     <div className="mt-4">
-                      <TreeMapChart trace={trace} />
+                      <TraceTimeline trace={trace} />
                     </div>
                   </TabPanel>
                   <TabPanel>
                     <div className="mt-4">
-                      <TraceTimeline trace={trace} />
+                      <div className="h-[500px] min-h-[500px]">
+                        <TraceTreeMap data={traceTreeMapData} />
+                      </div>
                     </div>
                   </TabPanel>
                 </TabPanels>
