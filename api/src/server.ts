@@ -14,7 +14,6 @@ import {
   redwoodFastifyGraphQLServer,
   DEFAULT_REDWOOD_FASTIFY_CONFIG,
 } from '@redwoodjs/fastify'
-import { getPaths, getConfig } from '@redwoodjs/project-config'
 
 import directives from 'src/directives/**/*.{js,ts}'
 import sdls from 'src/graphql/**/*.sdl.{js,ts}'
@@ -26,7 +25,12 @@ import { realtime } from 'src/lib/realtime'
 import { startConnectionWatching } from './util/connectionWatching'
 import { startWatchers } from './util/fsWatching'
 import { handleMail } from './util/mail'
-import { getStudioStatePath } from './util/project'
+import {
+  getUserProjectConfig,
+  getStudioPaths,
+  getStudioStatePath,
+  getStudioConfig,
+} from './util/project'
 
 async function serve() {
   logger.info('Starting RedwoodJS Studio')
@@ -66,10 +70,12 @@ async function serve() {
   })
 
   // Load config
-  const redwoodProjectPaths = getPaths()
-  const redwoodConfig = getConfig()
-  const apiRootPath = coerceRootPath(redwoodConfig.web.apiUrl)
-  const port = redwoodConfig.web.port
+  const redwoodProjectPaths = getStudioPaths()
+  const userConfig = getUserProjectConfig()
+  const studioConfig = getStudioConfig()
+  const apiRootPath = coerceRootPath(studioConfig.web.apiUrl)
+  // @ts-expect-error TODO: Update redwoodjs/project-config to vaoid experimental
+  const port = userConfig.studio.port
   config({
     path: path.join(redwoodProjectPaths.base, '.env'),
     defaults: path.join(redwoodProjectPaths.base, '.env.defaults'),
