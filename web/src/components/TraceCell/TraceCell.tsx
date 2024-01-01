@@ -27,6 +27,8 @@ import { SpanGenericToggleContext } from 'src/context/SpanGenericToggleContext'
 
 import { LinkingIcon } from '../LinkingIcon/LinkingIcon'
 import { SpanLink } from '../SpanLink/SpanLink'
+import TraceTimeline from '../TraceTimeline/TraceTimeline'
+import TreeMapChart from '../TreeMapChart/TreeMapChart'
 
 export const QUERY = gql`
   query FindTraceQuery($id: String!) {
@@ -102,26 +104,12 @@ export const Success = ({
                 <TabPanels>
                   <TabPanel>
                     <div className="mt-4">
-                      <Flex>
-                        <Text className="w-full">Product Y</Text>
-                        <Flex className="space-x-2" justifyContent="end">
-                          <Text>$ 108,799</Text>
-                          <Text>38%</Text>
-                        </Flex>
-                      </Flex>
-                      <ProgressBar value={38} className="mt-2" />
+                      <TreeMapChart trace={trace} />
                     </div>
                   </TabPanel>
                   <TabPanel>
                     <div className="mt-4">
-                      <Flex>
-                        <Text className="w-full">Product Z</Text>
-                        <Flex className="space-x-2" justifyContent="end">
-                          <Text>$ 99,484</Text>
-                          <Text>16%</Text>
-                        </Flex>
-                      </Flex>
-                      <ProgressBar value={12} className="mt-2" />
+                      <TraceTimeline trace={trace} />
                     </div>
                   </TabPanel>
                 </TabPanels>

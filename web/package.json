@@ -17,9 +17,11 @@
     "@redwoodjs/router": "7.0.0-canary.785",
     "@redwoodjs/web": "7.0.0-canary.785",
     "@tremor/react": "3.12.1",
+    "apexcharts": "^3.45.1",
     "buffer": "6.0.3",
     "prop-types": "15.8.1",
     "react": "0.0.0-experimental-e5205658f-20230913",
+    "react-apexcharts": "^1.4.1",
     "react-dom": "0.0.0-experimental-e5205658f-20230913",
     "reactflow": "11.8.3"
   },
