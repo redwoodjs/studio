@@ -86,6 +86,17 @@ export const resyncMailTemplate: MutationResolvers['resyncMailTemplate'] =
                 }
               })
               props = JSON.stringify(propsForJson, undefined, 2)
+            } else if (
+              t.isAssignmentPattern(propsParam) &&
+              t.isObjectPattern(propsParam.left)
+            ) {
+              const propsForJson = {}
+              propsParam.left.properties.forEach((prop) => {
+                if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
+                  propsForJson[prop.key.name] = '?'
+                }
+              })
+              props = JSON.stringify(propsForJson, undefined, 2)
             }
           }
           components.push({ name, props })
@@ -297,10 +308,10 @@ export const resyncMailTemplate: MutationResolvers['resyncMailTemplate'] =
 //   }
 
 export const mailRenderedTemplate: QueryResolvers['mailRenderedTemplate'] =
-  async () => {
+  async ({ templateId, componentId, rendererId, props }) => {
     return {
       id: '',
-      props: {},
+      props: props,
       html: '',
       text: '',
     }
