@@ -2,7 +2,6 @@ import path from 'node:path'
 
 import type { MutationResolvers, QueryResolvers } from 'types/graphql'
 
-// import { SyntaxError, UserInputError } from '@redwoodjs/graphql-server'
 import { UserInputError } from '@redwoodjs/graphql-server'
 import { resolveFile } from '@redwoodjs/project-config'
 import {
@@ -11,13 +10,11 @@ import {
 } from '@redwoodjs/realtime'
 
 import { db } from 'src/lib/db'
-// import { importFresh } from 'src/util/import'
 import { extractMailComponents } from 'src/util/ast'
 import { importFresh } from 'src/util/import'
 import {
   getFilesInDirectory,
   getUserProjectMailer,
-  // getUserProjectMailer,
   getUserProjectPaths,
 } from 'src/util/project'
 

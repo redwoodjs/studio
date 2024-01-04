@@ -13,7 +13,8 @@ import {
 } from '@react-email/components'
 
 export function ExampleEmail(
-  { when }: { when: string } = { when: new Date().toLocaleString() }
+  // { when }: { when: string } = { when: new Date().toLocaleString() }
+  props: any
 ) {
   return (
     <Html lang="en">
@@ -30,7 +31,7 @@ export function ExampleEmail(
             </Text>
             <Hr className="mx-0 my-[26px] w-full border border-solid border-[#eaeaea]" />
             <Text className="text-[12px] leading-[24px] text-[#666666]">
-              Message was sent on {when}
+              Message was sent on {props.when}
             </Text>
           </Container>
         </Body>
@@ -39,25 +40,23 @@ export function ExampleEmail(
   )
 }
 
-export function SecondEmail(
-  { when }: { when: string } = { when: new Date().toLocaleString() }
-) {
+export const WelcomeEmail = ({ name }: { name: string }) => {
   return (
     <Html lang="en">
       <Head />
-      <Preview>An TESTING email</Preview>
+      <Preview>A welcome email</Preview>
       <Tailwind>
         <Body className="mx-auto my-auto bg-white font-sans">
           <Container className="mx-auto my-[40px] rounded border border-solid border-gray-200 p-[20px]">
             <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-              TESTING Email
+              Welcome Email
             </Heading>
             <Text className="text-[14px] leading-[24px] text-black">
-              This is an example email which you can customise to your needs.
+              This is a welcome email which you can customise to your needs.
             </Text>
             <Hr className="mx-0 my-[26px] w-full border border-solid border-[#eaeaea]" />
             <Text className="text-[12px] leading-[24px] text-[#666666]">
-              Message was sent on {when}
+              {name}
             </Text>
           </Container>
         </Body>
