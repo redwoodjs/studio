@@ -128,6 +128,7 @@ async function main() {
   if (!verbose) {
     spinner.start('Setting dependencies...')
   }
+  const rootPackageJSON = fs.readJSONSync(path.join(studioDir, 'package.json'))
   const apiDependencies = fs.readJSONSync(
     path.join(studioDir, 'api', 'package.json')
   ).dependencies
@@ -135,6 +136,15 @@ async function main() {
     path.join(packagedDir, 'package.json'),
     {
       name: '@redwoodjs/studio',
+      version: rootPackageJSON.version,
+      description: "Redwood's development studio",
+      repository: {
+        type: 'git',
+        url: 'https://github.com/redwoodjs/rw-studio.git',
+      },
+      license: 'MIT',
+      main: 'api/dist/server.js',
+      files: ['api', 'web', 'redwood.toml'],
       bin: {
         'rw-studio': './api/dist/server.js',
       },
