@@ -3,7 +3,6 @@
 .env
 .netlify
 .redwood/*
-.packaged/*
 !.redwood/README.md
 dev.db*
 dist
@@ -14,6 +13,7 @@ web/public/mockServiceWorker.js
 web/types/graphql.d.ts
 api/types/graphql.d.ts
 api/src/lib/generateGraphiQLHeader.*
+api/db/client
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -21,3 +21,6 @@ api/src/lib/generateGraphiQLHeader.*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+packaged
+packaged.tgz

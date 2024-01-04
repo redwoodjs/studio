@@ -1,17 +1,23 @@
 export const schema = gql`
-  type MailInboxEntry {
+  type MailAPIInboxEntry {
     id: ID!
-    source: String!
-    api: JSON
-    text: String
+    api: JSON!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+  }
+
+  type MailSMTPInboxEntry {
+    id: ID!
+    plaintext: String
     html: String
-    smtp: JSON
-    envelope: JSON
+    smtp: JSON!
+    envelope: JSON!
     createdAt: DateTime!
     updatedAt: DateTime!
   }
 
   type Query {
-    mailInboxEntries(source: String!): [MailInboxEntry!]! @skipAuth
+    mailAPIInboxEntries: [MailAPIInboxEntry!]! @skipAuth
+    mailSMTPInboxEntries: [MailSMTPInboxEntry!]! @skipAuth
   }
 `

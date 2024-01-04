@@ -3,8 +3,7 @@ import type { SMTPServerDataStream, SMTPServerSession } from 'smtp-server'
 
 import { liveQueryStore } from '@redwoodjs/realtime'
 
-import { db } from 'src/lib/drizzle/db'
-import { mailInboxEntryTable } from 'src/lib/drizzle/schema'
+import { db, generateTypicalValues } from 'src/lib/db'
 import { logger } from 'src/lib/logger'
 
 export function handleMail(
@@ -19,20 +18,21 @@ export function handleMail(
       return
     }
 
-    // This entry was received via SMTP and not the API endpoint
-    db.insert(mailInboxEntryTable)
-      .values({
-        source: 'SMTP',
-        smtp: mail,
-        envelope: session.envelope,
-        html: mail.html || null,
-        text: mail.text || null,
-      })
-      .run()
+    const { id: rowId, createdAt, updatedAt } = generateTypicalValues()
+    const smtpJSON = JSON.stringify(mail)
+    const envelopeJSON = JSON.stringify(session.envelope)
+    const rowsAffected =
+      await db.$executeRaw`INSERT INTO MailSMTPInboxEntry (id, createdAt, updatedAt, smtp, envelope, html, plaintext) VALUES (${rowId}, ${createdAt}, ${updatedAt}, ${smtpJSON}, ${envelopeJSON}, ${
+        mail.html ?? 'NULL'
+      }, ${mail.text ?? 'NULL'});`
+    if (rowsAffected < 1) {
+      logger.error('Error inserting mail into database')
+      callback()
+      return
+    }
 
-    // Invalidate the live query for the mailInbox
-    // TODO: Is there a way to say only invalidate the query for the SMTP source?
-    await liveQueryStore?.invalidate('Query.mailInbox')
+    // Invalidate the live query for the mailSMTPInboxEntries query
+    await liveQueryStore?.invalidate('Query.mailSMTPInboxEntries')
 
     callback()
   })

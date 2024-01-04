@@ -1,6 +1,10 @@
+// Notes:
+//  - I wish we could customise the nanoid alphabet: https://github.com/prisma/prisma/issues/17294
+//  - I REALLY wish json was directly supported: https://github.com/prisma/prisma/issues/3786
+
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL_PRISMA")
+  url      = env("RWSTUDIO_DATABASE_URL")
 }
 
 generator client {
@@ -14,4 +18,166 @@ model ConnectionStatus {
   developmentServer Boolean  @default(false)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+}
+
+model MailRenderer {
+  id        String   @id @default(nanoid(24))
+  key       String   @unique
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MailTemplate {
+  id         String                  @id @default(nanoid(24))
+  name       String
+  path       String                  @unique
+  components MailTemplateComponent[]
+  createdAt  DateTime                @default(now())
+  updatedAt  DateTime                @updatedAt
+}
+
+model MailTemplateComponent {
+  id             String       @id @default(nanoid(24))
+  name           String
+  mailTemplateId String
+  template       MailTemplate @relation(fields: [mailTemplateId], references: [id], onDelete: Cascade)
+  propsTemplate  String       @default("")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([mailTemplateId, name])
+  @@index([mailTemplateId])
+}
+
+model MailSMTPInboxEntry {
+  id        String              @id @default(nanoid(24))
+  plaintext String?
+  html      String?
+  smtp      Unsupported("JSON")
+  envelope  Unsupported("JSON")
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+}
+
+model MailAPIInboxEntry {
+  id        String              @id @default(nanoid(24))
+  api       Unsupported("JSON")
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+}
+
+model OTelTraceAttribute {
+  id        String              @id @default(nanoid(24))
+  hash      String              @unique
+  key       String
+  type      String
+  value     Unsupported("JSON")
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  resources OTelTraceResource[]
+  spans     OTelTraceSpan[]
+  events    OTelTraceEvent[]
+  links     OTelTraceLink[]
+  scopes    OTelTraceScope[]
+
+  @@index([hash])
+  @@index([key])
+}
+
+model OTelTraceResource {
+  id             String               @id @default(nanoid(24))
+  attributesHash String               @unique
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  attributes     OTelTraceAttribute[]
+  spans          OTelTraceSpan[]
+
+  @@index([attributesHash])
+}
+
+model OTelTraceSpan {
+  id            String               @id @default(nanoid(24))
+  typeId        String
+  type          OTelTraceSpanType    @relation(fields: [typeId], references: [id])
+  brief         String?
+  traceId       String
+  traceState    String?
+  spanId        String               @unique
+  parentId      String?
+  name          String
+  flags         Int?
+  kind          Int
+  startTimeNano BigInt
+  endTimeNano   BigInt
+  attributes    OTelTraceAttribute[]
+  events        OTelTraceEvent[]
+  links         OTelTraceLink[]
+  statusMessage String?
+  statusCode    Int?
+  scopeId       String
+  scope         OTelTraceScope       @relation(fields: [scopeId], references: [id])
+  resourceId    String
+  resource      OTelTraceResource    @relation(fields: [resourceId], references: [id])
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  @@index([typeId])
+  @@index([traceId])
+  @@index([spanId])
+  @@index([parentId])
+  @@index([statusCode])
+  @@index([scopeId])
+  @@index([resourceId])
+}
+
+model OTelTraceEvent {
+  id            String               @id @default(nanoid(24))
+  startTimeNano BigInt
+  name          String
+  attributes    OTelTraceAttribute[]
+  spanId        String
+  span          OTelTraceSpan        @relation(fields: [spanId], references: [spanId], onDelete: Cascade)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  @@index([spanId])
+}
+
+model OTelTraceLink {
+  id           String               @id @default(nanoid(24))
+  traceId      String
+  spanId       String
+  traceState   String?
+  attributes   OTelTraceAttribute[]
+  flags        Int?
+  linkedSpanId String
+  span         OTelTraceSpan        @relation(fields: [linkedSpanId], references: [spanId], onDelete: Cascade)
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@index([traceId])
+  @@index([spanId])
+  @@index([linkedSpanId])
+}
+
+model OTelTraceScope {
+  id         String               @id @default(nanoid(24))
+  name       String
+  version    String?
+  spans      OTelTraceSpan[]
+  attributes OTelTraceAttribute[]
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+
+  @@unique([name, version])
+}
+
+model OTelTraceSpanType {
+  id        String          @id @default(nanoid(24))
+  name      String          @unique
+  colour    String          @unique
+  spans     OTelTraceSpan[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
 }

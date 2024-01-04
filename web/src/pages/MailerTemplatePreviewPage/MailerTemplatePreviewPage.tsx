@@ -40,7 +40,7 @@ const TEMPLATES_QUERY = gql`
       components {
         id
         name
-        propsPreview
+        propsTemplate
       }
     }
   }
@@ -288,12 +288,12 @@ const MailerTemplatePreviewPage = () => {
             {
               // TODO: Animate this in and out
               selectedTemplateComponent !== undefined &&
-                selectedTemplateComponent.propsPreview !== null && (
+                selectedTemplateComponent.propsTemplate !== null && (
                   <Flex className="pt-6" flexDirection="col" alignItems="start">
                     <Text>Props</Text>
                     <textarea
                       id="mailPreviewPropsInputTextarea"
-                      placeholder={selectedTemplateComponent.propsPreview}
+                      placeholder={selectedTemplateComponent.propsTemplate}
                       rows={3}
                       className="w-full resize-y border text-gray-500 dark:bg-gray-800 dark:text-gray-600"
                       onChange={(e) => {

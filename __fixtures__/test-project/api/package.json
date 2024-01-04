@@ -1,0 +1,27 @@
+{
+  "name": "api",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@opentelemetry/api": "^1.6.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.44.0",
+    "@opentelemetry/instrumentation": "^0.44.0",
+    "@opentelemetry/instrumentation-fastify": "^0.32.3",
+    "@opentelemetry/instrumentation-http": "^0.44.0",
+    "@opentelemetry/resources": "^1.17.1",
+    "@opentelemetry/sdk-node": "^0.44.0",
+    "@opentelemetry/semantic-conventions": "^1.17.1",
+    "@prisma/instrumentation": "^5.4.2",
+    "@react-email/components": "^0.0.12",
+    "@redwoodjs/api": "7.0.0-canary.785",
+    "@redwoodjs/auth-dbauth-api": "7.0.0-canary.785",
+    "@redwoodjs/graphql-server": "7.0.0-canary.785",
+    "@redwoodjs/mailer-core": "7.0.0-canary.785",
+    "@redwoodjs/mailer-handler-nodemailer": "7.0.0-canary.785",
+    "@redwoodjs/mailer-renderer-react-email": "7.0.0-canary.785"
+  },
+  "devDependencies": {
+    "@redwoodjs/mailer-handler-in-memory": "7.0.0-canary.785",
+    "@redwoodjs/mailer-handler-studio": "7.0.0-canary.785"
+  }
+}

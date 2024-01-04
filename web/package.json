@@ -13,10 +13,12 @@
   "dependencies": {
     "@headlessui/react": "1.7.17",
     "@heroicons/react": "1.0.6",
-    "@redwoodjs/forms": "7.0.0-canary.348",
-    "@redwoodjs/router": "7.0.0-canary.348",
-    "@redwoodjs/web": "7.0.0-canary.348",
-    "@tremor/react": "3.6.6",
+    "@nivo/core": "^0.84.0",
+    "@nivo/treemap": "^0.84.0",
+    "@redwoodjs/forms": "7.0.0-canary.785",
+    "@redwoodjs/router": "7.0.0-canary.785",
+    "@redwoodjs/web": "7.0.0-canary.785",
+    "@tremor/react": "3.12.1",
     "buffer": "6.0.3",
     "prop-types": "15.8.1",
     "react": "0.0.0-experimental-e5205658f-20230913",
@@ -24,7 +26,9 @@
     "reactflow": "11.8.3"
   },
   "devDependencies": {
-    "@redwoodjs/vite": "7.0.0-canary.348",
+    "@redwoodjs/vite": "7.0.0-canary.785",
+    "@types/react": "18.2.37",
+    "@types/react-dom": "18.2.15",
     "autoprefixer": "10.4.15",
     "open-graph-scraper": "^6.2.2",
     "postcss": "8.4.29",

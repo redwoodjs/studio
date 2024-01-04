@@ -11,7 +11,7 @@ export const schema = gql`
   type MailTemplateComponent {
     id: ID!
     name: String!
-    propsPreview: String
+    propsTemplate: String
     createdAt: DateTime!
     updatedAt: DateTime!
   }

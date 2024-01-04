@@ -1,25 +1,36 @@
-import { desc, eq } from 'drizzle-orm'
 import type { QueryResolvers } from 'types/graphql'
 
-import { UserInputError } from '@redwoodjs/graphql-server'
+import { db } from 'src/lib/db'
 
-import { db } from 'src/lib/drizzle/db'
-import {
-  mailInboxEntryTable,
-  type MailInboxEntry,
-} from 'src/lib/drizzle/schema'
-
-export const mailInboxEntries: QueryResolvers['mailInboxEntries'] = async ({
-  source,
-}) => {
-  if (source !== 'SMTP' && source !== 'API') {
-    throw new UserInputError(`Invalid source: "${source}"`)
+export const mailAPIInboxEntries: QueryResolvers['mailAPIInboxEntries'] =
+  async () => {
+    const mail =
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (await db.$queryRaw`SELECT id, api, createdAt, updatedAt FROM MailAPIInboxEntry ORDER BY createdAt DESC;`) as any[]
+    return mail.map((entry) => {
+      return {
+        id: entry.id,
+        api: JSON.parse(entry.api),
+        createdAt: entry.createdAt,
+        updatedAt: entry.updatedAt,
+      }
+    })
   }
 
-  return db
-    .select()
-    .from(mailInboxEntryTable)
-    .where(eq(mailInboxEntryTable.source, source as MailInboxEntry['source']))
-    .orderBy(desc(mailInboxEntryTable.createdAt))
-    .all()
-}
+export const mailSMTPInboxEntries: QueryResolvers['mailSMTPInboxEntries'] =
+  async () => {
+    const mails =
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (await db.$queryRaw`SELECT id, plaintext, html, smtp, envelope, createdAt, updatedAt FROM MailSMTPInboxEntry ORDER BY createdAt DESC;`) as any[]
+    return mails.map((entry) => {
+      return {
+        id: entry.id,
+        plaintext: entry.plaintext,
+        html: entry.html,
+        smtp: JSON.parse(entry.smtp),
+        envelope: JSON.parse(entry.envelope),
+        createdAt: entry.createdAt,
+        updatedAt: entry.updatedAt,
+      }
+    })
+  }

@@ -1,25 +1,16 @@
-import fs from 'node:fs'
 import path from 'node:path'
 
-import { parse as babelParse } from '@babel/parser'
-import traverse from '@babel/traverse'
-import * as t from '@babel/types'
-import { and, asc, eq, notInArray } from 'drizzle-orm'
 import type { MutationResolvers, QueryResolvers } from 'types/graphql'
 
-import { SyntaxError, UserInputError } from '@redwoodjs/graphql-server'
+import { UserInputError } from '@redwoodjs/graphql-server'
 import { resolveFile } from '@redwoodjs/project-config'
 import {
   type LiveQueryStorageMechanism,
   liveQueryStore,
 } from '@redwoodjs/realtime'
 
-import { db } from 'src/lib/drizzle/db'
-import {
-  mailRendererTable,
-  mailTemplateComponentTable,
-  mailTemplateTable,
-} from 'src/lib/drizzle/schema'
+import { db } from 'src/lib/db'
+import { extractMailComponents } from 'src/util/ast'
 import { importFresh } from 'src/util/import'
 import {
   getFilesInDirectory,
@@ -28,11 +19,13 @@ import {
 } from 'src/util/project'
 
 export const mailTemplates: QueryResolvers['mailTemplates'] = async () => {
-  return await db.query.mailTemplateTable.findMany({
-    with: {
+  return await db.mailTemplate.findMany({
+    include: {
       components: true,
     },
-    orderBy: [asc(mailTemplateTable.name)],
+    orderBy: {
+      name: 'asc',
+    },
   })
 }
 
@@ -52,151 +45,91 @@ export const resyncMailTemplate: MutationResolvers['resyncMailTemplate'] =
       )
     )
 
-    // Extract the components from the template
-    // We use the src version so things are not in anyway mutated by the build process
-    const plugins = []
-    if (templateSrcPath.endsWith('.tsx')) {
-      plugins.push('typescript')
-      plugins.push('jsx')
-    } else if (templateSrcPath.endsWith('.jsx')) {
-      plugins.push('jsx')
-    }
-    const templateAST = babelParse(fs.readFileSync(templateSrcPath, 'utf8'), {
-      plugins,
-      sourceType: 'unambiguous',
+    // Check the template
+    const templateName =
+      templateInProjectPathWithoutExtension.split('/').pop() ??
+      templateInProjectPathWithoutExtension
+    let template = await db.mailTemplate.findUnique({
+      where: {
+        path: templateInProjectPathWithoutExtension,
+      },
     })
+    if (!template) {
+      template = await db.mailTemplate.create({
+        data: {
+          path: templateInProjectPathWithoutExtension,
+          name: templateName,
+        },
+      })
+    }
 
     // Extract the components from the template
-    const components = []
-    traverse(templateAST, {
-      ExportNamedDeclaration(path) {
-        if (t.isFunctionDeclaration(path.node.declaration)) {
-          // extract the name
-          const name = path.node.declaration.id.name
-          // extract the props
-          let props: string | null = null
-          if (path.node.declaration.params.length > 0) {
-            // We know we only care about the first param - the component props
-            const propsParam = path.node.declaration.params[0]
-            if (t.isIdentifier(propsParam)) {
-              props = propsParam.name
-            } else if (t.isObjectPattern(propsParam)) {
-              // We want a { param: ?, param2: ? } style string
-              const propsForJson = {}
-              propsParam.properties.forEach((prop) => {
-                if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
-                  propsForJson[prop.key.name] = '?'
-                }
-              })
-              props = JSON.stringify(propsForJson, undefined, 2)
-            }
-          }
-          components.push({ name, props })
-        }
+    const components = extractMailComponents(templateSrcPath)
+    const upsertedIds = []
+    for (const component of components) {
+      let componentInDb = await db.mailTemplateComponent.findFirst({
+        where: {
+          AND: [
+            {
+              name: component.name,
+            },
+            {
+              mailTemplateId: template.id,
+            },
+          ],
+        },
+      })
+      if (!componentInDb) {
+        componentInDb = await db.mailTemplateComponent.create({
+          data: {
+            name: component.name,
+            propsTemplate: component.props,
+            mailTemplateId: template.id,
+          },
+        })
+      } else {
+        await db.mailTemplateComponent.update({
+          where: {
+            id: componentInDb.id,
+          },
+          data: {
+            propsTemplate: component.props,
+          },
+        })
+      }
+      upsertedIds.push(componentInDb.id)
+    }
+
+    // Delete any components that no longer exist
+    await db.mailTemplateComponent.deleteMany({
+      where: {
+        AND: [
+          {
+            mailTemplateId: template.id,
+          },
+          {
+            NOT: {
+              id: {
+                in: upsertedIds,
+              },
+            },
+          },
+        ],
       },
     })
 
-    const existingTemplate = db
-      .select({
-        id: mailTemplateTable.id,
-      })
-      .from(mailTemplateTable)
-      .where(eq(mailTemplateTable.path, templateInProjectPathWithoutExtension))
-      .get()
-
-    let templateId = existingTemplate?.id
-    if (templateId) {
-      db.update(mailTemplateTable)
-        .set({
-          name:
-            templateInProjectPathWithoutExtension.split('/').pop() ??
-            templateInProjectPathWithoutExtension,
-        })
-        .where(eq(mailTemplateTable.id, templateId))
-        .run()
-    } else {
-      templateId = db
-        .insert(mailTemplateTable)
-        .values({
-          name:
-            templateInProjectPathWithoutExtension.split('/').pop() ??
-            templateInProjectPathWithoutExtension,
-          path: templateInProjectPathWithoutExtension,
-        })
-        .returning({
-          id: mailTemplateTable.id,
-        })
-        .get()?.id
-    }
-
-    const upsertedComponentIds: string[] = []
-    for (let i = 0; i < components.length; i++) {
-      let componentId = db
-        .select({
-          id: mailTemplateComponentTable.id,
-        })
-        .from(mailTemplateComponentTable)
-        .where(
-          and(
-            eq(mailTemplateComponentTable.templateId, templateId),
-            eq(mailTemplateComponentTable.name, components[i].name)
-          )
-        )
-        .get()?.id
-
-      if (componentId) {
-        db.update(mailTemplateComponentTable)
-          .set({
-            propsPreview: components[i].props,
-          })
-          .where(eq(mailTemplateComponentTable.id, componentId))
-          .run()
-        upsertedComponentIds.push(componentId)
-        continue
-      }
-
-      componentId = db
-        .insert(mailTemplateComponentTable)
-        .values({
-          name: components[i].name,
-          templateId: templateId,
-          propsPreview: components[i].props,
-        })
-        .returning({
-          id: mailTemplateComponentTable.id,
-        })
-        .get()?.id
-      if (componentId) {
-        upsertedComponentIds.push(componentId)
-      }
-    }
-
-    if (upsertedComponentIds.length > 0) {
-      db.delete(mailTemplateComponentTable)
-        .where(
-          and(
-            eq(mailTemplateComponentTable.templateId, templateId),
-            notInArray(mailTemplateComponentTable.id, upsertedComponentIds)
-          )
-        )
-        .run()
-    } else {
-      db.delete(mailTemplateComponentTable)
-        .where(eq(mailTemplateComponentTable.templateId, templateId))
-        .run()
-    }
-
     const filesInDist = getFilesInDirectory(mailDistPath)
-    db.delete(mailTemplateTable)
-      .where(
-        notInArray(
-          mailTemplateTable.path,
-          filesInDist.map((file) =>
-            file.substring(mailDistPath.length + 1, file.length - 3)
-          )
-        )
-      )
-      .run()
+    await db.mailTemplate.deleteMany({
+      where: {
+        NOT: {
+          path: {
+            in: filesInDist.map((file) =>
+              file.substring(mailDistPath.length + 1, file.length - 3)
+            ),
+          },
+        },
+      },
+    })
 
     // Invalidate the live query
     const lqs = (ctx?.context?.liveQueryStore ??
@@ -216,44 +149,38 @@ export const mailRenderedTemplate: QueryResolvers['mailRenderedTemplate'] =
       throw new UserInputError(`Invalid props JSON`)
     }
 
-    const template = db
-      .select({
-        id: mailTemplateTable.id,
-        name: mailTemplateTable.name,
-        path: mailTemplateTable.path,
-      })
-      .from(mailTemplateTable)
-      .where(eq(mailTemplateTable.id, templateId))
-      .get()
+    const template = await db.mailTemplate.findUnique({
+      where: {
+        id: templateId,
+      },
+    })
     if (!template) {
       throw new UserInputError(`Could not find template with id ${templateId}`)
     }
 
-    const component = db
-      .select({
-        name: mailTemplateComponentTable.name,
-      })
-      .from(mailTemplateComponentTable)
-      .where(
-        and(
-          eq(mailTemplateComponentTable.id, componentId),
-          eq(mailTemplateComponentTable.templateId, template.id)
-        )
-      )
-      .get()
+    const component = await db.mailTemplateComponent.findFirst({
+      where: {
+        AND: [
+          {
+            id: componentId,
+          },
+          {
+            mailTemplateId: template.id,
+          },
+        ],
+      },
+    })
     if (!component) {
       throw new UserInputError(
         `Could not find component with id ${componentId} for template ${templateId}`
       )
     }
 
-    const renderer = db
-      .select({
-        key: mailRendererTable.key,
-      })
-      .from(mailRendererTable)
-      .where(eq(mailRendererTable.id, rendererId))
-      .get()
+    const renderer = await db.mailRenderer.findUnique({
+      where: {
+        id: rendererId,
+      },
+    })
     if (!renderer) {
       throw new UserInputError(`Could not find renderer with id ${rendererId}`)
     }
@@ -267,7 +194,7 @@ export const mailRenderedTemplate: QueryResolvers['mailRenderedTemplate'] =
     const importedTemplate = await importFresh(templatePath)
     const importedComponent = importedTemplate[component.name]
     if (!importedComponent) {
-      throw new UserInputError(
+      throw new Error(
         `Could not find component ${component.name} in template ${template.name}`
       )
     }
@@ -275,17 +202,18 @@ export const mailRenderedTemplate: QueryResolvers['mailRenderedTemplate'] =
     // Import the renderer
     const mailer = await getUserProjectMailer()
     if (!mailer) {
-      throw new UserInputError(`Could not find mailer in project`)
+      throw new Error(`Could not find mailer in project`)
     }
 
     let renderResult
     try {
+      // @ts-expect-error TODO: Fix this type issue
       renderResult = await mailer.renderers[renderer.key].render(
         importedComponent(propsJSON),
         {} // TODO: We need a way for the user to specify the render options
       )
     } catch (error) {
-      throw new SyntaxError(`Error rendering template: ${error.message}`)
+      throw new Error(`Error rendering template: ${error.message}`)
     }
 
     return {

@@ -16,7 +16,7 @@ const PrismaPage = () => {
         {/* Timeline */}
         <Col numColSpanLg={6}>
           <Card className="h-full">
-            <div className="h-full" />
+            <Text>Timeline: Coming soon!</Text>
           </Card>
         </Col>
 

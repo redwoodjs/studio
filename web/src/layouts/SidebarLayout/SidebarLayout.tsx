@@ -8,15 +8,17 @@ import {
   HomeIcon,
   MailIcon,
   InboxIcon,
-  DatabaseIcon,
+  // DatabaseIcon,
   AdjustmentsIcon,
+  CubeIcon,
+  CubeTransparentIcon,
 } from '@heroicons/react/outline'
 import { Title } from '@tremor/react'
 import { GetConnectionStatus } from 'types/graphql'
 
 import { NavLink, routes } from '@redwoodjs/router'
 
-import { GraphQLIcon } from 'src/icons/GraphQL'
+// import { GraphQLIcon } from 'src/icons/GraphQL'
 
 // TODO: Move this out into a context so we can warn users on any page that needs the development server
 //       to be running to work correctly
@@ -87,7 +89,7 @@ const ConnectionStatusIndicator = ({
           ? 'Connected'
           : developmentServer === 'disconnected'
           ? 'Disconnected'
-          : 'Unknown'}
+          : 'Please Reload'}
       </span>
     </div>
   )
@@ -99,32 +101,37 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   const navigation: TNavigationItem[] = [
     { name: 'Dashboard', to: routes.home(), icon: HomeIcon },
   ]
-  const graphqlNavigation: TNavigationItem[] = [
-    {
-      name: 'GraphQL Schema',
-      to: routes.graphql(),
-      icon: GraphQLIcon,
-    },
-  ]
-  const databaseNavigation: TNavigationItem[] = [
-    {
-      name: 'Prisma Schema',
-      to: routes.prisma(),
-      icon: DatabaseIcon,
-    },
-  ]
+  // const graphqlNavigation: TNavigationItem[] = [
+  //   {
+  //     name: 'GraphQL Schema',
+  //     to: routes.graphql(),
+  //     icon: GraphQLIcon,
+  //   },
+  // ]
+  // const databaseNavigation: TNavigationItem[] = [
+  //   {
+  //     name: 'Prisma Schema',
+  //     to: routes.prisma(),
+  //     icon: DatabaseIcon,
+  //   },
+  // ]
   const telemetryNavigation: TNavigationItem[] = [
     {
-      name: 'Dashboard',
-      to: routes.telemetryDashboard(),
-      icon: HomeIcon,
+      name: 'Traces',
+      to: routes.opentelemetryTraces(),
+      icon: CubeTransparentIcon,
+    },
+    {
+      name: 'Spans',
+      to: routes.opentelemetrySpans(),
+      icon: CubeIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
     { name: 'Inbox', to: routes.mailerInbox(), icon: InboxIcon },
     { name: 'Templates', to: routes.mailerTemplatePreview(), icon: MailIcon },
   ]
-  const utilitiesNavigation: TNavigationItem[] = [
+  const ssrNavigation: TNavigationItem[] = [
     {
       name: 'OG Tag Preview',
       to: routes.ogTagPreview(),
@@ -207,7 +214,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     <div className="flex h-16 shrink-0 items-center">
                       <img
                         className="h-8 w-auto"
-                        src="https://redwoodjs.com/images/logo.svg"
+                        src="/mark.svg"
                         alt="RedwoodJS"
                       />
                       <Title className="pl-4">RedwoodJS Studio</Title>
@@ -223,7 +230,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                             ))}
                           </ul>
                         </li>
-                        <li>
+                        {/* <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
                             GraphQL
                           </div>
@@ -234,8 +241,8 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                               </li>
                             ))}
                           </ul>
-                        </li>
-                        <li>
+                        </li> */}
+                        {/* <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
                             Database
                           </div>
@@ -246,7 +253,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                               </li>
                             ))}
                           </ul>
-                        </li>
+                        </li> */}
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
                             OpenTelemetry
@@ -273,10 +280,10 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                         </li>
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
-                            Utilities
+                            SSR
                           </div>
                           <ul className="-mx-2 mt-2 space-y-1">
-                            {utilitiesNavigation.map((item) => (
+                            {ssrNavigation.map((item) => (
                               <li key={item.name}>
                                 <NavigationItem item={item} />
                               </li>
@@ -306,11 +313,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:border-gray-800 dark:bg-gray-900">
             <div className="flex h-16 shrink-0 items-center">
-              <img
-                className="h-8 w-auto"
-                src="https://redwoodjs.com/images/logo.svg"
-                alt="RedwoodJS"
-              />
+              <img className="h-8 w-auto" src="/mark.svg" alt="RedwoodJS" />
               <Title className="pl-4">RedwoodJS Studio</Title>
             </div>
             <nav className="flex flex-1 flex-col">
@@ -324,7 +327,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     ))}
                   </ul>
                 </li>
-                <li>
+                {/* <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
                     GraphQL
                   </div>
@@ -335,8 +338,8 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                       </li>
                     ))}
                   </ul>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
                     Database
                   </div>
@@ -347,7 +350,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                       </li>
                     ))}
                   </ul>
-                </li>
+                </li> */}
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
                     OpenTelemetry
@@ -374,10 +377,10 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                 </li>
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
-                    Utilities
+                    SSR
                   </div>
                   <ul className="-mx-2 mt-2 space-y-1">
-                    {utilitiesNavigation.map((item) => (
+                    {ssrNavigation.map((item) => (
                       <li key={item.name}>
                         <NavigationItem item={item} />
                       </li>

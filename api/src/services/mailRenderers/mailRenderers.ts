@@ -1,4 +1,3 @@
-import { asc, eq, notInArray } from 'drizzle-orm'
 import type { MutationResolvers, QueryResolvers } from 'types/graphql'
 
 import {
@@ -6,22 +5,22 @@ import {
   liveQueryStore,
 } from '@redwoodjs/realtime'
 
-import { db } from 'src/lib/drizzle/db'
-import { mailRendererTable } from 'src/lib/drizzle/schema'
+import { db } from 'src/lib/db'
 import { getUserProjectMailer } from 'src/util/project'
 
-export const mailRenderers: QueryResolvers['mailRenderers'] = () => {
-  return db
-    .select()
-    .from(mailRendererTable)
-    .orderBy(asc(mailRendererTable.key))
-    .all()
+export const mailRenderers: QueryResolvers['mailRenderers'] = async () => {
+  return await db.mailRenderer.findMany({
+    orderBy: {
+      key: 'asc',
+    },
+  })
 }
 
 export const resyncMailRenderers: MutationResolvers['resyncMailRenderers'] =
   async (_, ctx) => {
     try {
-      const mailer = await getUserProjectMailer()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const mailer = (await getUserProjectMailer()) as any
       if (mailer === null) {
         return true
       }
@@ -32,52 +31,34 @@ export const resyncMailRenderers: MutationResolvers['resyncMailRenderers'] =
       // Upsert all renderers provided by the mailer
       const ids: string[] = []
       for (let i = 0; i < rendererKeys.length; i++) {
-        const existingRenderer = db
-          .select({
-            id: mailRendererTable.id,
-          })
-          .from(mailRendererTable)
-          .where(eq(mailRendererTable.key, rendererKeys[i]))
-          .get()
-
-        // If the renderer doesn't exist, create it
-        if (existingRenderer === undefined) {
-          const returned = db
-            .insert(mailRendererTable)
-            .values({
-              key: rendererKeys[i],
-              isDefault: rendererKeys[i] === defaultRendererKey,
-            })
-            .returning({
-              id: mailRendererTable.id,
-            })
-            .get()
-          if (returned.id) {
-            ids.push(returned.id)
-          }
-          continue
-        }
-
-        // Update the renderer if it exists
-        const returned = db
-          .update(mailRendererTable)
-          .set({
+        const renderer = await db.mailRenderer.upsert({
+          where: {
+            key: rendererKeys[i],
+          },
+          create: {
+            key: rendererKeys[i],
             isDefault: rendererKeys[i] === defaultRendererKey,
-          })
-          .where(eq(mailRendererTable.id, existingRenderer.id))
-          .returning({
-            id: mailRendererTable.id,
-          })
-          .get()
-        if (returned.id) {
-          ids.push(returned.id)
-        }
+          },
+          update: {
+            isDefault: rendererKeys[i] === defaultRendererKey,
+          },
+          select: {
+            id: true,
+          },
+        })
+        ids.push(renderer.id)
       }
 
       // Clear out any renderers that are no longer in the mailer
-      db.delete(mailRendererTable)
-        .where(notInArray(mailRendererTable.id, ids))
-        .run()
+      await db.mailRenderer.deleteMany({
+        where: {
+          NOT: {
+            id: {
+              in: ids,
+            },
+          },
+        },
+      })
 
       // Invalidate the live query
       const lqs = (ctx?.context?.liveQueryStore ??

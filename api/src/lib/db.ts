@@ -1,6 +1,8 @@
 // See https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/constructor
 // for options.
 
+import { nanoid } from 'nanoid'
+
 import { emitLogLevels, handlePrismaLogging } from '@redwoodjs/api/logger'
 
 import { PrismaClient } from '../../db/client'
@@ -19,3 +21,12 @@ handlePrismaLogging({
   logger,
   logLevels: ['info', 'warn', 'error'],
 })
+
+// Useful because Prisma's raw methods don't automatically generate values
+export function generateTypicalValues() {
+  return {
+    id: nanoid(24),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }
+}
