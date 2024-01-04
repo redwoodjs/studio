@@ -5,6 +5,7 @@ import chalk from 'chalk'
 import { config } from 'dotenv-defaults'
 import execa from 'execa'
 import Fastify from 'fastify'
+import open from 'open'
 import { SMTPServer } from 'smtp-server'
 
 import {
@@ -32,7 +33,7 @@ import {
   getStudioConfig,
 } from './util/project'
 
-async function serve() {
+async function serve({ open: autoOpen }: { open: boolean } = { open: false }) {
   logger.info('Starting RedwoodJS Studio')
   // TODO: Have the redwood cli set this env var when execa runs this file
   // Ensure we're acting from the studio project root and not the user project root
@@ -74,8 +75,7 @@ async function serve() {
   const userConfig = getUserProjectConfig()
   const studioConfig = getStudioConfig()
   const apiRootPath = coerceRootPath(studioConfig.web.apiUrl)
-  // @ts-expect-error TODO: Update redwoodjs/project-config to vaoid experimental
-  const port = userConfig.studio.port
+  const port = userConfig.experimental.studio.basePort
   config({
     path: path.join(redwoodProjectPaths.base, '.env'),
     defaults: path.join(redwoodProjectPaths.base, '.env.defaults'),
@@ -127,6 +127,10 @@ async function serve() {
     logger.info(
       `To access the Studio, visit ${chalk.green(`http://localhost:${port}`)}`
     )
+
+    if (autoOpen) {
+      open(`http://localhost:${port}`)
+    }
   })
 
   // Cleanup (async will not be resolved!)
