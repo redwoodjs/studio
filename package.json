@@ -30,6 +30,7 @@
   "packageManager": "yarn@4.0.2",
   "scripts": {
     "studio:migrate": "node ./tasks/migrate.mjs",
-    "studio:package": "node ./tasks/package.mjs"
+    "studio:package": "node ./tasks/package.mjs",
+    "studio:reset": "node ./tasks/reset.mjs"
   }
 }
