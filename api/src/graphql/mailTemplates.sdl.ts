@@ -31,6 +31,7 @@ export const schema = gql`
       rendererId: ID!
       props: String!
     ): MailTemplateRendered! @skipAuth
+    mailComponentCount: Int! @skipAuth
   }
 
   type Mutation {

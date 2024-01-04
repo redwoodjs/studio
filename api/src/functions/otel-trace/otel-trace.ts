@@ -292,6 +292,8 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
   // Invalidate the appropriate queries
   await liveQueryStore?.invalidate('Query.otelSpans')
   await liveQueryStore?.invalidate('Query.otelTraces')
+  await liveQueryStore?.invalidate('Query.otelSpanCount')
+  await liveQueryStore?.invalidate('Query.otelTraceCount')
 
   // TODO: Currently we always respond with a "full success" but we should respond dynamically based on how we got on
   //       with the parsing/ingesting

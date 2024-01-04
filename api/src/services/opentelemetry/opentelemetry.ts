@@ -470,3 +470,15 @@ export const otelTraceTreeMapData: QueryResolvers['otelTraceTreeMapData'] =
     }
     return data
   }
+
+export const otelSpanCount: QueryResolvers['otelSpanCount'] = async () => {
+  return await db.oTelTraceSpan.count()
+}
+
+export const otelTraceCount: QueryResolvers['otelTraceCount'] = async () => {
+  return (
+    await db.oTelTraceSpan.findMany({
+      distinct: ['traceId'],
+    })
+  ).length
+}

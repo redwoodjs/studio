@@ -223,3 +223,8 @@ export const mailRenderedTemplate: QueryResolvers['mailRenderedTemplate'] =
       text: renderResult.text,
     }
   }
+
+export const mailComponentCount: QueryResolvers['mailComponentCount'] =
+  async () => {
+    return await db.mailTemplateComponent.count()
+  }

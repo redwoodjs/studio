@@ -19,5 +19,7 @@ export const schema = gql`
   type Query {
     mailAPIInboxEntries: [MailAPIInboxEntry!]! @skipAuth
     mailSMTPInboxEntries: [MailSMTPInboxEntry!]! @skipAuth
+    mailAPICount: Int! @skipAuth
+    mailSMTPCount: Int! @skipAuth
   }
 `

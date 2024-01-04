@@ -34,3 +34,11 @@ export const mailSMTPInboxEntries: QueryResolvers['mailSMTPInboxEntries'] =
       }
     })
   }
+
+export const mailAPICount: QueryResolvers['mailAPICount'] = async () => {
+  return await db.mailAPIInboxEntry.count()
+}
+
+export const mailSMTPCount: QueryResolvers['mailSMTPCount'] = async () => {
+  return await db.mailSMTPInboxEntry.count()
+}
