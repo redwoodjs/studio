@@ -13,7 +13,7 @@ import {
   CubeIcon,
   CubeTransparentIcon,
 } from '@heroicons/react/outline'
-import { Title } from '@tremor/react'
+import { Flex, Subtitle, Title } from '@tremor/react'
 import { GetConnectionStatus } from 'types/graphql'
 
 import { NavLink, routes } from '@redwoodjs/router'
@@ -217,7 +217,16 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                         src="/mark.svg"
                         alt="RedwoodJS"
                       />
-                      <Title className="pl-4">RedwoodJS Studio</Title>
+                      <Flex
+                        flexDirection="col"
+                        justifyContent="start"
+                        alignItems="center"
+                      >
+                        <Title className="pl-4">RedwoodJS Studio</Title>
+                        <Subtitle className="pl-4">
+                          {window.RW_STUDIO_VERSION}
+                        </Subtitle>
+                      </Flex>
                     </div>
                     <nav className="flex flex-1 flex-col">
                       <ul className="flex flex-1 flex-col gap-y-7">
@@ -314,7 +323,14 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:border-gray-800 dark:bg-gray-900">
             <div className="flex h-16 shrink-0 items-center">
               <img className="h-8 w-auto" src="/mark.svg" alt="RedwoodJS" />
-              <Title className="pl-4">RedwoodJS Studio</Title>
+              <Flex
+                flexDirection="col"
+                justifyContent="start"
+                alignItems="center"
+              >
+                <Title className="pl-4">RedwoodJS Studio</Title>
+                <Subtitle className="pl-4">{window.RW_STUDIO_VERSION}</Subtitle>
+              </Flex>
             </div>
             <nav className="flex flex-1 flex-col">
               <ul className="flex flex-1 flex-col gap-y-4">

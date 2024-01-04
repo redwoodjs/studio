@@ -22,7 +22,7 @@
     "ioredis": "5",
     "mailparser": "3.6.5",
     "nanoid": "3.3.6",
-    "open": "10.0.2",
+    "open": "8.4.2",
     "open-graph-scraper": "6.2.2",
     "prisma-json-schema-generator": "4.0.0",
     "smtp-server": "3.13.0"

@@ -98,6 +98,19 @@ async function main() {
     path.join(studioDir, 'web', 'dist'),
     path.join(packagedDir, 'web', 'dist')
   )
+  const indexHTMLPath = path.join(packagedDir, 'web', 'dist', 'index.html')
+  const original = fs.readFileSync(indexHTMLPath, {
+    encoding: 'utf8',
+    flag: 'r',
+  })
+  const studioVersion = fs.readJSONSync(
+    path.join(studioDir, 'package.json')
+  ).version
+  const modified = original.replaceAll(
+    '__RW_STUDIO_VERISON_REPLACE_ME__',
+    'v' + studioVersion
+  )
+  fs.writeFileSync(indexHTMLPath, modified)
   if (!verbose) {
     spinner.succeed('Web files copied!')
   }
