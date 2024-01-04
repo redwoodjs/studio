@@ -4,6 +4,7 @@
 1. Update @redwoodjs/project-config to support new studio config - not experimental
 2. Update @redwoodjs/cli to just call the bin for studio. Needs to setup the boilerplate config if not present.
 3. Studio components should be smart enough to not need port changes in multiple places
+4. Upstream any changes to the opentelemetry setup
 
 ## Contributing
 1. Make your changes to the source code.

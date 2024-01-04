@@ -164,13 +164,13 @@ model OTelTraceLink {
 model OTelTraceScope {
   id         String               @id @default(nanoid(24))
   name       String
-  version    String?
+  version    String
   spans      OTelTraceSpan[]
   attributes OTelTraceAttribute[]
   createdAt  DateTime             @default(now())
   updatedAt  DateTime             @updatedAt
 
-  @@unique([name, version])
+  @@unique([name, version], name: "OTelTraceScope_name_version_unique")
 }
 
 model OTelTraceSpanType {

@@ -47,7 +47,7 @@ type LongType = Parameters<typeof convertLongToBigInt>[0]
 
 async function createAttribute(attribute: KeyValue) {
   const hash = getMD5Hash(attribute)
-  let attributeId = (
+  const attributeId = (
     await db.oTelTraceAttribute.findUnique({
       where: {
         hash,
@@ -62,7 +62,7 @@ async function createAttribute(attribute: KeyValue) {
     const { id, createdAt, updatedAt } = generateTypicalValues()
     const attributeType = Object.keys(attribute.value)[0]
     const attributeValue = JSON.stringify(attribute.value[attributeType])
-    const affectedRows = await db.$executeRaw`INSERT INTO OTelTraceAttribute (
+    const _rowsAffected = await db.$executeRaw`INSERT INTO OTelTraceAttribute (
       id,
       createdAt,
       updatedAt,
@@ -79,7 +79,15 @@ async function createAttribute(attribute: KeyValue) {
       ${attributeValue},
       ${attributeType.replace('Value', '')}
     ) ON CONFLICT ([hash]) DO NOTHING;`
-    attributeId = id
+    const { id: createdId } = await db.oTelTraceAttribute.findUnique({
+      where: {
+        hash,
+      },
+      select: {
+        id: true,
+      },
+    })
+    return createdId
   }
   return attributeId
 }
@@ -106,12 +114,18 @@ async function createResource(
   }
 
   // Create the resource
-  const resourceRow = await db.oTelTraceResource.create({
-    data: {
+  const resourceRow = await db.oTelTraceResource.upsert({
+    where: {
+      attributesHash: resourceAttributesHash,
+    },
+    create: {
       attributesHash: resourceAttributesHash,
       attributes: {
         connect: attributeIds.map((id) => ({ id })),
       },
+    },
+    update: {
+      // Do nothing
     },
     select: {
       id: true,
@@ -129,40 +143,32 @@ async function createScope(scope: InstrumentationScope) {
     }
   }
 
-  let scopeId = (
-    await db.oTelTraceScope.findFirst({
-      where: {
-        AND: [
-          {
-            name: scope.name,
-          },
-          {
-            version: scope.version,
-          },
-        ],
+  // It has to have a value as we use it within a unique constraint
+  const version = scope.version ?? '__unversioned__'
+
+  const scopeInDb = await db.oTelTraceScope.upsert({
+    where: {
+      OTelTraceScope_name_version_unique: {
+        name: scope.name,
+        version: version,
       },
-      select: { id: true },
-    })
-  )?.id
+    },
+    create: {
+      name: scope.name,
+      version: version,
+      attributes: {
+        connect: attributeIds.map((id) => ({ id })),
+      },
+    },
+    update: {
+      // Do nothing
+    },
+    select: {
+      id: true,
+    },
+  })
 
-  if (!scopeId) {
-    scopeId = (
-      await db.oTelTraceScope.create({
-        data: {
-          name: scope.name,
-          version: scope.version,
-          attributes: {
-            connect: attributeIds.map((id) => ({ id })),
-          },
-        },
-        select: {
-          id: true,
-        },
-      })
-    ).id
-  }
-
-  return scopeId
+  return scopeInDb.id
 }
 
 async function createSpan(span: Span, resourceId: string, scopeId: string) {
@@ -238,9 +244,9 @@ async function createSpan(span: Span, resourceId: string, scopeId: string) {
       endTimeNano: convertLongToBigInt(
         span.endTimeUnixNano as unknown as LongType
       ),
-      attributes: {
-        connect: attributeIds.map((id) => ({ id })),
-      },
+      // attributes: {
+      //   connect: attributeIds.map((id) => ({ id })),
+      // },
       events: {
         create: events,
       },
@@ -272,7 +278,12 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
       const scopeId = await createScope(scopeSpans[j].scope)
       const spans = scopeSpans[j].spans
       for (let k = 0; k < spans.length; k++) {
-        await createSpan(spans[k], resourceId, scopeId)
+        try {
+          await createSpan(spans[k], resourceId, scopeId)
+        } catch (error) {
+          logger.error('Failed to ingest span')
+          logger.error(error)
+        }
       }
       logger.debug(`Ingested ${spans.length} OpenTelemetry spans`)
     }

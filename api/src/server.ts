@@ -48,7 +48,7 @@ async function serve() {
   // TODO: Have the redwood cli set this env var when execa runs this file
   process.env.RWSTUDIO_DATABASE_URL = `file:${path.resolve(
     path.join(studioStateDirectory, 'prisma.sqlite')
-  )}`
+  )}?connection_limit=1`
 
   // Execute prisma migrate
   // 'rw build' should have generated the prisma client already
