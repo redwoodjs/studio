@@ -140,7 +140,7 @@ async function main() {
       description: "Redwood's development studio",
       repository: {
         type: 'git',
-        url: 'https://github.com/redwoodjs/rw-studio.git',
+        url: 'https://github.com/redwoodjs/studio.git',
       },
       license: 'MIT',
       main: 'api/dist/server.js',
