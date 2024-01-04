@@ -33,7 +33,9 @@ import {
   getStudioConfig,
 } from './util/project'
 
-async function serve({ open: autoOpen }: { open: boolean } = { open: false }) {
+export async function serve(
+  { open: autoOpen }: { open: boolean } = { open: false }
+) {
   logger.info('Starting RedwoodJS Studio')
   // TODO: Have the redwood cli set this env var when execa runs this file
   // Ensure we're acting from the studio project root and not the user project root
@@ -139,4 +141,7 @@ async function serve({ open: autoOpen }: { open: boolean } = { open: false }) {
   })
 }
 
-serve()
+// Only run this function if this file is being run directly
+if (require.main === module) {
+  serve()
+}
