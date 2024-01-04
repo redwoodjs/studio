@@ -1,4 +1,4 @@
-import { Title, Text, Flex } from '@tremor/react'
+import { Title, Text, Flex, Card } from '@tremor/react'
 import { GetTraces } from 'types/graphql'
 
 import { MetaTags, useQuery } from '@redwoodjs/web'
@@ -6,7 +6,7 @@ import { MetaTags, useQuery } from '@redwoodjs/web'
 import TraceListItem from 'src/components/TraceListItem/TraceListItem'
 
 const TRACES_QUERY = gql`
-  query GetTraces {
+  query GetTraces @live {
     traces: otelTraces {
       id
       spans {
@@ -44,6 +44,11 @@ const OpenTelemetryTracesPage = () => {
       </Flex>
 
       <Flex className="mt-6 space-y-6" flexDirection="col">
+        {traces.length === 0 && (
+          <Card className="w-full">
+            <Text>No traces found</Text>
+          </Card>
+        )}
         {traces.map((trace) => (
           <TraceListItem key={trace.id} id={trace.id} spans={trace.spans} />
         ))}

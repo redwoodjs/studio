@@ -24,7 +24,7 @@ import SpanListItem from 'src/components/SpanListItem/SpanListItem'
 
 const SPANS_QUERY = gql`
   # Have as a live query
-  query GetSpans {
+  query GetSpans @live {
     otelSpans {
       id
       traceId
@@ -185,6 +185,11 @@ const OpenTelemetrySpansPage = () => {
             />
           </Flex>
         </Card>
+        {spans.length === 0 && (
+          <Card className="w-full">
+            <Text>No spans found</Text>
+          </Card>
+        )}
         {spans
           .filter((span) => !nameFilter || span.name.includes(nameFilter))
           .filter(
