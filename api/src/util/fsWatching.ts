@@ -2,6 +2,8 @@ import path from 'node:path'
 
 import chokidar from 'chokidar'
 
+import { liveQueryStore } from '@redwoodjs/realtime'
+
 import { resyncMailRenderers } from 'src/services/mailRenderers/mailRenderers'
 import { resyncMailTemplate } from 'src/services/mailTemplates/mailTemplates'
 
@@ -44,6 +46,7 @@ export async function startWatchers() {
         await resyncMailTemplate({
           rawTemplateDistPath: path.join(userPaths.api.dist, pathThatChanged),
         })
+        await liveQueryStore?.invalidate('Query.mailSMTPCount')
         return
       }
     })

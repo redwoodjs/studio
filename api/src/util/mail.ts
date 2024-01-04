@@ -33,6 +33,7 @@ export function handleMail(
 
     // Invalidate the live query for the mailSMTPInboxEntries query
     await liveQueryStore?.invalidate('Query.mailSMTPInboxEntries')
+    await liveQueryStore?.invalidate('Query.mailSMTPCount')
 
     callback()
   })
