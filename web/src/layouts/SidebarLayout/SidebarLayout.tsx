@@ -220,10 +220,10 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                       <Flex
                         flexDirection="col"
                         justifyContent="start"
-                        alignItems="center"
+                        alignItems="start"
                       >
                         <Title className="pl-4">RedwoodJS Studio</Title>
-                        <Subtitle className="pl-4">
+                        <Subtitle className="-mt-1 pl-6 text-sm">
                           {window.RW_STUDIO_VERSION}
                         </Subtitle>
                       </Flex>
@@ -326,10 +326,12 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
               <Flex
                 flexDirection="col"
                 justifyContent="start"
-                alignItems="center"
+                alignItems="start"
               >
                 <Title className="pl-4">RedwoodJS Studio</Title>
-                <Subtitle className="pl-4">{window.RW_STUDIO_VERSION}</Subtitle>
+                <Subtitle className="-mt-1 pl-6 text-sm">
+                  {window.RW_STUDIO_VERSION}
+                </Subtitle>
               </Flex>
             </div>
             <nav className="flex flex-1 flex-col">

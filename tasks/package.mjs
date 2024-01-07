@@ -107,7 +107,7 @@ async function main() {
     path.join(studioDir, 'package.json')
   ).version
   const modified = original.replaceAll(
-    '__RW_STUDIO_VERISON_REPLACE_ME__',
+    '__RW_STUDIO_VERSION__',
     'v' + studioVersion
   )
   fs.writeFileSync(indexHTMLPath, modified)
