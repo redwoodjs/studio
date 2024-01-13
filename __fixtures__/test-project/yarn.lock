@@ -6060,8 +6060,8 @@ __metadata:
   linkType: hard
 
 "@redwoodjs/studio@file:./../../packaged.tgz::locator=root-workspace-0b6124%40workspace%3A.":
-  version: 10.0.0
-  resolution: "@redwoodjs/studio@file:./../../packaged.tgz#./../../packaged.tgz::hash=d44336&locator=root-workspace-0b6124%40workspace%3A."
+  version: 10.0.2
+  resolution: "@redwoodjs/studio@file:./../../packaged.tgz#./../../packaged.tgz::hash=deab06&locator=root-workspace-0b6124%40workspace%3A."
   dependencies:
     "@babel/parser": "npm:7.22.16"
     "@babel/traverse": "npm:7.22.17"
@@ -6082,12 +6082,13 @@ __metadata:
     ioredis: "npm:5"
     mailparser: "npm:3.6.5"
     nanoid: "npm:3.3.6"
+    open: "npm:8.4.2"
     open-graph-scraper: "npm:6.2.2"
     prisma-json-schema-generator: "npm:4.0.0"
     smtp-server: "npm:3.13.0"
   bin:
     rw-studio: ./api/dist/server.js
-  checksum: 3429331970612d4e88dfc13806cb2bf41e5bf4a105fbd924625da4008c5fd52bf883524d0781dd1400fc093a78285916f60024f0821a5e5c8c42fb35db54c71b
+  checksum: c9e1e9cbbd160fe69a4a6b20ef6262e1f4dade263193a385ecd9055dabfae4c01d3c2d96a9c75b465ed61e51d114a3ea1549d5b9e185402d777ebf0e15adb351
   languageName: node
   linkType: hard
 
@@ -18151,7 +18152,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"open@npm:^8.0.9":
+"open@npm:8.4.2, open@npm:^8.0.9":
   version: 8.4.2
   resolution: "open@npm:8.4.2"
   dependencies:
