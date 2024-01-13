@@ -54,7 +54,7 @@ async function main() {
   if (!verbose) {
     spinner.start('Building project...')
   }
-  const { stderr, exitCode } = await $`yarn rw build`
+  const { stderr, exitCode } = await $`yarn rw build --no-prerender`
   if (exitCode !== 0) {
     spinner.fail('Project build failed!')
     console.log(chalk.redBright(stderr))
