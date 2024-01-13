@@ -214,6 +214,10 @@ async function main() {
     spinner.start('Running yarn...')
   }
   $.cwd = testProjectPath
+  // There needs to be a yarn.lock file in the root of the fixture
+  // test-project, otherwise yarn will walk up the directory tree and find the
+  // yarn.lock file in the root of the Studio project and get confused
+  await $`touch yarn.lock`
   await $`yarn`
   $.cwd = undefined
   if (!verbose) {
