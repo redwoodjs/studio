@@ -25,6 +25,7 @@ import { realtime } from 'src/lib/realtime'
 
 import { startConnectionWatching } from './util/connectionWatching'
 import { startWatchers } from './util/fsWatching'
+import { graphqlProxy } from './util/graphqlProxy'
 import { handleMail } from './util/mail'
 import {
   getUserProjectConfig,
@@ -32,6 +33,7 @@ import {
   getStudioStatePath,
   getStudioConfig,
 } from './util/project'
+import { rewriteBasePortEnvVar } from './util/rewriteWebIndexBasePort'
 
 export async function serve(
   { open: autoOpen }: { open: boolean } = { open: false }
@@ -84,6 +86,8 @@ export async function serve(
     multiline: true,
   })
 
+  rewriteBasePortEnvVar(port)
+
   // Start the studio web+api+graphql server
   const fastify = Fastify(DEFAULT_REDWOOD_FASTIFY_CONFIG)
   await fastify.register(redwoodFastifyWeb)
@@ -104,6 +108,8 @@ export async function serve(
     allowGraphiQL: true,
     realtime,
   })
+
+  await fastify.register(graphqlProxy)
 
   // Start filesystem watchers
   await startWatchers()
