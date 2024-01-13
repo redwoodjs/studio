@@ -49,7 +49,7 @@ export async function serve(
 
   // Set the DATABASE_URL for studio
   // TODO: Have the redwood cli set this env var when execa runs this file
-  process.env.RWSTUDIO_DATABASE_URL = `file:${path.resolve(
+  process.env.RW_STUDIO_DATABASE_URL = `file:${path.resolve(
     path.join(studioStateDirectory, 'prisma.sqlite')
   )}?connection_limit=1`
 
