@@ -2,7 +2,7 @@ import type { QueryResolvers, MutationResolvers } from 'types/graphql'
 
 import { db } from 'src/lib/db'
 import { mailer } from 'src/lib/mailer'
-import { Example } from 'src/mail/Example'
+import { ExampleEmail } from 'src/mail/Example'
 
 export const contacts: QueryResolvers['contacts'] = () => {
   return db.contact.findMany()
@@ -22,7 +22,7 @@ export const createContact: MutationResolvers['createContact'] = async ({
   })
 
   await mailer.send(
-    Example({
+    ExampleEmail({
       when: new Date().toLocaleString(),
     }),
     {
