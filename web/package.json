@@ -11,6 +11,8 @@
     ]
   },
   "dependencies": {
+    "@graphiql/plugin-explorer": "0.1.22",
+    "@graphiql/toolkit": "0.8.4",
     "@headlessui/react": "1.7.17",
     "@heroicons/react": "1.0.6",
     "@nivo/core": "^0.84.0",
@@ -20,10 +22,13 @@
     "@redwoodjs/web": "7.0.0-canary.785",
     "@tremor/react": "3.12.1",
     "buffer": "6.0.3",
+    "graphiql": "3.0.10",
+    "json-bigint-patch": "0.0.8",
     "prop-types": "15.8.1",
     "react": "0.0.0-experimental-e5205658f-20230913",
     "react-dom": "0.0.0-experimental-e5205658f-20230913",
-    "reactflow": "11.8.3"
+    "reactflow": "11.8.3",
+    "use-url-search-params": "2.5.1"
   },
   "devDependencies": {
     "@redwoodjs/vite": "7.0.0-canary.785",

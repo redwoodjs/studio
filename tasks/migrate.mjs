@@ -19,7 +19,7 @@ async function main() {
   console.log()
 
   // Build the project
-  $.env.RWSTUDIO_DATABASE_URL =
+  $.env.RW_STUDIO_DATABASE_URL =
     'file://' + path.join(__dirname, '..', 'api', 'db', 'dummy.sqlite')
   const { stderr, exitCode } =
     await $`yarn rw prisma migrate dev --skip-seed --create-only`

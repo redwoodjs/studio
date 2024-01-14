@@ -24,3 +24,5 @@ api/db/client
 
 packaged
 packaged.tgz
+
+__fixtures__/test-project/yarn.lock

@@ -19,6 +19,8 @@ const Routes = () => {
         <Route path="/opentelemetry/spans" page={OpenTelemetrySpansPage} name="opentelemetrySpans" />
         <Route path="/opentelemetry/spans/{id:String}" page={OpenTelemetrySpanPage} name="opentelemetrySpan" />
 
+        <Route path="/graphiql" page={GraphiqlPage} name="graphiql" />
+
         <Route path="/mailer-inbox" page={MailerInboxPage} name="mailerInbox" />
         <Route path="/mailer-template-preview" page={MailerTemplatePreviewPage} name="mailerTemplatePreview" />
 

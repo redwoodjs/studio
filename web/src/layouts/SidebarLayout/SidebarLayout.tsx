@@ -12,6 +12,7 @@ import {
   AdjustmentsIcon,
   CubeIcon,
   CubeTransparentIcon,
+  ViewBoardsIcon,
 } from '@heroicons/react/outline'
 import { Flex, Subtitle, Title } from '@tremor/react'
 import { GetConnectionStatus } from 'types/graphql'
@@ -61,13 +62,13 @@ const ConnectionStatusIndicator = ({
 }: {
   developmentServer: 'connected' | 'disconnected' | 'unknown'
 }) => {
-  const bgColourDark =
+  const bgColorDark =
     developmentServer === 'connected'
       ? 'bg-green-500'
       : developmentServer === 'disconnected'
       ? 'bg-red-500'
       : 'bg-yellow-500'
-  const bgColourLight =
+  const bgColorLight =
     developmentServer === 'connected'
       ? 'bg-green-400'
       : developmentServer === 'disconnected'
@@ -78,10 +79,10 @@ const ConnectionStatusIndicator = ({
     <div className="group flex w-full grow items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-500 dark:text-gray-600">
       <span className="relative flex h-3 w-3">
         <span
-          className={`absolute inline-flex h-full w-full animate-ping rounded-full ${bgColourLight} opacity-75`}
+          className={`absolute inline-flex h-full w-full animate-ping rounded-full ${bgColorLight} opacity-75`}
         ></span>
         <span
-          className={`relative inline-flex h-3 w-3 rounded-full ${bgColourDark}`}
+          className={`relative inline-flex h-3 w-3 rounded-full ${bgColorDark}`}
         ></span>
       </span>
       <span>
@@ -125,6 +126,13 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
       name: 'Spans',
       to: routes.opentelemetrySpans(),
       icon: CubeIcon,
+    },
+  ]
+  const apiNavigation: TNavigationItem[] = [
+    {
+      name: 'GraphiQL Playground',
+      to: routes.graphiql(),
+      icon: ViewBoardsIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
@@ -277,6 +285,18 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                         </li>
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
+                            APIs
+                          </div>
+                          <ul className="-mx-2 mt-2 space-y-1">
+                            {apiNavigation.map((item) => (
+                              <li key={item.name}>
+                                <NavigationItem item={item} />
+                              </li>
+                            ))}
+                          </ul>
+                        </li>
+                        <li>
+                          <div className="text-xs font-semibold leading-6 text-gray-400">
                             Mailer
                           </div>
                           <ul className="-mx-2 mt-2 space-y-1">
@@ -375,6 +395,18 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                   </div>
                   <ul className="-mx-2 mt-2 space-y-1">
                     {telemetryNavigation.map((item) => (
+                      <li key={item.name}>
+                        <NavigationItem item={item} />
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+                <li>
+                  <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
+                    APIs
+                  </div>
+                  <ul className="-mx-2 mt-2 space-y-1">
+                    {apiNavigation.map((item) => (
                       <li key={item.name}>
                         <NavigationItem item={item} />
                       </li>

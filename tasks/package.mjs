@@ -54,7 +54,7 @@ async function main() {
   if (!verbose) {
     spinner.start('Building project...')
   }
-  const { stderr, exitCode } = await $`yarn rw build`
+  const { stderr, exitCode } = await $`yarn rw build --no-prerender`
   if (exitCode !== 0) {
     spinner.fail('Project build failed!')
     console.log(chalk.redBright(stderr))
@@ -98,19 +98,35 @@ async function main() {
     path.join(studioDir, 'web', 'dist'),
     path.join(packagedDir, 'web', 'dist')
   )
+
+  const studioVersion = fs.readJSONSync(
+    path.join(studioDir, 'package.json')
+  ).version
+
   const indexHTMLPath = path.join(packagedDir, 'web', 'dist', 'index.html')
   const original = fs.readFileSync(indexHTMLPath, {
     encoding: 'utf8',
     flag: 'r',
   })
-  const studioVersion = fs.readJSONSync(
-    path.join(studioDir, 'package.json')
-  ).version
   const modified = original.replaceAll(
     '__RW_STUDIO_VERSION__',
     'v' + studioVersion
   )
   fs.writeFileSync(indexHTMLPath, modified)
+
+  const twoHundredHtmlPath = path.join(packagedDir, 'web', 'dist', '200.html')
+  if (fs.existsSync(twoHundredHtmlPath)) {
+    const original200 = fs.readFileSync(twoHundredHtmlPath, {
+      encoding: 'utf8',
+      flag: 'r',
+    })
+    const modified200 = original200.replaceAll(
+      '__RW_STUDIO_VERSION__',
+      'v' + studioVersion
+    )
+    fs.writeFileSync(twoHundredHtmlPath, modified200)
+  }
+
   if (!verbose) {
     spinner.succeed('Web files copied!')
   }
@@ -198,6 +214,10 @@ async function main() {
     spinner.start('Running yarn...')
   }
   $.cwd = testProjectPath
+  // There needs to be a yarn.lock file in the root of the fixture
+  // test-project, otherwise yarn will walk up the directory tree and find the
+  // yarn.lock file in the root of the Studio project and get confused
+  await $`touch yarn.lock`
   await $`yarn`
   $.cwd = undefined
   if (!verbose) {

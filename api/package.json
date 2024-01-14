@@ -9,6 +9,7 @@
     "@graphql-inspector/core": "5.0.1",
     "@prisma/internals": "5.2.0",
     "@redwoodjs/api": "7.0.0-canary.785",
+    "@redwoodjs/auth-dbauth-api": "7.0.0-canary.785",
     "@redwoodjs/fastify": "7.0.0-canary.785",
     "@redwoodjs/graphql-server": "7.0.0-canary.785",
     "@redwoodjs/project-config": "7.0.0-canary.785",
@@ -18,14 +19,16 @@
     "chokidar": "3.5.3",
     "dotenv-defaults": "5.0.2",
     "fast-glob": "3.3.1",
-    "fastify": "4.21.0",
+    "fastify": "4.24.3",
     "ioredis": "5",
+    "jsonwebtoken": "9.0.2",
     "mailparser": "3.6.5",
     "nanoid": "3.3.6",
     "open": "8.4.2",
     "open-graph-scraper": "6.2.2",
     "prisma-json-schema-generator": "4.0.0",
-    "smtp-server": "3.13.0"
+    "smtp-server": "3.13.0",
+    "uuid": "9.0.1"
   },
   "devDependencies": {
     "@types/better-sqlite3": "7.6.4",

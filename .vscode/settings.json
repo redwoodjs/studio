@@ -7,5 +7,14 @@
   },
   "[prisma]": {
     "editor.formatOnSave": true
-  }
+  },
+  "cSpell.words": [
+    "Graphi",
+    "Graphiql",
+    "headlessui",
+    "heroicons",
+    "opentelemetry",
+    "otel",
+    "STARTTLS"
+  ]
 }

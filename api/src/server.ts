@@ -25,6 +25,7 @@ import { realtime } from 'src/lib/realtime'
 
 import { startConnectionWatching } from './util/connectionWatching'
 import { startWatchers } from './util/fsWatching'
+import { graphqlProxy } from './util/graphqlProxy'
 import { handleMail } from './util/mail'
 import {
   getUserProjectConfig,
@@ -32,6 +33,7 @@ import {
   getStudioStatePath,
   getStudioConfig,
 } from './util/project'
+import { rewriteBasePortEnvVar } from './util/rewriteWebIndexBasePort'
 
 export async function serve(
   { open: autoOpen }: { open: boolean } = { open: false }
@@ -49,7 +51,7 @@ export async function serve(
 
   // Set the DATABASE_URL for studio
   // TODO: Have the redwood cli set this env var when execa runs this file
-  process.env.RWSTUDIO_DATABASE_URL = `file:${path.resolve(
+  process.env.RW_STUDIO_DATABASE_URL = `file:${path.resolve(
     path.join(studioStateDirectory, 'prisma.sqlite')
   )}?connection_limit=1`
 
@@ -84,6 +86,8 @@ export async function serve(
     multiline: true,
   })
 
+  rewriteBasePortEnvVar(port)
+
   // Start the studio web+api+graphql server
   const fastify = Fastify(DEFAULT_REDWOOD_FASTIFY_CONFIG)
   await fastify.register(redwoodFastifyWeb)
@@ -104,6 +108,8 @@ export async function serve(
     allowGraphiQL: true,
     realtime,
   })
+
+  await fastify.register(graphqlProxy)
 
   // Start filesystem watchers
   await startWatchers()
