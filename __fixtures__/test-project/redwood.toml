@@ -22,7 +22,7 @@
 
 [experimental.opentelemetry]
 	enabled = true
-	apiSdk = "/Users/jgmw/Development/redwood/rw-studio/__fixtures__/test-project/api/dist/opentelemetry.js"
+	apiSdk = "/Users/dthyresson/Dropbox/Code/redwoodjs/studio/__fixtures__/test-project/api/dist/opentelemetry.js"
 
 [studio]
   port = 4318

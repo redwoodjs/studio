@@ -244,9 +244,9 @@ async function createSpan(span: Span, resourceId: string, scopeId: string) {
       endTimeNano: convertLongToBigInt(
         span.endTimeUnixNano as unknown as LongType
       ),
-      // attributes: {
-      //   connect: attributeIds.map((id) => ({ id })),
-      // },
+      attributes: {
+        connect: attributeIds.map((id) => ({ id })),
+      },
       events: {
         create: events,
       },
