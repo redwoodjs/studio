@@ -1,4 +1,4 @@
-import type { GenerateAuthHeadersQuery } from 'types/graphql'
+import type { GraphiqlQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
@@ -30,7 +30,7 @@ export const Failure = ({ error }: CellFailureProps) => (
 
 export const Success = ({
   generateAuthHeaders,
-}: CellSuccessProps<GenerateAuthHeadersQuery>) => {
+}: CellSuccessProps<GraphiqlQuery>) => {
   const headers = {
     'auth-provider': generateAuthHeaders?.authProvider,
     authorization: generateAuthHeaders?.authorization,
