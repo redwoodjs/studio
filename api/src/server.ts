@@ -28,10 +28,10 @@ import { startWatchers } from './util/fsWatching'
 import { graphqlProxy } from './util/graphqlProxy'
 import { handleMail } from './util/mail'
 import {
-  getUserProjectConfig,
-  getStudioPaths,
-  getStudioStatePath,
   getStudioConfig,
+  getStudioStatePath,
+  getUserProjectConfig,
+  getUserProjectPaths,
 } from './util/project'
 import { rewriteBasePortEnvVar } from './util/rewriteWebIndexBasePort'
 
@@ -75,14 +75,14 @@ export async function serve(
   })
 
   // Load config
-  const redwoodProjectPaths = getStudioPaths()
+  const userPaths = getUserProjectPaths()
   const userConfig = getUserProjectConfig()
   const studioConfig = getStudioConfig()
   const apiRootPath = coerceRootPath(studioConfig.web.apiUrl)
   const port = userConfig.experimental.studio.basePort
   config({
-    path: path.join(redwoodProjectPaths.base, '.env'),
-    defaults: path.join(redwoodProjectPaths.base, '.env.defaults'),
+    path: path.join(userPaths.base, '.env'),
+    defaults: path.join(userPaths.base, '.env.defaults'),
     multiline: true,
   })
 

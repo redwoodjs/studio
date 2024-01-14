@@ -39,7 +39,11 @@ export const Success = ({
 
   return (
     <RedwoodGraphiQL
-      headers={headers['auth-provider'] ? JSON.stringify(headers) : undefined}
+      headers={
+        headers['auth-provider']
+          ? JSON.stringify(headers, undefined, 2)
+          : undefined
+      }
       endpoint={`http://localhost:${PORT}/proxies/graphql`}
       defaultQuery={DEFAULT_QUERY}
     />

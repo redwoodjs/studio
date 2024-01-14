@@ -6,7 +6,7 @@ const isNumeric = (id: string) => {
 
 export const getDBAuthHeader = async (userId?: string) => {
   if (!userId) {
-    throw new Error('Require an unique id to generate session cookie')
+    throw new Error('Require a unique id to generate session cookie')
   }
 
   if (!process.env.SESSION_SECRET) {
