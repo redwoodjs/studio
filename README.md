@@ -1,4 +1,4 @@
-# studio
+# Studio
 
 ## TODO:
 1. Update @redwoodjs/project-config to support new studio config - not experimental
@@ -7,18 +7,24 @@
 4. Upstream any changes to the opentelemetry setup
 
 ## Contributing
+
+### Local dev
+1. Make your changes to the source code.
+2. Run `RW_STUDIO_USER_PROJECT_PATH=./__fixture__/test-project yarn rw dev`
+3. Run the Test Project that send in to Studio using `yarn rw dev` inside `__fixture__/test-project`
+4. Be sure you set the OpenTelemetry sdk path in `redwood.toml` to point to the
+  correct path for your project (see example below under
+  [Troubleshooting](#troubleshooting))
+
+### Test packaged version
 1. Make your changes to the source code.
 2. Run `yarn studio:package` - this will rebuild the project and package it locally.
 3. Restart `yarn rw-studio` from within the `__fixtures__/test-project` directory.
 4. Run the Test Project that send in to Studio using `yarn rw dev`
-5. Be sure you set the OpenTelemetry sdk path in `redwood.toml` to point to the correct path for your project
+5. Be sure you set the OpenTelemetry sdk path in `redwood.toml` to point to the
+  correct path for your project (see example below under
+  [Troubleshooting](#troubleshooting))
 
-```
-[experimental.opentelemetry]
-	enabled = true
-	apiSdk = "/Users/dthyresson/Dropbox/Code/redwoodjs/studio/__fixtures__/test-project/api/dist/opentelemetry.js"
-
-```
 If you have to generate migrations because you have altered the database schema please use `yarn studio:migrate` as this will set the appropriate configuration above the default `yarn rw prisma migrate dev`.
 
 ### Development
