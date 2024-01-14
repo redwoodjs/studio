@@ -8,21 +8,38 @@ import { importFresh } from './import'
 // --- General wrappers around project config ---
 
 export function getStudioConfig() {
-  return getConfig(getConfigPath(__dirname))
+  const configPath = getConfigPath(__dirname)
+  return getConfig(configPath)
 }
 
 export function getStudioPaths() {
-  return getPaths(path.dirname(getConfigPath(__dirname)))
+  const configPath = getConfigPath(__dirname)
+  return getPaths(path.dirname(configPath))
+}
+
+function getUserProjectConfigPath() {
+  let projectPath = process.env.RW_STUDIO_USER_PROJECT_PATH || ''
+
+  const isWinFullPath = /^[A-Z]:\//.test(projectPath)
+
+  // Support both ./relative/path/ and relative/path/ (and relative\path\ on
+  // Windows)
+  if (
+    projectPath &&
+    (projectPath[0] === '.' || (projectPath[0] !== '/' && !isWinFullPath))
+  ) {
+    projectPath = path.join(process.cwd(), projectPath)
+  }
+
+  return getConfigPath(projectPath || path.join(getStudioPaths().base, '..'))
 }
 
 export function getUserProjectConfig() {
-  return getConfig(getConfigPath(path.join(getStudioPaths().base, '..')))
+  return getConfig(getUserProjectConfigPath())
 }
 
 export function getUserProjectPaths() {
-  return getPaths(
-    path.dirname(getConfigPath(path.join(getStudioPaths().base, '..')))
-  )
+  return getPaths(path.dirname(getUserProjectConfigPath()))
 }
 
 export function getStudioStatePath() {
