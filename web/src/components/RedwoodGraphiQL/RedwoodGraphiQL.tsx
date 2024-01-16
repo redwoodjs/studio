@@ -102,6 +102,8 @@ export function RedwoodGraphiQL(
   const urlLoader = useMemo(() => new UrlLoader(), [])
 
   const fetcher: Fetcher = useMemo(() => {
+    const headers = props.additionalHeaders || {}
+
     const executor = urlLoader.getExecutorAsync(endpoint, {
       subscriptionsProtocol: SubscriptionProtocol.SSE,
       credentials: 'same-origin',
@@ -109,7 +111,7 @@ export function RedwoodGraphiQL(
       directiveIsRepeatable: true,
       fetch: window.fetch,
       ...props,
-      headers: props.additionalHeaders || {},
+      headers,
     })
 
     return function fetcher(graphQLParams: FetcherParams, opts?: FetcherOpts) {
@@ -118,10 +120,16 @@ export function RedwoodGraphiQL(
         graphQLParams.operationName ?? undefined
       )
 
+      headers['rw-studio-impersonation-cookie'] =
+        opts?.headers?.cookie || opts?.headers?.Cookie
+
       return executor({
         document,
         operationName: graphQLParams.operationName ?? undefined,
         variables: graphQLParams.variables,
+        // TODO: Remove this when we're ready to bump minimum RW version
+        // supported by Studio. https://github.com/redwoodjs/redwood/pull/9836
+        // needs to be released first
         extensions: {
           headers: opts?.headers,
         },
