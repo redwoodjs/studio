@@ -6,7 +6,7 @@ import { getSupabaseAuthHeader } from 'src/lib/authProviderEncoders/supabaseAuth
 import { getUserProjectConfig } from 'src/util/project'
 
 function getGraphiqlConfig() {
-  return getUserProjectConfig().experimental.studio?.graphiql
+  return getUserProjectConfig().studio?.graphiql
 }
 
 export const generateAuthHeaders: QueryResolvers['generateAuthHeaders'] =

@@ -79,7 +79,7 @@ export async function serve(
   const userConfig = getUserProjectConfig()
   const studioConfig = getStudioConfig()
   const apiRootPath = coerceRootPath(studioConfig.web.apiUrl)
-  const port = userConfig.experimental.studio.basePort
+  const port = userConfig.studio.basePort
   config({
     path: path.join(userPaths.base, '.env'),
     defaults: path.join(userPaths.base, '.env.defaults'),
