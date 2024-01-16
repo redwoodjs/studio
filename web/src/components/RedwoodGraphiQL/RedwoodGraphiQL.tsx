@@ -127,6 +127,9 @@ export function RedwoodGraphiQL(
         document,
         operationName: graphQLParams.operationName ?? undefined,
         variables: graphQLParams.variables,
+        // TODO: Remove this when we're ready to bump minimum RW version
+        // supported by Studio. https://github.com/redwoodjs/redwood/pull/9836
+        // needs to be released first
         extensions: {
           headers: opts?.headers,
         },
