@@ -20,7 +20,7 @@ const DEFAULT_QUERY = `{
   }
 }`
 
-const PORT = window.RW_STUDIO_BASE_PORT
+const API_PORT = window.RW_STUDIO_API_PORT
 
 export const Loading = () => <div>Loading...</div>
 
@@ -44,7 +44,7 @@ export const Success = ({
           ? JSON.stringify(headers, undefined, 2)
           : undefined
       }
-      endpoint={`http://localhost:${PORT}/proxies/graphql`}
+      endpoint={`http://localhost:${API_PORT}/proxies/graphql`}
       defaultQuery={DEFAULT_QUERY}
     />
   )
