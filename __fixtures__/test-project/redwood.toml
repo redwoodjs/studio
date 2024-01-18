@@ -23,6 +23,8 @@
 [experimental.opentelemetry]
 	enabled = true
 	apiSdk = "/Users/dthyresson/Dropbox/Code/redwoodjs/studio/__fixtures__/test-project/api/dist/opentelemetry.js"
+[studio]
+  basePort = 4318
 
 [studio.graphiql]
   authImpersonation.authProvider = "dbAuth"
