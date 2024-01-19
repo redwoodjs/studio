@@ -1,14 +1,13 @@
 import { QueryResolvers, SpansByAttributeKeyAndType } from 'types/graphql'
 
 import { db } from 'src/lib/db'
-// import { logger } from 'src/lib/logger'
 
 const spansByAttributeKeyAndType = async (
   typeId,
   attributeKey,
   attributeValue = null
 ) =>
-  await db.$queryRaw`
+  (await db.$queryRaw`
 SELECT
   s.createdAt,
   s.updatedAt,
@@ -34,17 +33,14 @@ WHERE
   a.key = ${attributeKey}
   AND (${attributeValue} IS NULL OR a.value = ${attributeValue})
 ORDER BY
-  s.createdAt DESC`
+  s.createdAt DESC`) as SpansByAttributeKeyAndType[]
 
 export const metricSqlStatements: QueryResolvers['metricSqlStatements'] =
   async () => {
     const typeId = 'SQL'
     const attributeKey = 'db.statement'
 
-    return (await spansByAttributeKeyAndType(
-      typeId,
-      attributeKey
-    )) as SpansByAttributeKeyAndType[]
+    return await spansByAttributeKeyAndType(typeId, attributeKey)
   }
 
 export const metricPrismaModels: QueryResolvers['metricSqlStatements'] =
@@ -52,10 +48,7 @@ export const metricPrismaModels: QueryResolvers['metricSqlStatements'] =
     const typeId = 'PRISMA'
     const attributeKey = 'model'
 
-    return (await spansByAttributeKeyAndType(
-      typeId,
-      attributeKey
-    )) as SpansByAttributeKeyAndType[]
+    return await spansByAttributeKeyAndType(typeId, attributeKey)
   }
 
 export const metricGraphQLOperations: QueryResolvers['metricGraphQLOperations'] =
@@ -63,10 +56,7 @@ export const metricGraphQLOperations: QueryResolvers['metricGraphQLOperations'] 
     const typeId = 'GRAPHQL'
     const attributeKey = 'graphql.execute.operationName'
 
-    return (await spansByAttributeKeyAndType(
-      typeId,
-      attributeKey
-    )) as SpansByAttributeKeyAndType[]
+    return await spansByAttributeKeyAndType(typeId, attributeKey)
   }
 
 export const metricAnonymousGraphQLOperations: QueryResolvers['metricAnonymousGraphQLOperations'] =
@@ -75,9 +65,9 @@ export const metricAnonymousGraphQLOperations: QueryResolvers['metricAnonymousGr
     const attributeKey = 'graphql.execute.operationName'
     const attributeValue = '"Anonymous Operation"' // has quotes in data
 
-    return (await spansByAttributeKeyAndType(
+    return await spansByAttributeKeyAndType(
       typeId,
       attributeKey,
       attributeValue
-    )) as SpansByAttributeKeyAndType[]
+    )
   }
