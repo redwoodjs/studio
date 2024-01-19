@@ -1,15 +1,21 @@
 import { LineChart } from '@tremor/react'
+import type { PerformanceDataPoint } from 'types/graphql'
 
 import { categoryColors } from '../categoryColors'
+import { formattedTimeAgo } from '../time'
 
-const PerformanceLineChart = ({ dataPoints }) => {
+const PerformanceLineChart = ({
+  dataPoints,
+}: {
+  dataPoints: PerformanceDataPoint[]
+}) => {
   const spanTypeNames = dataPoints.map((dataPoint) => dataPoint.spanTypeName)
 
   const categories = [...new Set(spanTypeNames)] as string[]
 
   const chartdata = dataPoints.map((dataPoint) => {
     return {
-      duration: dataPoint.startedAt,
+      ago: formattedTimeAgo(dataPoint.startedAt),
       [dataPoint.spanTypeName]: dataPoint.durationMs,
     }
   })
@@ -18,7 +24,7 @@ const PerformanceLineChart = ({ dataPoints }) => {
     <LineChart
       className="mt-6"
       data={chartdata}
-      index="duration"
+      index="ago"
       categories={categories}
       colors={categoryColors(categories.length)}
       // valueFormatter={valueFormatter}
