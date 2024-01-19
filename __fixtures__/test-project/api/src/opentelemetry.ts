@@ -27,9 +27,10 @@ const studioPort = getConfig().studio.basePort
 const exporter = new OTLPTraceExporter({
   // Update this URL to point to where your OTLP compatible collector is listening
   // The redwood development studio (`yarn rw exp studio`) can collect your
-  // telemetry at `http://127.0.0.1:<PORT>/v1/traces` (default PORT is 4318)
+  // telemetry at `http://127.0.0.1:<PORT>/.redwood/functions/otel-trace`
+  // (default PORT is 4318)
   url: `http://127.0.0.1:${studioPort}/.redwood/functions/otel-trace`,
-  concurrencyLimit: 64,
+  concurrencyLimit: 128,
 })
 
 // You may wish to switch to BatchSpanProcessor in production as it is the recommended choice for performance reasons

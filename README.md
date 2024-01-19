@@ -4,8 +4,9 @@
 
 ### Local dev
 1. Make your changes to the source code.
-2. Run `RW_STUDIO_USER_PROJECT_PATH=./__fixture__/test-project yarn rw dev`
-3. Run the Test Project that send in to Studio using `yarn rw dev` inside `__fixture__/test-project`
+2. Run `RW_STUDIO_USER_PROJECT_PATH=./__fixtures__/test-project yarn rw dev`
+3. Run the Test Project that send in to Studio using `yarn rw dev` inside
+  `__fixtures__/test-project`
 4. Be sure you set the OpenTelemetry sdk path in `redwood.toml` to point to the
   correct path for your project (see example below under
   [Troubleshooting](#troubleshooting))

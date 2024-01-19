@@ -175,7 +175,7 @@ async function main() {
       main: 'api/dist/server.js',
       files: ['api', 'web', 'redwood.toml'],
       bin: {
-        'rw-studio': './api/dist/server.js',
+        'rw-studio': './api/dist/bin/rw-studio.js',
       },
       dependencies: {
         ...apiDependencies,

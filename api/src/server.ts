@@ -33,10 +33,13 @@ import {
   getUserProjectConfig,
   getUserProjectPaths,
 } from './util/project'
-import { rewriteBasePortEnvVar } from './util/rewriteWebIndexBasePort'
+import { rewriteApiPortEnvVar } from './util/rewriteWebIndexApiPort'
 
 export async function serve(
-  { open: autoOpen }: { open: boolean } = { open: false }
+  { open: autoOpen, enableWeb }: { open: boolean; enableWeb: boolean } = {
+    open: false,
+    enableWeb: false,
+  }
 ) {
   logger.info('Starting RedwoodJS Studio')
   // TODO: Have the redwood cli set this env var when execa runs this file
@@ -78,29 +81,35 @@ export async function serve(
   const userPaths = getUserProjectPaths()
   const userConfig = getUserProjectConfig()
   const studioConfig = getStudioConfig()
-  const apiRootPath = coerceRootPath(studioConfig.web.apiUrl)
-  const port = userConfig.studio.basePort
+  const apiRootPath = enableWeb ? coerceRootPath(studioConfig.web.apiUrl) : ''
+  const webPort = userConfig.studio.basePort
+  const apiPort = enableWeb ? webPort : webPort + 1
+
   config({
     path: path.join(userPaths.base, '.env'),
     defaults: path.join(userPaths.base, '.env.defaults'),
     multiline: true,
   })
 
-  rewriteBasePortEnvVar(port)
+  rewriteApiPortEnvVar(apiPort)
 
-  // Start the studio web+api+graphql server
   const fastify = Fastify(DEFAULT_REDWOOD_FASTIFY_CONFIG)
-  await fastify.register(redwoodFastifyWeb)
+
+  if (enableWeb) {
+    await fastify.register(redwoodFastifyWeb)
+  }
+
   await fastify.register(redwoodFastifyAPI, {
     redwood: {
       apiRootPath,
     },
   })
+
   await fastify.register(redwoodFastifyGraphQLServer, {
     loggerConfig: {
       logger: logger,
     },
-    graphiQLEndpoint: '/.redwood/functions/graphql',
+    graphiQLEndpoint: enableWeb ? '/.redwood/functions/graphql' : '/graphql',
     sdls,
     services,
     directives,
@@ -124,20 +133,22 @@ export async function serve(
     hideSTARTTLS: true,
     onData: handleMail,
   })
-  smtpServer.listen(port + 1, undefined, () => {
+  smtpServer.listen(apiPort + 1, undefined, () => {
     logger.info('Listening for mail...')
   })
 
   // Start
-  fastify.listen({ port })
+  fastify.listen({ port: apiPort })
   fastify.ready(() => {
     logger.info('Studio is up and running!')
     logger.info(
-      `To access the Studio, visit ${chalk.green(`http://localhost:${port}`)}`
+      `To access the Studio, visit ${chalk.green(
+        `http://localhost:${webPort}`
+      )}`
     )
 
     if (autoOpen) {
-      open(`http://localhost:${port}`)
+      open(`http://localhost:${webPort}`)
     }
   })
 

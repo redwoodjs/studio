@@ -13,6 +13,10 @@
     # Add any ENV vars that should be available to the web side to this array
     # See https://redwoodjs.com/docs/environment-variables#web
   ]
+[api]
+  # TODO: Get rid of this when RW no longer cares about the api port for
+  # projects using their own server file
+  port = 4319
 [browser]
   open = true
 [notifications]

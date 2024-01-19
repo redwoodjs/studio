@@ -26,6 +26,9 @@
 [studio]
   basePort = 4318
 
+[studio]
+  basePort = 4318
+
 [studio.graphiql]
   authImpersonation.authProvider = "dbAuth"
   authImpersonation.userId = 1
