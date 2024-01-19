@@ -6,7 +6,7 @@ const Routes = () => {
   return (
     <Router>
       <Set wrap={SidebarLayout}>
-        <Route path="/" page={HomePage} name="home" />
+        <Route path="/" page={DashboardPage} name="home" />
 
         {/* TODO: Implement functionality and restore the route */}
         {/* <Route path="/graphql" page={GraphQLPage} name="graphql" /> */}

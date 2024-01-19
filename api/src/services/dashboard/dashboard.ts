@@ -79,6 +79,8 @@ export const anonymousGraphQLOperationSpans: QueryResolvers['anonymousGraphQLOpe
 // TODO: I wanted to generalize this function, but SQLite and Prisma isn't happy with interpolating variables with the IN clause
 export const databasePerformance: QueryResolvers['databasePerformance'] =
   async ({ filter }: { filter: PerformanceFilterCriteria }) => {
+    const secondsAgo = filter?.secondsAgo ?? null
+
     return await db.$queryRaw<PerformanceDataPoint[]>`SELECT
     s.id,
     t.id AS spanType,
@@ -97,7 +99,7 @@ export const databasePerformance: QueryResolvers['databasePerformance'] =
   WHERE
     t.id IN('SQL', 'PRISMA')
   AND
-    (${filter.secondsAgo} IS NULL OR startTimeNano / 1000000000.000 >= strftime('%s', 'now') - ${filter.secondsAgo})
+    (${secondsAgo} IS NULL OR startTimeNano / 1000000000.000 >= strftime('%s', 'now') - ${secondsAgo})
   ORDER BY
     s.startTimeNano ASC,
     t.id`
@@ -108,6 +110,8 @@ export const graphqlPerformance: QueryResolvers['graphqlPerformance'] = async ({
 }: {
   filter: PerformanceFilterCriteria
 }) => {
+  const secondsAgo = filter?.secondsAgo ?? null
+
   return await db.$queryRaw<PerformanceDataPoint[]>`SELECT
     s.id,
     t.id AS spanType,
@@ -126,7 +130,7 @@ export const graphqlPerformance: QueryResolvers['graphqlPerformance'] = async ({
   WHERE
     t.id IN('GRAPHQL')
   AND
-    (${filter.secondsAgo} IS NULL OR startTimeNano / 1000000000.000 >= strftime('%s', 'now') - ${filter.secondsAgo})
+    (${secondsAgo} IS NULL OR startTimeNano / 1000000000.000 >= strftime('%s', 'now') - ${secondsAgo})
   ORDER BY
     s.startTimeNano ASC,
     t.id`
@@ -137,6 +141,8 @@ export const apiPerformance: QueryResolvers['apiPerformance'] = async ({
 }: {
   filter: PerformanceFilterCriteria
 }) => {
+  const secondsAgo = filter?.secondsAgo ?? null
+
   return await db.$queryRaw<PerformanceDataPoint[]>`SELECT
     s.id,
     t.id AS spanType,
@@ -155,7 +161,7 @@ export const apiPerformance: QueryResolvers['apiPerformance'] = async ({
   WHERE
     t.id IN('REDWOOD_FUNCTION', 'REDWOOD_SERVICE')
   AND
-    (${filter.secondsAgo} IS NULL OR startTimeNano / 1000000000.000 >= strftime('%s', 'now') - ${filter.secondsAgo})
+    (${secondsAgo} IS NULL OR startTimeNano / 1000000000.000 >= strftime('%s', 'now') - ${secondsAgo})
   ORDER BY
     s.startTimeNano ASC,
     t.id`
@@ -166,6 +172,8 @@ export const miscPerformance: QueryResolvers['miscPerformance'] = async ({
 }: {
   filter: PerformanceFilterCriteria
 }) => {
+  const secondsAgo = filter?.secondsAgo ?? null
+
   return await db.$queryRaw<PerformanceDataPoint[]>`SELECT
     s.id,
     t.id AS spanType,
@@ -184,7 +192,7 @@ export const miscPerformance: QueryResolvers['miscPerformance'] = async ({
   WHERE
     t.id IN('GENERIC')
   AND
-    (${filter.secondsAgo} IS NULL OR startTimeNano / 1000000000.000 >= strftime('%s', 'now') - ${filter.secondsAgo})
+    (${secondsAgo} IS NULL OR startTimeNano / 1000000000.000 >= strftime('%s', 'now') - ${secondsAgo})
   ORDER BY
     s.startTimeNano ASC,
     t.id`
@@ -195,6 +203,8 @@ export const networkPerformance: QueryResolvers['networkPerformance'] = async ({
 }: {
   filter: PerformanceFilterCriteria
 }) => {
+  const secondsAgo = filter?.secondsAgo ?? null
+
   return await db.$queryRaw<PerformanceDataPoint[]>`SELECT
     s.id,
     t.id AS spanType,
@@ -213,7 +223,7 @@ export const networkPerformance: QueryResolvers['networkPerformance'] = async ({
   WHERE
     t.id IN('HTTP')
   AND
-    (${filter.secondsAgo} IS NULL OR startTimeNano / 1000000000.000 >= strftime('%s', 'now') - ${filter.secondsAgo})
+    (${secondsAgo} IS NULL OR startTimeNano / 1000000000.000 >= strftime('%s', 'now') - ${secondsAgo})
   ORDER BY
     s.startTimeNano ASC,
     t.id`
