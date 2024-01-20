@@ -13,7 +13,7 @@ const INSPECTOR_QUERY = gql`
   }
 `
 
-const GraphQLPage = () => {
+const GraphQLInspectorPage = () => {
   const inspectorQuery = useQuery<GetGraphQLInspectorResults>(INSPECTOR_QUERY)
   return (
     <>
@@ -75,4 +75,4 @@ const GraphQLPage = () => {
   )
 }
 
-export default GraphQLPage
+export default GraphQLInspectorPage

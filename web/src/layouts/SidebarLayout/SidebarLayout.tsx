@@ -120,30 +120,30 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   const databaseNavigation: TNavigationItem[] = [
     {
       name: 'SQL Statements',
-      to: routes.opentelemetryTraces(),
+      to: routes.databaseSqlStatements(),
       icon: SqlStatementsIcon,
     },
     {
-      name: 'Prisma Model ERD',
-      to: routes.opentelemetryTraces(),
+      name: 'Entity Relation Diagram',
+      to: routes.databaseErd(),
       icon: ErdIcon,
     },
   ]
   const graphQLNavigation: TNavigationItem[] = [
     {
-      name: 'GraphiQL Playground',
+      name: 'Playground',
       to: routes.graphiql(),
       icon: GraphQLIcon,
     },
     {
-      name: 'GraphQL Operations',
-      to: routes.graphiql(),
-      icon: ListBulletIcon,
+      name: 'Schema Explorer',
+      to: routes.graphQLInspector(),
+      icon: MagnifyingGlassCircleIcon,
     },
     {
-      name: 'GraphQL Inspector',
-      to: routes.graphiql(),
-      icon: MagnifyingGlassCircleIcon,
+      name: 'Operations',
+      to: routes.graphQLOperations(),
+      icon: ListBulletIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
@@ -264,7 +264,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                         </li>
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
-                            OpenTelemetry
+                            Monitoring
                           </div>
                           <ul className="-mx-2 mt-2 space-y-1">
                             {telemetryNavigation.map((item) => (
@@ -370,7 +370,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                 </li>
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
-                    OpenTelemetry
+                    Monitoring
                   </div>
                   <ul className="-mx-2 mt-2 space-y-1">
                     {telemetryNavigation.map((item) => (

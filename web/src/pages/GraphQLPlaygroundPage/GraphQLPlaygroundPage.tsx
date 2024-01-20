@@ -1,7 +1,7 @@
 import GraphiqlCell from 'src/components/GraphiqlCell'
 
-const GraphiqlPage = () => {
+const GraphQLPlaygroundPage = () => {
   return <GraphiqlCell />
 }
 
-export default GraphiqlPage
+export default GraphQLPlaygroundPage

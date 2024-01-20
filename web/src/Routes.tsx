@@ -1,6 +1,11 @@
 import { Router, Route, Set } from '@redwoodjs/router'
 
 import SidebarLayout from 'src/layouts/SidebarLayout'
+import DatabaseErdPage from 'src/pages/DatabaseErdPage/DatabaseErdPage'
+import DatabaseSqlStatementsPage from 'src/pages/DatabaseSQLStatementsPage/DatabaseSQLStatementsPage'
+import GraphQLInspectorPage from 'src/pages/GraphQLInspectorPage/GraphQLInspectorPage'
+import GraphQLOperationsPage from 'src/pages/GraphQLOperationsPage/GraphQLOperationsPage'
+import GraphQLPlaygroundPage from 'src/pages/GraphQLPlaygroundPage/GraphQLPlaygroundPage'
 
 const Routes = () => {
   return (
@@ -8,20 +13,22 @@ const Routes = () => {
       <Set wrap={SidebarLayout}>
         <Route path="/" page={DashboardPage} name="home" />
 
-        <Route path="/graphql" page={GraphQLPage} name="graphql" />
-        <Route path="/prisma" page={PrismaPage} name="prisma" />
+        <Route path="/monitoring/traces" page={OpenTelemetryTracesPage} name="opentelemetryTraces" />
+        <Route path="/monitoring/traces/{id:String}" page={OpenTelemetryTracePage} name="opentelemetryTrace" />
+        <Route path="/monitoring/spans" page={OpenTelemetrySpansPage} name="opentelemetrySpans" />
+        <Route path="/monitoring/spans/{id:String}" page={OpenTelemetrySpanPage} name="opentelemetrySpan" />
 
-        <Route path="/opentelemetry/traces" page={OpenTelemetryTracesPage} name="opentelemetryTraces" />
-        <Route path="/opentelemetry/traces/{id:String}" page={OpenTelemetryTracePage} name="opentelemetryTrace" />
-        <Route path="/opentelemetry/spans" page={OpenTelemetrySpansPage} name="opentelemetrySpans" />
-        <Route path="/opentelemetry/spans/{id:String}" page={OpenTelemetrySpanPage} name="opentelemetrySpan" />
+        <Route path="/database/erd" page={DatabaseErdPage} name="databaseErd" />
+        <Route path="/database/sql-statements" page={DatabaseSqlStatementsPage} name="databaseSqlStatements" />
 
-        <Route path="/graphiql" page={GraphiqlPage} name="graphiql" />
+        <Route path="/gql/playground" page={GraphQLPlaygroundPage} name="graphiql" />
+        <Route path="/gql/inspector" page={GraphQLInspectorPage} name="graphQLInspector" />
+        <Route path="/gql/operations" page={GraphQLOperationsPage} name="graphQLOperations" />
 
-        <Route path="/mailer-inbox" page={MailerInboxPage} name="mailerInbox" />
-        <Route path="/mailer-template-preview" page={MailerTemplatePreviewPage} name="mailerTemplatePreview" />
+        <Route path="/mailer/inbox" page={MailerInboxPage} name="mailerInbox" />
+        <Route path="/mailer/template-preview" page={MailerTemplatePreviewPage} name="mailerTemplatePreview" />
 
-        <Route path="/og-tag-preview" page={OGTagPreviewPage} name="ogTagPreview" />
+        <Route path="/ssr/og-tag-preview" page={OGTagPreviewPage} name="ogTagPreview" />
       </Set>
       <Route notfound page={NotFoundPage} />
     </Router>
