@@ -48,27 +48,37 @@ If you do not see any traces or spans, check that your `redwood.toml` points to 
 	apiSdk = "/Users/dthyresson/Dropbox/Code/redwoodjs/studio/__fixtures__/test-project/api/dist/opentelemetry.js"
 ```
 
-### Views
+### Adding New Prisma Modela and Views
 
 RW_STUDIO_DATABASE_URL=file:./dummy.sqlite
 
-1. In studio project root
-2. yarn rw prisma migrate reset to make sure dummy was up-to-date
+* In studio project root
+* yarn rw prisma migrate reset to make sure dummy was up-to-date
 
-view
+If adding a view a view:
 
-3. yarn rw prisma migrate dev span-attribute-view --create-only
-4. Wrote view
-5. Updated prisma schema with the view "model"
+* yarn rw prisma migrate dev span-attribute-view --create-only
+* Wrote view
+* Update prisma schema with the view "model"
 
-model
+If adding a mode:
 
-- todo
-5. Updated prisma schema with the new "model"
-3. yarn rw prisma migrate dev
+* Update prisma schema with the new "model"
+* yarn rw prisma migrate dev
 
-6. yarn rw prisma migrate reset
-6. View was applied to "dummy.sqlite"
-7. yarn studio:package
-8. Deleted __fixtures__/test-project/.redwood/studio/prisma.sqlite to make sure migrate deploy really updated
-8. Run studio via: yarn rw-studio to apply migrations
+Then ...
+
+* yarn rw prisma migrate reset
+* View was applied to "dummy.sqlite"
+* yarn studio:package
+* Deleted __fixtures__/test-project/.redwood/studio/prisma.sqlite to make sure migrate deploy really updated
+* Run studio via: yarn rw-studio to apply migrations
+
+
+## Releasing
+
+`npm version [major|minor|patch]`
+`git push upstream --follow-tags`
+`yarn studio:package`
+`cd packaged`
+`npm publish`
