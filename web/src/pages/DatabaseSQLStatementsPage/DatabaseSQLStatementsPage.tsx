@@ -1,26 +1,19 @@
-import { Link, routes } from '@redwoodjs/router'
+import { Title } from '@tremor/react'
+
 import { Metadata } from '@redwoodjs/web'
+
+import SQLStatementsCell from 'src/components/SQLStatementsCell'
 
 const DatabaseSqlStatementsPage = () => {
   return (
     <>
       <Metadata
-        title="DatabaseSqlStatements"
-        description="DatabaseSqlStatements page"
+        title="Database SQL Statements"
+        description="Database SQL Statements"
       />
 
-      <h1>DatabaseSqlStatementsPage</h1>
-      <p>
-        Find me in{' '}
-        <code>
-          ./web/src/pages/DatabaseSQLStatementsPage/DatabaseSQLStatementsPage.tsx
-        </code>
-      </p>
-      <p>
-        My default route is named <code>databaseSqlStatements</code>, link to me
-        with `
-        <Link to={routes.databaseSqlStatements()}>DatabaseSqlStatements</Link>`
-      </p>
+      <Title className="pb-4">SQL Statements</Title>
+      <SQLStatementsCell />
     </>
   )
 }

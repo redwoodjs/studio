@@ -1,5 +1,6 @@
 export const schema = gql`
   type SpansByAttributeKeyAndType {
+    id: String!
     createdAt: DateTime!
     updatedAt: DateTime!
     statusCode: Int!

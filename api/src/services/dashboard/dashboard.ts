@@ -14,6 +14,7 @@ const spansByAttributeKeyAndType = async (
 ) =>
   await db.$queryRaw<SpansByAttributeKeyAndType[]>`
 SELECT
+  s.id,
   s.createdAt,
   s.updatedAt,
   s.statusCode,
@@ -37,7 +38,9 @@ WHERE
   AND (${attributeKey} IS NULL OR a.key = ${attributeKey})
   AND (${attributeValue} IS NULL OR a.value = ${attributeValue})
 ORDER BY
-  s.createdAt DESC`
+  s.createdAt DESC
+LIMIT 100`
+// ^^ until we paginate
 
 export const sqlStatementSpans: QueryResolvers['sqlStatementSpans'] =
   async () => {

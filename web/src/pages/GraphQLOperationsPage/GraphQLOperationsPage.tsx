@@ -1,25 +1,16 @@
-import { Link, routes } from '@redwoodjs/router'
+import { Title } from '@tremor/react'
+
 import { Metadata } from '@redwoodjs/web'
+
+import GraphQLOperationsCell from 'src/components/GraphQLOperationsCell'
 
 const GraphQLOperationsPage = () => {
   return (
     <>
-      <Metadata
-        title="GraphQlOperations"
-        description="GraphQlOperations page"
-      />
+      <Metadata title="GraphQl Operations" description="GraphQl Operations" />
 
-      <h1>GraphQlOperationsPage</h1>
-      <p>
-        Find me in{' '}
-        <code>
-          ./web/src/pages/GraphQLOperationsPage/GraphQLOperationsPage.tsx
-        </code>
-      </p>
-      <p>
-        My default route is named <code>graphQlOperations</code>, link to me
-        with `<Link to={routes.graphQLOperations()}>GraphQlOperations</Link>`
-      </p>
+      <Title className="pb-4">GraphQL Operations</Title>
+      <GraphQLOperationsCell />
     </>
   )
 }
