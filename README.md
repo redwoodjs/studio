@@ -49,5 +49,5 @@ If you do not see any traces or spans, check that your `redwood.toml` points to 
 `npm version [major|minor|patch]`
 `git push --follow-tags`
 `yarn studio:package`
-`cd package`
+`cd packaged`
 `npm publish`
