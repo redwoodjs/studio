@@ -43,3 +43,11 @@ If you do not see any traces or spans, check that your `redwood.toml` points to 
 	enabled = true
 	apiSdk = "/Users/dthyresson/Dropbox/Code/redwoodjs/studio/__fixtures__/test-project/api/dist/opentelemetry.js"
 ```
+
+## Releasing
+
+`npm version [major|minor|patch]`
+`git push --follow-tags`
+`yarn studio:package`
+`cd package`
+`npm publish`
