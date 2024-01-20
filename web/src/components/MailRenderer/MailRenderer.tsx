@@ -1,16 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import {
-  DesktopComputerIcon,
-  DeviceMobileIcon,
+  ComputerDesktopIcon as DesktopComputerIcon,
+  DevicePhoneMobileIcon as DeviceMobileIcon,
   DeviceTabletIcon,
-} from '@heroicons/react/outline'
-import {
-  DocumentReportIcon,
+  DocumentIcon as DocumentReportIcon,
   DocumentTextIcon,
-  CodeIcon,
-  SwitchHorizontalIcon,
-} from '@heroicons/react/outline'
+  CodeBracketIcon as CodeIcon,
+  ArrowPathIcon as SwitchHorizontalIcon,
+} from '@heroicons/react/24/outline'
 import {
   Text,
   Card,

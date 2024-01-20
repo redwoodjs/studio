@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 
-import { CubeTransparentIcon } from '@heroicons/react/outline'
+import { CubeTransparentIcon } from '@heroicons/react/24/outline'
 import {
   Grid,
   Col,

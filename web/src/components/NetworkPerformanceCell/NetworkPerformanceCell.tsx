@@ -1,4 +1,5 @@
-import { Card, Text } from '@tremor/react'
+import { GlobeAltIcon } from '@heroicons/react/24/outline'
+import { Card } from '@tremor/react'
 import type {
   GetNetworkPerformanceQuery,
   GetNetworkPerformanceQueryVariables,
@@ -6,6 +7,10 @@ import type {
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
+import ChartEmptyState from 'src/components/Charts/ChartEmptyState'
+import ChartFailureState from 'src/components/Charts/ChartFailureState'
+import ChartHeading from 'src/components/Charts/ChartHeading'
+import ChartLoadingState from 'src/components/Charts/ChartLoadingState'
 import PerformanceLineChart from 'src/components/Charts/LineCharts/PerformanceLineChart'
 
 export const beforeQuery = (props) => {
@@ -29,14 +34,14 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => <ChartLoadingState />
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => <ChartEmptyState />
 
 export const Failure = ({
   error,
 }: CellFailureProps<GetNetworkPerformanceQueryVariables>) => (
-  <div style={{ color: 'red' }}>Error: {error?.message}</div>
+  <ChartFailureState message={error.message} />
 )
 
 export const Success = ({
@@ -47,7 +52,11 @@ export const Success = ({
 >) => {
   return (
     <Card>
-      <Text>Network Performance</Text>
+      <ChartHeading
+        caption="Network Performance"
+        icon={GlobeAltIcon}
+        tooltip="Network Performance"
+      />
       <PerformanceLineChart dataPoints={dataPoints} />{' '}
     </Card>
   )

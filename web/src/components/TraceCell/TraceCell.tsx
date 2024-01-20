@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 
-import { ClockIcon, MapIcon } from '@heroicons/react/outline'
+import { ClockIcon, MapIcon } from '@heroicons/react/24/outline'
 import {
   Grid,
   Col,

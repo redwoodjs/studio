@@ -1,4 +1,5 @@
-import { Card, Text } from '@tremor/react'
+import { CodeBracketIcon } from '@heroicons/react/24/outline'
+import { Card } from '@tremor/react'
 import type {
   GetApiPerformanceQuery,
   GetApiPerformanceQueryVariables,
@@ -6,6 +7,10 @@ import type {
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
+import ChartEmptyState from 'src/components/Charts/ChartEmptyState'
+import ChartFailureState from 'src/components/Charts/ChartFailureState'
+import ChartHeading from 'src/components/Charts/ChartHeading'
+import ChartLoadingState from 'src/components/Charts/ChartLoadingState'
 import PerformanceLineChart from 'src/components/Charts/LineCharts/PerformanceLineChart'
 
 export const beforeQuery = (props) => {
@@ -29,14 +34,14 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => <ChartLoadingState />
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => <ChartEmptyState />
 
 export const Failure = ({
   error,
 }: CellFailureProps<GetApiPerformanceQueryVariables>) => (
-  <div style={{ color: 'red' }}>Error: {error?.message}</div>
+  <ChartFailureState message={error.message} />
 )
 
 export const Success = ({
@@ -47,7 +52,11 @@ export const Success = ({
 >) => {
   return (
     <Card>
-      <Text>Api Performance</Text>
+      <ChartHeading
+        caption="API Performance"
+        icon={CodeBracketIcon}
+        tooltip="API Performance"
+      />
       <PerformanceLineChart dataPoints={dataPoints} />
     </Card>
   )

@@ -3,17 +3,20 @@ import { Fragment, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { Dialog, Transition } from '@headlessui/react'
 import {
-  XIcon,
-  MenuIcon,
+  Square2StackIcon as DashboardIcon,
+  Bars3Icon as MenuIcon,
   HomeIcon,
-  MailIcon,
+  InboxArrowDownIcon,
   InboxIcon,
-  // DatabaseIcon,
-  AdjustmentsIcon,
+  ListBulletIcon,
+  MagnifyingGlassCircleIcon,
+  CommandLineIcon as SqlStatementsIcon,
+  ShareIcon as GraphQLIcon,
+  PhotoIcon,
   CubeIcon,
   CubeTransparentIcon,
-  ViewBoardsIcon,
-} from '@heroicons/react/outline'
+  NewspaperIcon as ErdIcon,
+} from '@heroicons/react/24/outline'
 import { Flex, Subtitle, Title } from '@tremor/react'
 import { GetConnectionStatus } from 'types/graphql'
 
@@ -100,22 +103,8 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const navigation: TNavigationItem[] = [
-    { name: 'Dashboard', to: routes.home(), icon: HomeIcon },
+    { name: 'Dashboard', to: routes.home(), icon: DashboardIcon },
   ]
-  // const graphqlNavigation: TNavigationItem[] = [
-  //   {
-  //     name: 'GraphQL Schema',
-  //     to: routes.graphql(),
-  //     icon: GraphQLIcon,
-  //   },
-  // ]
-  // const databaseNavigation: TNavigationItem[] = [
-  //   {
-  //     name: 'Prisma Schema',
-  //     to: routes.prisma(),
-  //     icon: DatabaseIcon,
-  //   },
-  // ]
   const telemetryNavigation: TNavigationItem[] = [
     {
       name: 'Traces',
@@ -128,22 +117,48 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
       icon: CubeIcon,
     },
   ]
-  const apiNavigation: TNavigationItem[] = [
+  const databaseNavigation: TNavigationItem[] = [
+    {
+      name: 'SQL Statements',
+      to: routes.opentelemetryTraces(),
+      icon: SqlStatementsIcon,
+    },
+    {
+      name: 'Prisma Model ERD',
+      to: routes.opentelemetryTraces(),
+      icon: ErdIcon,
+    },
+  ]
+  const graphQLNavigation: TNavigationItem[] = [
     {
       name: 'GraphiQL Playground',
       to: routes.graphiql(),
-      icon: ViewBoardsIcon,
+      icon: GraphQLIcon,
+    },
+    {
+      name: 'GraphQL Operations',
+      to: routes.graphiql(),
+      icon: ListBulletIcon,
+    },
+    {
+      name: 'GraphQL Inspector',
+      to: routes.graphiql(),
+      icon: MagnifyingGlassCircleIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
     { name: 'Inbox', to: routes.mailerInbox(), icon: InboxIcon },
-    { name: 'Templates', to: routes.mailerTemplatePreview(), icon: MailIcon },
+    {
+      name: 'Templates',
+      to: routes.mailerTemplatePreview(),
+      icon: InboxArrowDownIcon,
+    },
   ]
   const ssrNavigation: TNavigationItem[] = [
     {
       name: 'OG Tag Preview',
       to: routes.ogTagPreview(),
-      icon: AdjustmentsIcon,
+      icon: PhotoIcon,
     },
   ]
 
@@ -210,7 +225,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                         onClick={() => setSidebarOpen(false)}
                       >
                         <span className="sr-only">Close sidebar</span>
-                        <XIcon
+                        <DashboardIcon
                           className="h-6 w-6 text-white"
                           aria-hidden="true"
                         />
@@ -247,30 +262,6 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                             ))}
                           </ul>
                         </li>
-                        {/* <li>
-                          <div className="text-xs font-semibold leading-6 text-gray-400">
-                            GraphQL
-                          </div>
-                          <ul className="-mx-2 mt-2 space-y-1">
-                            {graphqlNavigation.map((item) => (
-                              <li key={item.name}>
-                                <NavigationItem item={item} />
-                              </li>
-                            ))}
-                          </ul>
-                        </li> */}
-                        {/* <li>
-                          <div className="text-xs font-semibold leading-6 text-gray-400">
-                            Database
-                          </div>
-                          <ul className="-mx-2 mt-2 space-y-1">
-                            {databaseNavigation.map((item) => (
-                              <li key={item.name}>
-                                <NavigationItem item={item} />
-                              </li>
-                            ))}
-                          </ul>
-                        </li> */}
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
                             OpenTelemetry
@@ -285,10 +276,22 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                         </li>
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
-                            APIs
+                            Database
                           </div>
                           <ul className="-mx-2 mt-2 space-y-1">
-                            {apiNavigation.map((item) => (
+                            {databaseNavigation.map((item) => (
+                              <li key={item.name}>
+                                <NavigationItem item={item} />
+                              </li>
+                            ))}
+                          </ul>
+                        </li>
+                        <li>
+                          <div className="text-xs font-semibold leading-6 text-gray-400">
+                            GraphQL
+                          </div>
+                          <ul className="-mx-2 mt-2 space-y-1">
+                            {graphQLNavigation.map((item) => (
                               <li key={item.name}>
                                 <NavigationItem item={item} />
                               </li>
@@ -365,30 +368,6 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     ))}
                   </ul>
                 </li>
-                {/* <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
-                    GraphQL
-                  </div>
-                  <ul className="-mx-2 mt-2 space-y-1">
-                    {graphqlNavigation.map((item) => (
-                      <li key={item.name}>
-                        <NavigationItem item={item} />
-                      </li>
-                    ))}
-                  </ul>
-                </li> */}
-                {/* <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
-                    Database
-                  </div>
-                  <ul className="-mx-2 mt-2 space-y-1">
-                    {databaseNavigation.map((item) => (
-                      <li key={item.name}>
-                        <NavigationItem item={item} />
-                      </li>
-                    ))}
-                  </ul>
-                </li> */}
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
                     OpenTelemetry
@@ -403,10 +382,22 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                 </li>
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
-                    APIs
+                    GraphQL
                   </div>
                   <ul className="-mx-2 mt-2 space-y-1">
-                    {apiNavigation.map((item) => (
+                    {graphQLNavigation.map((item) => (
+                      <li key={item.name}>
+                        <NavigationItem item={item} />
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+                <li>
+                  <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
+                    Database
+                  </div>
+                  <ul className="-mx-2 mt-2 space-y-1">
+                    {databaseNavigation.map((item) => (
                       <li key={item.name}>
                         <NavigationItem item={item} />
                       </li>

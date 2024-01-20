@@ -2,13 +2,13 @@ import { useState } from 'react'
 
 import { useLazyQuery } from '@apollo/client'
 import {
-  CodeIcon,
-  CollectionIcon,
-  ExclamationIcon,
+  CodeBracketIcon as CodeIcon,
+  Square2StackIcon as CollectionIcon,
+  ExclamationTriangleIcon,
   EyeIcon,
   LinkIcon,
-  RefreshIcon,
-} from '@heroicons/react/outline'
+  ArrowPathIcon as RefreshIcon,
+} from '@heroicons/react/24/outline'
 import {
   Title,
   Grid,
@@ -130,7 +130,11 @@ const OgTagPreviewPage = () => {
         ) : ogTagPreviewQuery.error ? (
           <Col numColSpanLg={3}>
             <Card className="h-full p-6">
-              <Callout title="Error" icon={ExclamationIcon} color="rose">
+              <Callout
+                title="Error"
+                icon={ExclamationTriangleIcon}
+                color="rose"
+              >
                 <div className="h-full w-full overflow-x-auto">
                   <pre className="text-gray-500 dark:text-gray-600">
                     {JSON.stringify(ogTagPreviewQuery.error, undefined, 2)}

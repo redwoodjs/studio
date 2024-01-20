@@ -1,4 +1,4 @@
-import { CubeIcon, CubeTransparentIcon } from '@heroicons/react/outline'
+import { CubeIcon, CubeTransparentIcon } from '@heroicons/react/24/outline'
 import { Badge, Button, Card, Divider, Flex, Text, Title } from '@tremor/react'
 
 import { Link, routes } from '@redwoodjs/router'

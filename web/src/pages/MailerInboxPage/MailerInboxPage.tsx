@@ -3,12 +3,12 @@ import { Buffer } from 'buffer'
 import { useState } from 'react'
 
 import {
-  CodeIcon,
+  CodeBracketIcon as CodeIcon,
   DocumentDuplicateIcon,
-  MailIcon,
+  InboxArrowDownIcon as MailIcon,
   PaperClipIcon,
-  TableIcon,
-} from '@heroicons/react/outline'
+  TableCellsIcon as TableIcon,
+} from '@heroicons/react/24/outline'
 import { DocumentDuplicateIcon as DocumentDuplicateSolidIcon } from '@heroicons/react/solid'
 import {
   Card,
