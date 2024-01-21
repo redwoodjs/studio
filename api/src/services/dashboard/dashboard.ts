@@ -33,7 +33,9 @@ SELECT
 FROM
   OTelTraceSpan s
   JOIN OTelTraceSpanType t ON t. "id" = s.typeId
-  JOIN OTelTraceAttribute a ON a.hash
+  -- here we use the Prisma implicit join table to join attributes A to spans B
+  JOIN _OTelTraceAttributeToOTelTraceSpan atos on atos.A = a.id and atos.B = s.id
+  JOIN OTelTraceAttribute a ON atos.A = a.id
 WHERE
   t.id = ${typeId}
   AND (${attributeKey} IS NULL OR a.key = ${attributeKey})
