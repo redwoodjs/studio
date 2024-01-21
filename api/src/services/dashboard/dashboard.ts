@@ -39,7 +39,7 @@ WHERE
   AND (${attributeValue} IS NULL OR a.value = ${attributeValue})
 ORDER BY
   s.createdAt DESC
-LIMIT 100`
+LIMIT 200`
 // ^^ until we paginate
 
 export const sqlStatementSpans: QueryResolvers['sqlStatementSpans'] =

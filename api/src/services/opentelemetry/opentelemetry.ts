@@ -6,11 +6,16 @@ import { db } from 'src/lib/db'
 import { logger } from 'src/lib/logger'
 import { retypeSpan } from 'src/lib/opentelemetry'
 
+// Limiting to 300 for now until pagination is implemented
+// as 1000+ spans can be returned in a single query and bog down ui
+// but may cause some incomplete traces to be returned?
+// changed order to descending to show recent first
 export const otelSpans: QueryResolvers['otelSpans'] = async () => {
   const incompleteData = await db.oTelTraceSpan.findMany({
     orderBy: {
       startTimeNano: 'desc',
     },
+    take: 300,
     include: {
       attributes: true,
       events: {
@@ -422,7 +427,8 @@ export const otelTraces: QueryResolvers['otelTraces'] = async (args, obj) => {
     const bStartTime = bigIntMin(
       ...b.spans.map((span) => BigInt(span.startTimeNano))
     )
-    return aStartTime < bStartTime ? -1 : aStartTime > bStartTime ? 1 : 0
+    // changed order to descending to show recent first
+    return aStartTime > bStartTime ? -1 : aStartTime < bStartTime ? 1 : 0
   })
 }
 
