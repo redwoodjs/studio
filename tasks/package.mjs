@@ -166,12 +166,13 @@ async function main() {
   ).dependencies
 
   const dependencies = {}
+  const peerDependencies = {}
   Object.entries({ ...apiDependencies, ...webDependencies }).forEach(
     ([key, value]) => {
       if (key.startsWith('@redwoodjs/')) {
         // -0 at the end means "any prerelease version", and "prerelease" for
         // RW means -canary or -rc
-        dependencies[key] = '^7.0.0-0 || 7.x || ^8.0.0-0'
+        peerDependencies[key] = '^7.0.0-0 || 7.x || ^8.0.0-0'
       } else {
         dependencies[key] = value
       }
@@ -195,6 +196,7 @@ async function main() {
         'rw-studio': './api/dist/bin/rw-studio.js',
       },
       dependencies,
+      peerDependencies,
     },
     { spaces: 2 }
   )
