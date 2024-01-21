@@ -161,6 +161,23 @@ async function main() {
   const apiDependencies = fs.readJSONSync(
     path.join(studioDir, 'api', 'package.json')
   ).dependencies
+  const webDependencies = fs.readJSONSync(
+    path.join(studioDir, 'web', 'package.json')
+  ).dependencies
+
+  const dependencies = {}
+  Object.entries({ ...apiDependencies, ...webDependencies }).forEach(
+    ([key, value]) => {
+      if (key.startsWith('@redwoodjs/')) {
+        // -0 at the end means "any prerelease version", and "prerelease" for
+        // RW means -canary or -rc
+        dependencies[key] = '^7.0.0-0 || 7.x || ^8.0.0-0'
+      } else {
+        dependencies[key] = value
+      }
+    }
+  )
+
   fs.writeJSONSync(
     path.join(packagedDir, 'package.json'),
     {
@@ -177,9 +194,7 @@ async function main() {
       bin: {
         'rw-studio': './api/dist/bin/rw-studio.js',
       },
-      dependencies: {
-        ...apiDependencies,
-      },
+      dependencies,
     },
     { spaces: 2 }
   )
