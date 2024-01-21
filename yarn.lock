@@ -3650,7 +3650,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@headlessui/react@npm:1.7.17, @headlessui/react@npm:^1.7.15, @headlessui/react@npm:^1.7.17":
+"@headlessui/react@npm:1.7.18, @headlessui/react@npm:^1.7.18":
+  version: 1.7.18
+  resolution: "@headlessui/react@npm:1.7.18"
+  dependencies:
+    "@tanstack/react-virtual": "npm:^3.0.0-beta.60"
+    client-only: "npm:^0.0.1"
+  peerDependencies:
+    react: ^16 || ^17 || ^18
+    react-dom: ^16 || ^17 || ^18
+  checksum: 2d88d10874879182d4b9ed9a7779266032214034481129ba544e858d3624c8d12333e6a9d9d8263f2f116bc823bcfd43a2d1f69800fbf6a47b34d989370346e5
+  languageName: node
+  linkType: hard
+
+"@headlessui/react@npm:^1.7.15":
   version: 1.7.17
   resolution: "@headlessui/react@npm:1.7.17"
   dependencies:
@@ -3662,21 +3675,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@headlessui/tailwindcss@npm:^0.1.3":
-  version: 0.1.3
-  resolution: "@headlessui/tailwindcss@npm:0.1.3"
+"@headlessui/tailwindcss@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@headlessui/tailwindcss@npm:0.2.0"
   peerDependencies:
     tailwindcss: ^3.0
-  checksum: 55e1d8528fe995d13afafdb07d86f11dd367d6c7ba1a9780872495a8392170f2aa7c908be450a4c533b33b840849ed6399f6ff23243ea7df6eb4651340855609
+  checksum: b641bef150e4ee18afd068c1af8e83c582a3131903ed1a310abbdb463b6150428a9b4c38e42cb296469fb20857f5542ae34f681cbff62f47d52332fbc5117479
   languageName: node
   linkType: hard
 
-"@heroicons/react@npm:1.0.6":
-  version: 1.0.6
-  resolution: "@heroicons/react@npm:1.0.6"
+"@heroicons/react@npm:2.1.1":
+  version: 2.1.1
+  resolution: "@heroicons/react@npm:2.1.1"
   peerDependencies:
     react: ">= 16"
-  checksum: 04d77c604be6a9d3373e2cf773ef0f3e9fa02b52ed85260c440e629682dc3045935090811dda0423fa9bb2d5f8090cdbdda54c901dd3598c9bad691d0abce3d6
+  checksum: c85f76d4ccb5bdad9e6ffaa62bfdcde1c1f9ebaf3287908a7be0994c2d0f6151b9017f6e41d0a1ec9ba1eb1c53ab88f30704b0d25c72adc59896882b0a60147e
   languageName: node
   linkType: hard
 
@@ -7977,6 +7990,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/react-virtual@npm:^3.0.0-beta.60":
+  version: 3.0.2
+  resolution: "@tanstack/react-virtual@npm:3.0.2"
+  dependencies:
+    "@tanstack/virtual-core": "npm:3.0.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 2e0ee88d8b22f391188f920d8b069089338f98a93bcb52f6a23968894592481acdf6fd0954d53960be5d04cf04d7488e2902a80cdb9afe2c4fbc761d3689cada
+  languageName: node
+  linkType: hard
+
+"@tanstack/virtual-core@npm:3.0.0":
+  version: 3.0.0
+  resolution: "@tanstack/virtual-core@npm:3.0.0"
+  checksum: d0899fe470b43f80a2ccc567a01138cc015900f13d91b82abc784fc7bc46419e9c8b99c102a5c6ee76d15933db61aecc68c0ae8e92e9cb9ded9ae2f51a01cf4c
+  languageName: node
+  linkType: hard
+
 "@testing-library/dom@npm:^8.11.1":
   version: 8.20.1
   resolution: "@testing-library/dom@npm:8.20.1"
@@ -8069,13 +8101,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tremor/react@npm:3.12.1":
-  version: 3.12.1
-  resolution: "@tremor/react@npm:3.12.1"
+"@tremor/react@npm:3.13.2":
+  version: 3.13.2
+  resolution: "@tremor/react@npm:3.13.2"
   dependencies:
     "@floating-ui/react": "npm:^0.19.2"
-    "@headlessui/react": "npm:^1.7.17"
-    "@headlessui/tailwindcss": "npm:^0.1.3"
+    "@headlessui/react": "npm:^1.7.18"
+    "@headlessui/tailwindcss": "npm:^0.2.0"
     date-fns: "npm:^2.30.0"
     react-day-picker: "npm:^8.9.1"
     react-transition-group: "npm:^4.4.5"
@@ -8084,7 +8116,7 @@ __metadata:
   peerDependencies:
     react: ^18.0.0
     react-dom: ">=16.6.0"
-  checksum: 451654cc6797a6b3da2c9b641586c776bdedcfec8bfde0f2ededa73a354b43fa0a5485500344b05a29a840450b602a662a9f392217bb2a7b6296242b1575b3a4
+  checksum: 8fe094f382efade75bc96bb401e9719330667dd7da07e7fb6e1bc5d0fe05a823faa40a7b035f5ae695e019605a0d59c5d61d711682357412716cf61a52f16a38
   languageName: node
   linkType: hard
 
@@ -27353,15 +27385,15 @@ __metadata:
   dependencies:
     "@graphiql/plugin-explorer": "npm:0.1.22"
     "@graphiql/toolkit": "npm:0.8.4"
-    "@headlessui/react": "npm:1.7.17"
-    "@heroicons/react": "npm:1.0.6"
+    "@headlessui/react": "npm:1.7.18"
+    "@heroicons/react": "npm:2.1.1"
     "@nivo/core": "npm:^0.84.0"
     "@nivo/treemap": "npm:^0.84.0"
     "@redwoodjs/forms": "npm:7.0.0-canary.785"
     "@redwoodjs/router": "npm:7.0.0-canary.785"
     "@redwoodjs/vite": "npm:7.0.0-canary.785"
     "@redwoodjs/web": "npm:7.0.0-canary.785"
-    "@tremor/react": "npm:3.12.1"
+    "@tremor/react": "npm:3.13.2"
     "@types/react": "npm:18.2.37"
     "@types/react-dom": "npm:18.2.15"
     autoprefixer: "npm:10.4.15"

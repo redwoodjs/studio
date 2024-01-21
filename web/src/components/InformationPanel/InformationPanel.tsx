@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { InformationCircleIcon } from '@heroicons/react/outline'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { Callout } from '@tremor/react'
 
 export default function InformationPanel({ message }: { message: unknown }) {

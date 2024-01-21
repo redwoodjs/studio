@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { useQuery } from '@apollo/client'
-import { VariableIcon } from '@heroicons/react/outline'
+import { VariableIcon } from '@heroicons/react/24/outline'
 import {
   Title,
   Grid,

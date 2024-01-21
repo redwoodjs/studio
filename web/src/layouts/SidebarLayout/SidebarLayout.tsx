@@ -3,17 +3,17 @@ import { Fragment, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { Dialog, Transition } from '@headlessui/react'
 import {
-  XIcon,
-  MenuIcon,
+  XMarkIcon,
+  Bars3Icon,
   HomeIcon,
-  MailIcon,
+  EnvelopeIcon,
   InboxIcon,
-  // DatabaseIcon,
-  AdjustmentsIcon,
+  // CircleStackIcon,
+  AdjustmentsVerticalIcon,
   CubeIcon,
   CubeTransparentIcon,
-  ViewBoardsIcon,
-} from '@heroicons/react/outline'
+  ViewColumnsIcon,
+} from '@heroicons/react/24/outline'
 import { Flex, Subtitle, Title } from '@tremor/react'
 import { GetConnectionStatus } from 'types/graphql'
 
@@ -113,7 +113,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   //   {
   //     name: 'Prisma Schema',
   //     to: routes.prisma(),
-  //     icon: DatabaseIcon,
+  //     icon: CircleStackIcon,
   //   },
   // ]
   const telemetryNavigation: TNavigationItem[] = [
@@ -132,18 +132,22 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
     {
       name: 'GraphiQL Playground',
       to: routes.graphiql(),
-      icon: ViewBoardsIcon,
+      icon: ViewColumnsIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
     { name: 'Inbox', to: routes.mailerInbox(), icon: InboxIcon },
-    { name: 'Templates', to: routes.mailerTemplatePreview(), icon: MailIcon },
+    {
+      name: 'Templates',
+      to: routes.mailerTemplatePreview(),
+      icon: EnvelopeIcon,
+    },
   ]
   const ssrNavigation: TNavigationItem[] = [
     {
       name: 'OG Tag Preview',
       to: routes.ogTagPreview(),
-      icon: AdjustmentsIcon,
+      icon: AdjustmentsVerticalIcon,
     },
   ]
 
@@ -210,7 +214,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                         onClick={() => setSidebarOpen(false)}
                       >
                         <span className="sr-only">Close sidebar</span>
-                        <XIcon
+                        <XMarkIcon
                           className="h-6 w-6 text-white"
                           aria-hidden="true"
                         />
@@ -459,7 +463,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
-            <MenuIcon
+            <Bars3Icon
               className="h-6 w-6 text-gray-500 dark:text-gray-600"
               aria-hidden="true"
             />

@@ -2,13 +2,13 @@ import { useState } from 'react'
 
 import { useLazyQuery } from '@apollo/client'
 import {
-  CodeIcon,
-  CollectionIcon,
-  ExclamationIcon,
+  CodeBracketIcon,
+  RectangleStackIcon,
+  ExclamationTriangleIcon,
   EyeIcon,
   LinkIcon,
-  RefreshIcon,
-} from '@heroicons/react/outline'
+  ArrowPathIcon,
+} from '@heroicons/react/24/outline'
 import {
   Title,
   Grid,
@@ -111,7 +111,7 @@ const OgTagPreviewPage = () => {
               <div className="h-full">
                 <Button
                   className="h-full"
-                  icon={RefreshIcon}
+                  icon={ArrowPathIcon}
                   onClick={async () => executeFetch(url, customUserAgent)}
                   disabled={!isValidHttpUrl(url)}
                 >
@@ -130,7 +130,11 @@ const OgTagPreviewPage = () => {
         ) : ogTagPreviewQuery.error ? (
           <Col numColSpanLg={3}>
             <Card className="h-full p-6">
-              <Callout title="Error" icon={ExclamationIcon} color="rose">
+              <Callout
+                title="Error"
+                icon={ExclamationTriangleIcon}
+                color="rose"
+              >
                 <div className="h-full w-full overflow-x-auto">
                   <pre className="text-gray-500 dark:text-gray-600">
                     {JSON.stringify(ogTagPreviewQuery.error, undefined, 2)}
@@ -144,8 +148,8 @@ const OgTagPreviewPage = () => {
             <Card className="h-full p-6">
               <TabGroup>
                 <TabList>
-                  <Tab icon={CodeIcon}>Raw</Tab>
-                  <Tab icon={CollectionIcon}>Pretty</Tab>
+                  <Tab icon={CodeBracketIcon}>Raw</Tab>
+                  <Tab icon={RectangleStackIcon}>Pretty</Tab>
                 </TabList>
                 <TabPanels>
                   <TabPanel>

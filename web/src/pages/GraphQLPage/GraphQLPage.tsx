@@ -1,4 +1,4 @@
-import { ExclamationIcon } from '@heroicons/react/outline'
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { Title, Grid, Col, Card, Text, Callout } from '@tremor/react'
 import { GetGraphQLInspectorResults } from 'types/graphql'
 
@@ -50,7 +50,11 @@ const GraphQLPage = () => {
             {inspectorQuery.loading ? (
               <Card className="h-full p-6">Loading...</Card>
             ) : inspectorQuery.error ? (
-              <Callout title="Error" icon={ExclamationIcon} color="rose">
+              <Callout
+                title="Error"
+                icon={ExclamationTriangleIcon}
+                color="rose"
+              >
                 <div className="h-full w-full overflow-x-auto">
                   <pre className="text-gray-500 dark:text-gray-600">
                     {JSON.stringify(inspectorQuery.error, undefined, 2)}

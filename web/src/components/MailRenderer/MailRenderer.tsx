@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import {
-  DesktopComputerIcon,
-  DeviceMobileIcon,
+  ComputerDesktopIcon,
+  DevicePhoneMobileIcon,
   DeviceTabletIcon,
-} from '@heroicons/react/outline'
+} from '@heroicons/react/24/outline'
 import {
-  DocumentReportIcon,
+  DocumentChartBarIcon,
   DocumentTextIcon,
-  CodeIcon,
-  SwitchHorizontalIcon,
-} from '@heroicons/react/outline'
+  CodeBracketIcon,
+  ArrowsRightLeftIcon,
+} from '@heroicons/react/24/outline'
 import {
   Text,
   Card,
@@ -33,19 +33,19 @@ const PREVIEW_DIMENSIONS = [
     label: 'Desktop',
     width: null,
     height: null,
-    icon: DesktopComputerIcon,
+    icon: ComputerDesktopIcon,
   },
   {
     label: 'iPhone 12 Pro',
     width: 390 + 2,
     height: 844 + 2,
-    icon: DeviceMobileIcon,
+    icon: DevicePhoneMobileIcon,
   },
   {
     label: 'Pixel 5',
     width: 393 + 2,
     height: 851 + 2,
-    icon: DeviceMobileIcon,
+    icon: DevicePhoneMobileIcon,
   },
   {
     label: 'iPad Air',
@@ -123,9 +123,9 @@ function MailPreview({
       <TabGroup index={selectedTabIndex} onIndexChange={setSelectedTabIndex}>
         <Flex alignItems="center" className="space-x-2">
           <TabList className="flex-1">
-            <Tab icon={DocumentReportIcon}>HTML</Tab>
+            <Tab icon={DocumentChartBarIcon}>HTML</Tab>
             <Tab icon={DocumentTextIcon}>Text</Tab>
-            <Tab icon={CodeIcon}>Raw HTML</Tab>
+            <Tab icon={CodeBracketIcon}>Raw HTML</Tab>
             {additionalTabHeaders ?? <></>}
           </TabList>
           <div className="flex justify-end space-x-2">
@@ -153,7 +153,7 @@ function MailPreview({
               onClick={() => setIsPreviewHorizontal(!isPreviewHorizontal)}
               disabled={selectedPreviewDimension.label === 'Desktop'}
             >
-              <SwitchHorizontalIcon
+              <ArrowsRightLeftIcon
                 className={`h-5 w-5 ${isPreviewHorizontal ? '' : 'rotate-90'}`}
               />
             </Button>
