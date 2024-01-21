@@ -1,7 +1,8 @@
-import { CubeIcon, CubeTransparentIcon } from '@heroicons/react/24/outline'
 import { Badge, Button, Card, Divider, Flex, Text, Title } from '@tremor/react'
 
 import { Link, routes } from '@redwoodjs/router'
+
+import { SpansIcon, TracesIcon } from 'src/icons/Icons'
 
 const StatusBadge = ({ statusCode }: { statusCode: number }) => {
   // https://opentelemetry.io/docs/specs/otel/trace/api/#set-status
@@ -81,15 +82,12 @@ const SpanListItem = ({ data }) => {
           <Flex flexDirection="col" className="gap-2">
             <Link to={routes.opentelemetryTrace({ id: data.traceId })}>
               <Button className="p-2">
-                <CubeTransparentIcon
-                  className="h-6 w-6 shrink-0"
-                  aria-hidden="true"
-                />
+                <TracesIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
               </Button>
             </Link>
             <Link to={routes.opentelemetrySpan({ id: data.spanId })}>
               <Button className="p-2">
-                <CubeIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
+                <SpansIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
               </Button>
             </Link>
           </Flex>

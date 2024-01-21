@@ -2,13 +2,6 @@ import { Buffer } from 'buffer'
 
 import { useState } from 'react'
 
-import {
-  CodeBracketIcon as CodeIcon,
-  DocumentDuplicateIcon,
-  InboxArrowDownIcon as MailIcon,
-  PaperClipIcon,
-  TableCellsIcon as TableIcon,
-} from '@heroicons/react/24/outline'
 import { DocumentDuplicateIcon as DocumentDuplicateSolidIcon } from '@heroicons/react/solid'
 import {
   Card,
@@ -37,6 +30,13 @@ import { useQuery } from '@redwoodjs/web'
 import { MetaTags } from '@redwoodjs/web'
 
 import MailRenderer from 'src/components/MailRenderer/MailRenderer'
+import {
+  CodeIcon,
+  DocumentDuplicateIcon,
+  MailIcon,
+  PaperClipIcon,
+  TableIcon,
+} from 'src/icons/Icons'
 
 type MailSource = 'SMTP' | 'API'
 

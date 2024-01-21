@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { CogIcon } from '@heroicons/react/24/outline'
 import {
   Title,
   Card,
@@ -21,6 +20,7 @@ import {
 import { MetaTags, useMutation, useQuery } from '@redwoodjs/web'
 
 import SpanListItem from 'src/components/SpanListItem/SpanListItem'
+import { SettingsIcon } from 'src/icons/Icons'
 
 const SPANS_QUERY = gql`
   # Have as a live query
@@ -101,7 +101,7 @@ const OpenTelemetrySpansPage = () => {
             }}
             className="p-2"
           >
-            <CogIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
+            <SettingsIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
           </Button>
           <dialog ref={dialogRef}>
             <Card className="w-full">

@@ -1,4 +1,3 @@
-import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import { Card } from '@tremor/react'
 import type {
   GetNetworkPerformanceQuery,
@@ -12,6 +11,7 @@ import ChartFailureState from 'src/components/Charts/ChartFailureState'
 import ChartHeading from 'src/components/Charts/ChartHeading'
 import ChartLoadingState from 'src/components/Charts/ChartLoadingState'
 import PerformanceLineChart from 'src/components/Charts/LineCharts/PerformanceLineChart'
+import { NetworkPerformanceIcon } from 'src/icons/Icons'
 
 export const beforeQuery = (props) => {
   return {
@@ -54,7 +54,7 @@ export const Success = ({
     <Card>
       <ChartHeading
         caption="Network Performance"
-        icon={GlobeAltIcon}
+        icon={NetworkPerformanceIcon}
         tooltip="Network Performance"
       />
       <PerformanceLineChart dataPoints={dataPoints} />{' '}
