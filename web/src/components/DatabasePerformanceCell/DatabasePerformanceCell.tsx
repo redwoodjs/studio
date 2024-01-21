@@ -16,7 +16,7 @@ import { DatabasePerformanceIcon } from 'src/icons/Icons'
 export const beforeQuery = (props) => {
   return {
     variables: props,
-    pollInterval: 5,
+    pollInterval: 5000,
   }
 }
 

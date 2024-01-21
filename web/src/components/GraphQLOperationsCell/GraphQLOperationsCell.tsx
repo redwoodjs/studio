@@ -15,7 +15,8 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 export const beforeQuery = (props) => {
   return {
     variables: props,
-    pollInterval: 5,
+    pollInterval: 5000,
+    fetchPolicy: 'cache-and-network',
   }
 }
 
