@@ -14,8 +14,10 @@
 ### Test packaged version
 1. Make your changes to the source code.
 2. Run `yarn studio:package` - this will rebuild the project and package it locally.
-3. Restart `yarn rw-studio` from within the `__fixtures__/test-project` directory.
-4. Run the Test Project that send in to Studio using `yarn rw dev`
+3. (Re-)start Studio by running `yarn studio:start` from within the
+  `__fixtures__/test-project` directory.
+4. Run the Test Project that send in to Studio using `yarn rw dev` inside
+  `__fixtures__/test-project`
 5. Be sure you set the OpenTelemetry sdk path in `redwood.toml` to point to the
   correct path for your project (see example below under
   [Troubleshooting](#troubleshooting))
