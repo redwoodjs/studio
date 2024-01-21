@@ -16,24 +16,22 @@ async function parseArgs() {
         default: false,
         short: 'v',
       },
+      release: {
+        type: 'boolean',
+        default: false,
+        short: 'r',
+      },
     },
   })
 
   return {
     verbose: values.verbose,
+    release: values.release,
   }
 }
 
 async function main() {
   const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
-  // Intro
-  console.log(chalk.blue('~'.repeat(process.stdout.columns)))
-  console.log(chalk.bold('Studio: Package'))
-  console.log()
-  console.log('This script will build and package up studio.')
-  console.log(chalk.blue('~'.repeat(process.stdout.columns)))
-  console.log()
 
   // Parse options
   let options
@@ -45,8 +43,18 @@ async function main() {
     return
   }
 
-  const { verbose } = options
+  const { verbose, release } = options
   $.verbose = verbose
+
+  // Intro
+  console.log(chalk.blue('~'.repeat(process.stdout.columns)))
+  console.log(
+    chalk.bold('Studio: Package for ' + (release ? 'Release' : 'Development'))
+  )
+  console.log()
+  console.log('This script will build and package up studio.')
+  console.log(chalk.blue('~'.repeat(process.stdout.columns)))
+  console.log()
 
   const spinner = ora()
 
@@ -172,7 +180,11 @@ async function main() {
       if (key.startsWith('@redwoodjs/')) {
         // -0 at the end means "any prerelease version", and "prerelease" for
         // RW means -canary or -rc
-        peerDependencies[key] = '^7.0.0-0 || 7.x || ^8.0.0-0'
+        if (release) {
+          peerDependencies[key] = '^7.0.0-0 || 7.x || ^8.0.0-0'
+        } else {
+          dependencies[key] = '^7.0.0-0 || 7.x || ^8.0.0-0'
+        }
       } else {
         dependencies[key] = value
       }
