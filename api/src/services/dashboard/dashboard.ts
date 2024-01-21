@@ -14,7 +14,8 @@ const spansByAttributeKeyAndType = async (
 ) =>
   await db.$queryRaw<SpansByAttributeKeyAndType[]>`
 SELECT
-  s.id,
+  -- id must be unique per row or Apollo client will reuse data in cache
+  s.id || '-' || a.hash as id,
   s.createdAt,
   s.updatedAt,
   s.statusCode,
