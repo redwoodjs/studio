@@ -1,6 +1,7 @@
 import { Router, Route, Set } from '@redwoodjs/router'
 
 import SidebarLayout from 'src/layouts/SidebarLayout'
+import GraphQLSchemaPage from 'src/pages/GraphQLSchemaPage/GraphQLSchemaPage'
 
 const Routes = () => {
   return (
@@ -20,7 +21,7 @@ const Routes = () => {
         <Route path="/opentelemetry/spans/{id:String}" page={OpenTelemetrySpanPage} name="opentelemetrySpan" />
 
         <Route path="/graphiql" page={GraphiqlPage} name="graphiql" />
-
+        <Route path="/gql/schema" page={GraphQLSchemaPage} name="graphQLInspector" />
         <Route path="/mailer-inbox" page={MailerInboxPage} name="mailerInbox" />
         <Route path="/mailer-template-preview" page={MailerTemplatePreviewPage} name="mailerTemplatePreview" />
 
