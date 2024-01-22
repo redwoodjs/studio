@@ -1,11 +1,6 @@
 import { Router, Route, Set } from '@redwoodjs/router'
 
 import SidebarLayout from 'src/layouts/SidebarLayout'
-import DatabaseErdPage from 'src/pages/DatabaseErdPage/DatabaseErdPage'
-import DatabaseSqlStatementsPage from 'src/pages/DatabaseSQLStatementsPage/DatabaseSQLStatementsPage'
-import GraphQLInspectorPage from 'src/pages/GraphQLInspectorPage/GraphQLInspectorPage'
-import GraphQLOperationsPage from 'src/pages/GraphQLOperationsPage/GraphQLOperationsPage'
-import GraphQLPlaygroundPage from 'src/pages/GraphQLPlaygroundPage/GraphQLPlaygroundPage'
 
 const Routes = () => {
   return (
@@ -19,7 +14,7 @@ const Routes = () => {
         <Route path="/monitoring/spans/{id:String}" page={OpenTelemetrySpanPage} name="opentelemetrySpan" />
 
         <Route path="/database/erd" page={DatabaseErdPage} name="databaseErd" />
-        <Route path="/database/sql-statements" page={DatabaseSqlStatementsPage} name="databaseSqlStatements" />
+        <Route path="/database/sql-statements" page={DatabaseSQLStatementsPage} name="databaseSqlStatements" />
 
         <Route path="/gql/playground" page={GraphQLPlaygroundPage} name="graphiql" />
         <Route path="/gql/inspector" page={GraphQLInspectorPage} name="graphQLInspector" />
