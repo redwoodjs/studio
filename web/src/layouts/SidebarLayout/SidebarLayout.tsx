@@ -16,6 +16,7 @@ import {
   CubeIcon,
   CubeTransparentIcon,
   ViewColumnsIcon,
+  ListBulletIcon,
 } from '@heroicons/react/24/outline'
 import { Flex, Subtitle, Title } from '@tremor/react'
 import { GetConnectionStatus } from 'types/graphql'
@@ -134,6 +135,11 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
       name: 'Playground',
       to: routes.graphiql(),
       icon: ViewColumnsIcon,
+    },
+    {
+      name: 'Operations',
+      to: routes.graphQLOperations(),
+      icon: ListBulletIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
