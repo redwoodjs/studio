@@ -6304,7 +6304,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redwoodjs/api-server@npm:7.0.0-canary.869+4df1907e0":
+"@redwoodjs/api-server@npm:7.0.0-canary.869, @redwoodjs/api-server@npm:7.0.0-canary.869+4df1907e0":
   version: 7.0.0-canary.869
   resolution: "@redwoodjs/api-server@npm:7.0.0-canary.869"
   dependencies:
@@ -10630,6 +10630,7 @@ __metadata:
     "@graphql-inspector/core": "npm:5.0.1"
     "@prisma/internals": "npm:5.2.0"
     "@redwoodjs/api": "npm:7.0.0-canary.869"
+    "@redwoodjs/api-server": "npm:7.0.0-canary.869"
     "@redwoodjs/auth-dbauth-api": "npm:7.0.0-canary.869"
     "@redwoodjs/fastify": "npm:7.0.0-canary.869"
     "@redwoodjs/graphql-server": "npm:7.0.0-canary.869"

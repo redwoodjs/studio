@@ -2,26 +2,14 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import chalk from 'chalk'
-import { config } from 'dotenv-defaults'
 import execa from 'execa'
-import Fastify from 'fastify'
 import open from 'open'
 import { SMTPServer } from 'smtp-server'
 
-import {
-  coerceRootPath,
-  redwoodFastifyWeb,
-  redwoodFastifyAPI,
-  redwoodFastifyGraphQLServer,
-  DEFAULT_REDWOOD_FASTIFY_CONFIG,
-} from '@redwoodjs/fastify'
-
-import directives from 'src/directives/**/*.{js,ts}'
-import sdls from 'src/graphql/**/*.sdl.{js,ts}'
-import services from 'src/services/**/*.{js,ts}'
+import { createServer } from '@redwoodjs/api-server'
+import { coerceRootPath, redwoodFastifyWeb } from '@redwoodjs/fastify'
 
 import { logger } from 'src/lib/logger'
-import { realtime } from 'src/lib/realtime'
 
 import { startConnectionWatching } from './util/connectionWatching'
 import { startWatchers } from './util/fsWatching'
@@ -31,7 +19,6 @@ import {
   getStudioConfig,
   getStudioStatePath,
   getUserProjectConfig,
-  getUserProjectPaths,
 } from './util/project'
 import { rewriteApiPortEnvVar } from './util/rewriteWebIndexApiPort'
 
@@ -78,47 +65,23 @@ export async function serve(
   })
 
   // Load config
-  const userPaths = getUserProjectPaths()
   const userConfig = getUserProjectConfig()
   const studioConfig = getStudioConfig()
   const apiRootPath = enableWeb ? coerceRootPath(studioConfig.web.apiUrl) : ''
   const webPort = userConfig.studio.basePort
   const apiPort = enableWeb ? webPort : webPort + 1
 
-  config({
-    path: path.join(userPaths.base, '.env'),
-    defaults: path.join(userPaths.base, '.env.defaults'),
-    multiline: true,
-  })
-
   rewriteApiPortEnvVar(apiPort)
 
-  const fastify = Fastify(DEFAULT_REDWOOD_FASTIFY_CONFIG)
+  const server = await createServer({
+    apiRootPath,
+  })
 
   if (enableWeb) {
-    await fastify.register(redwoodFastifyWeb)
+    // await server.register(redwoodFastifyWeb)
   }
 
-  await fastify.register(redwoodFastifyAPI, {
-    redwood: {
-      apiRootPath,
-    },
-  })
-
-  await fastify.register(redwoodFastifyGraphQLServer, {
-    loggerConfig: {
-      logger: logger,
-    },
-    graphiQLEndpoint: enableWeb ? '/.redwood/functions/graphql' : '/graphql',
-    sdls,
-    services,
-    directives,
-    allowIntrospection: true,
-    allowGraphiQL: true,
-    realtime,
-  })
-
-  await fastify.register(graphqlProxy)
+  await server.register(graphqlProxy)
 
   // Start filesystem watchers
   await startWatchers()
@@ -138,8 +101,8 @@ export async function serve(
   })
 
   // Start
-  fastify.listen({ port: apiPort })
-  fastify.ready(() => {
+  server.listen({ port: apiPort })
+  server.ready(() => {
     logger.info('Studio is up and running!')
     logger.info(
       `To access the Studio, visit ${chalk.green(
@@ -154,7 +117,7 @@ export async function serve(
 
   // Cleanup (async will not be resolved!)
   process.on('exit', () => {
-    fastify.close()
+    server.close()
   })
 }
 
