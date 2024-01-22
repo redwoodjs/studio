@@ -2,14 +2,14 @@ import { Buffer } from 'buffer'
 
 import { useState } from 'react'
 
+import { DocumentDuplicateIcon as DocumentDuplicateSolidIcon } from '@heroicons/react/20/solid'
 import {
-  CodeBracketIcon as CodeIcon,
+  CodeBracketIcon,
   DocumentDuplicateIcon,
-  InboxArrowDownIcon as MailIcon,
+  EnvelopeIcon,
   PaperClipIcon,
-  TableCellsIcon as TableIcon,
+  TableCellsIcon,
 } from '@heroicons/react/24/outline'
-import { DocumentDuplicateIcon as DocumentDuplicateSolidIcon } from '@heroicons/react/solid'
 import {
   Card,
   Col,
@@ -212,8 +212,8 @@ const MailerInboxPage = () => {
               }
             >
               <TabList>
-                <Tab icon={MailIcon}>SMTP</Tab>
-                <Tab icon={CodeIcon}>API</Tab>
+                <Tab icon={EnvelopeIcon}>SMTP</Tab>
+                <Tab icon={CodeBracketIcon}>API</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>
@@ -244,7 +244,7 @@ const MailerInboxPage = () => {
             text={selectedMail?.plaintext}
             additionalTabHeaders={
               <>
-                <Tab icon={TableIcon}>Metadata</Tab>
+                <Tab icon={TableCellsIcon}>Metadata</Tab>
                 <Tab icon={PaperClipIcon}>Attachments</Tab>
               </>
             }

@@ -2,12 +2,12 @@ import { useState } from 'react'
 
 import { useLazyQuery } from '@apollo/client'
 import {
-  CodeBracketIcon as CodeIcon,
-  Square2StackIcon as CollectionIcon,
+  CodeBracketIcon,
+  RectangleStackIcon,
   ExclamationTriangleIcon,
   EyeIcon,
   LinkIcon,
-  ArrowPathIcon as RefreshIcon,
+  ArrowPathIcon,
 } from '@heroicons/react/24/outline'
 import {
   Title,
@@ -111,7 +111,7 @@ const OgTagPreviewPage = () => {
               <div className="h-full">
                 <Button
                   className="h-full"
-                  icon={RefreshIcon}
+                  icon={ArrowPathIcon}
                   onClick={async () => executeFetch(url, customUserAgent)}
                   disabled={!isValidHttpUrl(url)}
                 >
@@ -148,8 +148,8 @@ const OgTagPreviewPage = () => {
             <Card className="h-full p-6">
               <TabGroup>
                 <TabList>
-                  <Tab icon={CodeIcon}>Raw</Tab>
-                  <Tab icon={CollectionIcon}>Pretty</Tab>
+                  <Tab icon={CodeBracketIcon}>Raw</Tab>
+                  <Tab icon={RectangleStackIcon}>Pretty</Tab>
                 </TabList>
                 <TabPanels>
                   <TabPanel>

@@ -16,24 +16,22 @@ async function parseArgs() {
         default: false,
         short: 'v',
       },
+      release: {
+        type: 'boolean',
+        default: false,
+        short: 'r',
+      },
     },
   })
 
   return {
     verbose: values.verbose,
+    release: values.release,
   }
 }
 
 async function main() {
   const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
-  // Intro
-  console.log(chalk.blue('~'.repeat(process.stdout.columns)))
-  console.log(chalk.bold('Studio: Package'))
-  console.log()
-  console.log('This script will build and package up studio.')
-  console.log(chalk.blue('~'.repeat(process.stdout.columns)))
-  console.log()
 
   // Parse options
   let options
@@ -45,8 +43,18 @@ async function main() {
     return
   }
 
-  const { verbose } = options
+  const { verbose, release } = options
   $.verbose = verbose
+
+  // Intro
+  console.log(chalk.blue('~'.repeat(process.stdout.columns)))
+  console.log(
+    chalk.bold('Studio: Package for ' + (release ? 'Release' : 'Development'))
+  )
+  console.log()
+  console.log('This script will build and package up studio.')
+  console.log(chalk.blue('~'.repeat(process.stdout.columns)))
+  console.log()
 
   const spinner = ora()
 
@@ -158,9 +166,19 @@ async function main() {
     spinner.start('Setting dependencies...')
   }
   const rootPackageJSON = fs.readJSONSync(path.join(studioDir, 'package.json'))
-  const apiDependencies = fs.readJSONSync(
-    path.join(studioDir, 'api', 'package.json')
-  ).dependencies
+
+  // Note that we're not adding any kind of dependencies to package.json.
+  // The list of dependencies (and peerDependencies) are there to let
+  // the package manager know what to install when someone does
+  // `yarn add <package>` or similar. But we don't expect users to do that
+  // for Redwood Studio. Instead, we expect them to just run it using
+  // `yarn rw studio`, and that script will install it on the first run.
+  // It's true that `yarn rw studio` in turn will use yarn to install Studio,
+  // but we can still control exactly what dependencies are needed and handle
+  // installing them separately. Mostly we don't want anything to be installed
+  // apart from Studio itself and what's bundled with it. Other dependencies
+  // should mostly already be available in the user's project seeing as that's
+  // also a RW project.
   fs.writeJSONSync(
     path.join(packagedDir, 'package.json'),
     {
@@ -176,9 +194,6 @@ async function main() {
       files: ['api', 'web', 'redwood.toml'],
       bin: {
         'rw-studio': './api/dist/bin/rw-studio.js',
-      },
-      dependencies: {
-        ...apiDependencies,
       },
     },
     { spaces: 2 }
@@ -203,6 +218,12 @@ async function main() {
     spinner.succeed('Archive created!')
   }
 
+  if (release) {
+    // The rest of the steps in this file are only needed for local dev, not
+    // for doing a release
+    return
+  }
+
   // Yarn install in the test-project
   const testProjectPath = path.join(
     __dirname,
@@ -210,19 +231,32 @@ async function main() {
     '__fixtures__',
     'test-project'
   )
+  $.cwd = testProjectPath
+
   if (!verbose) {
     spinner.start('Running yarn...')
   }
-  $.cwd = testProjectPath
   // There needs to be a yarn.lock file in the root of the fixture
   // test-project, otherwise yarn will walk up the directory tree and find the
   // yarn.lock file in the root of the Studio project and get confused
   await $`touch yarn.lock`
   await $`yarn`
-  $.cwd = undefined
   if (!verbose) {
     spinner.succeed("Yarn'd!")
   }
+
+  // Studio needs @redwoodjs/realtime. The test project doesn't use it itself,
+  // so we manually install it. Normally this is handled by `yarn rw studio`
+  const rwVersion = rootPackageJSON.devDependencies['@redwoodjs/core']
+  if (!verbose) {
+    spinner.start("Adding @redwoodjs/realtime, as it's used by Studio...")
+  }
+  await $`yarn add @redwoodjs/realtime@${rwVersion}`
+  if (!verbose) {
+    spinner.succeed(`@redwoodjs/realtime@${rwVersion} added!`)
+  }
+
+  $.cwd = undefined
 }
 
 main().catch((err) => {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { CogIcon } from '@heroicons/react/24/outline'
+import { Cog8ToothIcon } from '@heroicons/react/24/outline'
 import {
   Title,
   Card,
@@ -101,7 +101,7 @@ const OpenTelemetrySpansPage = () => {
             }}
             className="p-2"
           >
-            <CogIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
+            <Cog8ToothIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
           </Button>
           <dialog ref={dialogRef}>
             <Card className="w-full">

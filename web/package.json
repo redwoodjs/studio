@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@graphiql/plugin-explorer": "0.1.22",
-    "@graphiql/toolkit": "0.8.4",
+    "@graphiql/toolkit": "0.9.1",
     "@headlessui/react": "1.7.18",
     "@heroicons/react": "2.1.1",
     "@nivo/core": "^0.84.0",
