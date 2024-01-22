@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 
+import { ClockIcon, MapIcon } from '@heroicons/react/24/outline'
 import {
   Grid,
   Col,
@@ -22,7 +23,6 @@ import { routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import { SpanGenericToggleContext } from 'src/context/SpanGenericToggleContext'
-import { ClockIcon, MapIcon } from 'src/icons/Icons'
 
 import { LinkingIcon } from '../LinkingIcon/LinkingIcon'
 import { SpanLink } from '../SpanLink/SpanLink'

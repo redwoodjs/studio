@@ -1,3 +1,4 @@
+import { CodeBracketIcon } from '@heroicons/react/24/outline'
 import { Card } from '@tremor/react'
 import type {
   GetApiPerformanceQuery,
@@ -11,7 +12,6 @@ import ChartFailureState from 'src/components/Charts/ChartFailureState'
 import ChartHeading from 'src/components/Charts/ChartHeading'
 import ChartLoadingState from 'src/components/Charts/ChartLoadingState'
 import PerformanceLineChart from 'src/components/Charts/LineCharts/PerformanceLineChart'
-import { ApiPerformanceIcon } from 'src/icons/Icons'
 
 export const beforeQuery = (props) => {
   return {
@@ -54,7 +54,7 @@ export const Success = ({
     <Card>
       <ChartHeading
         caption="API Performance"
-        icon={ApiPerformanceIcon}
+        icon={CodeBracketIcon}
         tooltip="API Performance"
       />
       <PerformanceLineChart dataPoints={dataPoints} />

@@ -3,7 +3,10 @@ export const GraphQLIcon = ({ className }) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 100 100"
-      fill="currentColor"
+      fill="#e10098"
+      style={{
+        fill: 'color(display-p3 0.8824 0 0.5961)',
+      }}
       className={className}
     >
       <path

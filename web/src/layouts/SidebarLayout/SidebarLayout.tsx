@@ -2,26 +2,25 @@ import { Fragment, useState } from 'react'
 
 import { useQuery } from '@apollo/client'
 import { Dialog, Transition } from '@headlessui/react'
+import {
+  Square2StackIcon as DashboardIcon,
+  Bars3Icon as MenuIcon,
+  HomeIcon,
+  InboxArrowDownIcon,
+  InboxIcon,
+  ListBulletIcon,
+  MagnifyingGlassCircleIcon,
+  CommandLineIcon as SqlStatementsIcon,
+  ShareIcon as GraphQLIcon,
+  PhotoIcon,
+  CubeIcon,
+  CubeTransparentIcon,
+  NewspaperIcon as ErdIcon,
+} from '@heroicons/react/24/outline'
 import { Flex, Subtitle, Title } from '@tremor/react'
 import { GetConnectionStatus } from 'types/graphql'
 
 import { NavLink, routes } from '@redwoodjs/router'
-
-import {
-  DashboardIcon,
-  MenuIcon,
-  HomeIcon,
-  TemplatesIcon,
-  InboxIcon,
-  OperationsIcon,
-  InspectorIcon,
-  SqlStatementsIcon,
-  GraphQLIcon,
-  OGTagPreviewIcon,
-  SpansIcon,
-  TracesIcon,
-  ErdIcon,
-} from 'src/icons/Icons'
 
 // import { GraphQLIcon } from 'src/icons/GraphQL'
 
@@ -110,12 +109,12 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
     {
       name: 'Traces',
       to: routes.opentelemetryTraces(),
-      icon: TracesIcon,
+      icon: CubeTransparentIcon,
     },
     {
       name: 'Spans',
       to: routes.opentelemetrySpans(),
-      icon: SpansIcon,
+      icon: CubeIcon,
     },
   ]
   const databaseNavigation: TNavigationItem[] = [
@@ -139,12 +138,12 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
     {
       name: 'Schema Explorer',
       to: routes.graphQLInspector(),
-      icon: InspectorIcon,
+      icon: MagnifyingGlassCircleIcon,
     },
     {
       name: 'Operations',
       to: routes.graphQLOperations(),
-      icon: OperationsIcon,
+      icon: ListBulletIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
@@ -152,14 +151,14 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
     {
       name: 'Templates',
       to: routes.mailerTemplatePreview(),
-      icon: TemplatesIcon,
+      icon: InboxArrowDownIcon,
     },
   ]
   const ssrNavigation: TNavigationItem[] = [
     {
       name: 'OG Tag Preview',
       to: routes.ogTagPreview(),
-      icon: OGTagPreviewIcon,
+      icon: PhotoIcon,
     },
   ]
 

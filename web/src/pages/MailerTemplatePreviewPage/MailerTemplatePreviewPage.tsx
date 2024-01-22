@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { useQuery } from '@apollo/client'
+import { VariableIcon } from '@heroicons/react/24/outline'
 import {
   Title,
   Grid,
@@ -21,7 +22,6 @@ import {
 import { MetaTags } from '@redwoodjs/web'
 
 import MailRenderer from 'src/components/MailRenderer/MailRenderer'
-import { VariableIcon } from 'src/icons/Icons'
 
 const RENDERERS_QUERY = gql`
   query GetMailRenderers @live {
