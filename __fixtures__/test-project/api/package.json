@@ -13,15 +13,15 @@
     "@opentelemetry/semantic-conventions": "^1.17.1",
     "@prisma/instrumentation": "^5.4.2",
     "@react-email/components": "^0.0.12",
-    "@redwoodjs/api": "7.0.0-canary.785",
-    "@redwoodjs/auth-dbauth-api": "7.0.0-canary.785",
-    "@redwoodjs/graphql-server": "7.0.0-canary.785",
-    "@redwoodjs/mailer-core": "7.0.0-canary.785",
-    "@redwoodjs/mailer-handler-nodemailer": "7.0.0-canary.785",
-    "@redwoodjs/mailer-renderer-react-email": "7.0.0-canary.785"
+    "@redwoodjs/api": "7.0.0-canary.869",
+    "@redwoodjs/auth-dbauth-api": "7.0.0-canary.869",
+    "@redwoodjs/graphql-server": "7.0.0-canary.869",
+    "@redwoodjs/mailer-core": "7.0.0-canary.869",
+    "@redwoodjs/mailer-handler-nodemailer": "7.0.0-canary.869",
+    "@redwoodjs/mailer-renderer-react-email": "7.0.0-canary.869"
   },
   "devDependencies": {
-    "@redwoodjs/mailer-handler-in-memory": "7.0.0-canary.785",
-    "@redwoodjs/mailer-handler-studio": "7.0.0-canary.785"
+    "@redwoodjs/mailer-handler-in-memory": "7.0.0-canary.869",
+    "@redwoodjs/mailer-handler-studio": "7.0.0-canary.869"
   }
 }

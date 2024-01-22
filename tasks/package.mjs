@@ -45,6 +45,17 @@ async function main() {
 
   const { verbose, release } = options
   $.verbose = verbose
+  const studioPath = path.join(__dirname, '..')
+  const rootPackageJSON = fs.readJSONSync(path.join(studioPath, 'package.json'))
+  const studioRwVersion = rootPackageJSON.devDependencies['@redwoodjs/core']
+  const testProjectPath = path.join(
+    __dirname,
+    '..',
+    '__fixtures__',
+    'test-project'
+  )
+
+  const spinner = ora()
 
   // Intro
   console.log(chalk.blue('~'.repeat(process.stdout.columns)))
@@ -56,7 +67,12 @@ async function main() {
   console.log(chalk.blue('~'.repeat(process.stdout.columns)))
   console.log()
 
-  const spinner = ora()
+  if (!release) {
+    spinner.start('Asserting matching RW versions...')
+    // exits on mismatched versions
+    assertMatchingRwVersions(testProjectPath, studioPath, studioRwVersion)
+    spinner.succeed('Matching RW versions!')
+  }
 
   // Build the project
   if (!verbose) {
@@ -87,12 +103,11 @@ async function main() {
   }
 
   // Copy over files
-  const studioDir = path.join(__dirname, '..')
   if (!verbose) {
     spinner.start('Copying over API files...')
   }
   fs.copySync(
-    path.join(studioDir, 'api', 'dist'),
+    path.join(studioPath, 'api', 'dist'),
     path.join(packagedDir, 'api', 'dist')
   )
   if (!verbose) {
@@ -103,13 +118,9 @@ async function main() {
     spinner.start('Copying over web files...')
   }
   fs.copySync(
-    path.join(studioDir, 'web', 'dist'),
+    path.join(studioPath, 'web', 'dist'),
     path.join(packagedDir, 'web', 'dist')
   )
-
-  const studioVersion = fs.readJSONSync(
-    path.join(studioDir, 'package.json')
-  ).version
 
   const indexHTMLPath = path.join(packagedDir, 'web', 'dist', 'index.html')
   const original = fs.readFileSync(indexHTMLPath, {
@@ -118,7 +129,7 @@ async function main() {
   })
   const modified = original.replaceAll(
     '__RW_STUDIO_VERSION__',
-    'v' + studioVersion
+    'v' + rootPackageJSON.version
   )
   fs.writeFileSync(indexHTMLPath, modified)
 
@@ -130,7 +141,7 @@ async function main() {
     })
     const modified200 = original200.replaceAll(
       '__RW_STUDIO_VERSION__',
-      'v' + studioVersion
+      'v' + rootPackageJSON.version
     )
     fs.writeFileSync(twoHundredHtmlPath, modified200)
   }
@@ -143,7 +154,7 @@ async function main() {
     spinner.start('Copying over db files...')
   }
   fs.copySync(
-    path.join(studioDir, 'api', 'db'),
+    path.join(studioPath, 'api', 'db'),
     path.join(packagedDir, 'api', 'db')
   )
   if (!verbose) {
@@ -154,7 +165,7 @@ async function main() {
     spinner.start('Copying over misc files...')
   }
   fs.copySync(
-    path.join(studioDir, 'redwood.toml'),
+    path.join(studioPath, 'redwood.toml'),
     path.join(packagedDir, 'redwood.toml')
   )
   if (!verbose) {
@@ -165,7 +176,6 @@ async function main() {
   if (!verbose) {
     spinner.start('Setting dependencies...')
   }
-  const rootPackageJSON = fs.readJSONSync(path.join(studioDir, 'package.json'))
 
   // Note that we're not adding any kind of dependencies to package.json.
   // The list of dependencies (and peerDependencies) are there to let
@@ -225,12 +235,6 @@ async function main() {
   }
 
   // Yarn install in the test-project
-  const testProjectPath = path.join(
-    __dirname,
-    '..',
-    '__fixtures__',
-    'test-project'
-  )
   $.cwd = testProjectPath
 
   if (!verbose) {
@@ -247,13 +251,12 @@ async function main() {
 
   // Studio needs @redwoodjs/realtime. The test project doesn't use it itself,
   // so we manually install it. Normally this is handled by `yarn rw studio`
-  const rwVersion = rootPackageJSON.devDependencies['@redwoodjs/core']
   if (!verbose) {
     spinner.start("Adding @redwoodjs/realtime, as it's used by Studio...")
   }
-  await $`yarn add @redwoodjs/realtime@${rwVersion}`
+  await $`yarn add @redwoodjs/realtime@${studioRwVersion}`
   if (!verbose) {
-    spinner.succeed(`@redwoodjs/realtime@${rwVersion} added!`)
+    spinner.succeed(`@redwoodjs/realtime@${studioRwVersion} added!`)
   }
 
   $.cwd = undefined
@@ -263,3 +266,40 @@ main().catch((err) => {
   console.error(chalk.red(err))
   process.exit(1)
 })
+
+function assertMatchingRwVersions(
+  testProjectPath,
+  studioPath,
+  studioRwVersion
+) {
+  const testProjectRootPackageJSON = fs.readJSONSync(
+    path.join(testProjectPath, 'package.json')
+  )
+
+  if (
+    testProjectRootPackageJSON.devDependencies['@redwoodjs/core'] !==
+    studioRwVersion
+  ) {
+    console.log(chalk.redBright('RedwoodJS version mismatch!'))
+    console.log()
+    console.log(
+      `RedwoodJS version in ${chalk.bold('package.json')} in ${chalk.bold(
+        testProjectPath
+      )} is ${chalk.bold(
+        testProjectRootPackageJSON.devDependencies['@redwoodjs/core']
+      )}, but the version in ${chalk.bold('package.json')} in ${chalk.bold(
+        studioPath
+      )} is ${chalk.bold(studioRwVersion)}.`
+    )
+    console.log()
+    console.log(
+      `Please update the RedwoodJS version in ${chalk.bold(
+        'package.json'
+      )} in ${chalk.bold(testProjectPath)} to match the version in ${chalk.bold(
+        'package.json'
+      )} in ${chalk.bold(studioPath)}`
+    )
+    console.log()
+    process.exit(1)
+  }
+}
