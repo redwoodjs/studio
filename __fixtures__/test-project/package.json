@@ -23,8 +23,5 @@
   "packageManager": "yarn@4.0.2",
   "resolutions": {
     "@redwoodjs/studio": "./../../packaged.tgz"
-  },
-  "scripts": {
-    "studio:start": "yarn rw-studio | yarn rw-log-formatter"
   }
 }

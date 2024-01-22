@@ -22,10 +22,6 @@
 
 If you have to generate migrations because you have altered the database schema please use `yarn studio:migrate` as this will set the appropriate configuration above the default `yarn rw prisma migrate dev`.
 
-Note:
-
-Instead of using `yarn rw-studio` you can start the studio from the test project with `yarn studio:start` which will also prettify logging.
-
 ### Development
 
 If you want to try out any Studio GraphQL queries, you may access the Studio GraphQL Playground at:
@@ -48,7 +44,7 @@ If you do not see any traces or spans, check that your `redwood.toml` points to 
 	apiSdk = "/Users/dthyresson/Dropbox/Code/redwoodjs/studio/__fixtures__/test-project/api/dist/opentelemetry.js"
 ```
 
-### Adding New Prisma Modela and Views
+### Adding New Prisma Models and Views
 
 RW_STUDIO_DATABASE_URL=file:./dummy.sqlite
 
