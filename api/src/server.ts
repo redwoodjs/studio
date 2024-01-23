@@ -111,17 +111,17 @@ export async function serve(
 
   // Start
   server.listen({ port: apiPort })
-  server.ready(() => {
+  server.addHook('onReady', (done) => {
     logger.info('Studio is up and running!')
-    logger.info(
-      `To access the Studio, visit ${chalk.green(
-        `http://localhost:${webPort}`
-      )}`
-    )
+
+    const prettyUrl = chalk.green(`http://localhost:${webPort}`)
+    logger.info(`To access the Studio, visit ${prettyUrl}`)
 
     if (autoOpen) {
       open(`http://localhost:${webPort}`)
     }
+
+    done()
   })
 
   // Cleanup (async will not be resolved!)
