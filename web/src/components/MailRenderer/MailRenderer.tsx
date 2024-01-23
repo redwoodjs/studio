@@ -1,17 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import {
-  ComputerDesktopIcon,
-  DevicePhoneMobileIcon,
-  DeviceTabletIcon,
-} from '@heroicons/react/24/outline'
-import {
-  DocumentChartBarIcon,
-  DocumentTextIcon,
-  CodeBracketIcon,
-  ArrowsRightLeftIcon,
-} from '@heroicons/react/24/outline'
-import {
   Text,
   Card,
   Button,
@@ -24,6 +13,16 @@ import {
   TabPanel,
   TabPanels,
 } from '@tremor/react'
+
+import {
+  ArrowsRightLeftIcon,
+  CodeBracketIcon,
+  ComputerDesktopIcon,
+  DevicePhoneMobileIcon,
+  DeviceTabletIcon,
+  DocumentChartBarIcon,
+  DocumentTextIcon,
+} from 'src/icons/Icons'
 
 import ErrorPanel from '../ErrorPanel/ErrorPanel'
 

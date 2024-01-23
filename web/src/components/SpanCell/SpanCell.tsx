@@ -1,6 +1,5 @@
 import { useContext } from 'react'
 
-import { CubeTransparentIcon } from '@heroicons/react/24/outline'
 import {
   Grid,
   Col,
@@ -17,6 +16,7 @@ import { Link, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import { SpanGenericToggleContext } from 'src/context/SpanGenericToggleContext'
+import { TracesIcon } from 'src/icons/Icons'
 
 import SpanAncestorsCell from '../SpanAncestorsCell'
 import { SpanAttribute } from '../SpanAttribute/SpanAttribute'
@@ -97,10 +97,7 @@ export const Success = ({
         <div>
           <Link to={routes.opentelemetryTrace({ id: span.traceId })}>
             <Button className="p-2">
-              <CubeTransparentIcon
-                className="h-6 w-6 shrink-0"
-                aria-hidden="true"
-              />
+              <TracesIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
             </Button>
           </Link>
         </div>

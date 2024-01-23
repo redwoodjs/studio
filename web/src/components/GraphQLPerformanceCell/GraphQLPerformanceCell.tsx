@@ -1,4 +1,3 @@
-import { ShareIcon } from '@heroicons/react/24/outline'
 import { Card } from '@tremor/react'
 import type {
   GetGraphQLPerformanceQuery,
@@ -12,6 +11,7 @@ import ChartFailureState from 'src/components/Charts/ChartFailureState'
 import ChartHeading from 'src/components/Charts/ChartHeading'
 import ChartLoadingState from 'src/components/Charts/ChartLoadingState'
 import PerformanceLineChart from 'src/components/Charts/LineCharts/PerformanceLineChart'
+import { GraphQLPerformanceIcon } from 'src/icons/Icons'
 
 export const beforeQuery = (props) => {
   return {
@@ -54,7 +54,7 @@ export const Success = ({
     <Card>
       <ChartHeading
         caption="GraphQL Performance"
-        icon={ShareIcon}
+        icon={GraphQLPerformanceIcon}
         tooltip="GraphQL Performance"
       />
       <PerformanceLineChart dataPoints={dataPoints} />{' '}

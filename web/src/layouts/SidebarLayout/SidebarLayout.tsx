@@ -2,31 +2,27 @@ import { Fragment, useState } from 'react'
 
 import { useQuery } from '@apollo/client'
 import { Dialog, Transition } from '@headlessui/react'
-import {
-  XMarkIcon,
-  Bars3Icon,
-  HomeIcon,
-  EnvelopeIcon,
-  InboxIcon,
-  Square2StackIcon as DashboardIcon,
-  // CircleStackIcon,
-  PhotoIcon,
-  NewspaperIcon as ErdIcon,
-  CommandLineIcon as SqlStatementsIcon,
-  CubeIcon,
-  CubeTransparentIcon,
-  ViewColumnsIcon,
-  ListBulletIcon,
-} from '@heroicons/react/24/outline'
 import { Flex, Subtitle, Title } from '@tremor/react'
 import { GetConnectionStatus } from 'types/graphql'
 
 import { NavLink, routes } from '@redwoodjs/router'
 
-// import { GraphQLIcon } from 'src/icons/GraphQL'
+import {
+  CloseIcon,
+  DashboardIcon,
+  ErdIcon,
+  HomeIcon,
+  InboxIcon,
+  MenuIcon,
+  OGTagPreviewIcon,
+  OperationsIcon,
+  PlaygroundIcon,
+  SpansIcon,
+  SqlStatementsIcon,
+  TemplatesIcon,
+  TracesIcon,
+} from 'src/icons/Icons'
 
-// TODO: Move this out into a context so we can warn users on any page that needs the development server
-//       to be running to work correctly
 const CONNECTION_STATUS_QUERY = gql`
   query GetConnectionStatus @live {
     connectionStatus {
@@ -110,12 +106,12 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
     {
       name: 'Traces',
       to: routes.opentelemetryTraces(),
-      icon: CubeTransparentIcon,
+      icon: TracesIcon,
     },
     {
       name: 'Spans',
       to: routes.opentelemetrySpans(),
-      icon: CubeIcon,
+      icon: SpansIcon,
     },
   ]
   const databaseNavigation: TNavigationItem[] = [
@@ -130,16 +126,17 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
       icon: ErdIcon,
     },
   ]
+
   const graphQLNavigation: TNavigationItem[] = [
     {
       name: 'Playground',
       to: routes.graphiql(),
-      icon: ViewColumnsIcon,
+      icon: PlaygroundIcon,
     },
     {
       name: 'Operations',
       to: routes.graphQLOperations(),
-      icon: ListBulletIcon,
+      icon: OperationsIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
@@ -147,14 +144,14 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
     {
       name: 'Templates',
       to: routes.mailerTemplatePreview(),
-      icon: EnvelopeIcon,
+      icon: TemplatesIcon,
     },
   ]
   const ssrNavigation: TNavigationItem[] = [
     {
       name: 'OG Tag Preview',
       to: routes.ogTagPreview(),
-      icon: PhotoIcon,
+      icon: OGTagPreviewIcon,
     },
   ]
 
@@ -221,7 +218,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                         onClick={() => setSidebarOpen(false)}
                       >
                         <span className="sr-only">Close sidebar</span>
-                        <XMarkIcon
+                        <CloseIcon
                           className="h-6 w-6 text-white"
                           aria-hidden="true"
                         />
@@ -446,7 +443,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
-            <Bars3Icon
+            <MenuIcon
               className="h-6 w-6 text-gray-500 dark:text-gray-600"
               aria-hidden="true"
             />

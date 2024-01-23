@@ -1,10 +1,10 @@
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { Title, Grid, Col, Card, Text, Callout } from '@tremor/react'
 import { GetGraphQLInspectorResults } from 'types/graphql'
 
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
 import GraphQlSchemaCell from 'src/components/GraphQLSchemaCell'
+import { ErrorIcon } from 'src/icons/Icons'
 
 const INSPECTOR_QUERY = gql`
   # Have as a live query
@@ -50,11 +50,7 @@ const GraphQLInspectorPage = () => {
             {inspectorQuery.loading ? (
               <Card className="h-full p-6">Loading...</Card>
             ) : inspectorQuery.error ? (
-              <Callout
-                title="Error"
-                icon={ExclamationTriangleIcon}
-                color="rose"
-              >
+              <Callout title="Error" icon={ErrorIcon} color="rose">
                 <div className="h-full w-full overflow-x-auto">
                   <pre className="text-gray-500 dark:text-gray-600">
                     {JSON.stringify(inspectorQuery.error, undefined, 2)}
