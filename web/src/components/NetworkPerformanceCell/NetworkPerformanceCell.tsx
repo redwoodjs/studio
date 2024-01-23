@@ -6,9 +6,9 @@ import type {
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
+import ChartCard from 'src/components/Charts/ChartCard'
 import ChartEmptyState from 'src/components/Charts/ChartEmptyState'
 import ChartFailureState from 'src/components/Charts/ChartFailureState'
-import ChartHeading from 'src/components/Charts/ChartHeading'
 import ChartLoadingState from 'src/components/Charts/ChartLoadingState'
 import PerformanceLineChart from 'src/components/Charts/LineCharts/PerformanceLineChart'
 import { NetworkPerformanceIcon } from 'src/icons/Icons'
@@ -34,14 +34,36 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <ChartLoadingState />
+export const Loading = () => (
+  <ChartCard
+    caption="Network Performance"
+    icon={NetworkPerformanceIcon}
+    tooltip="Network Performance"
+  >
+    <ChartLoadingState />
+  </ChartCard>
+)
 
-export const Empty = () => <ChartEmptyState />
+export const Empty = () => (
+  <ChartCard
+    caption="Network Performance"
+    icon={NetworkPerformanceIcon}
+    tooltip="Network Performance"
+  >
+    <ChartEmptyState />
+  </ChartCard>
+)
 
 export const Failure = ({
   error,
 }: CellFailureProps<GetNetworkPerformanceQueryVariables>) => (
-  <ChartFailureState message={error.message} />
+  <ChartCard
+    caption="Network Performance"
+    icon={NetworkPerformanceIcon}
+    tooltip="Network Performance"
+  >
+    <ChartFailureState message={error.message} />
+  </ChartCard>
 )
 
 export const Success = ({
@@ -51,13 +73,12 @@ export const Success = ({
   GetNetworkPerformanceQueryVariables
 >) => {
   return (
-    <Card>
-      <ChartHeading
-        caption="Network Performance"
-        icon={NetworkPerformanceIcon}
-        tooltip="Network Performance"
-      />
+    <ChartCard
+      caption="Network Performance"
+      icon={NetworkPerformanceIcon}
+      tooltip="Network Performance"
+    >
       <PerformanceLineChart dataPoints={dataPoints} />{' '}
-    </Card>
+    </ChartCard>
   )
 }

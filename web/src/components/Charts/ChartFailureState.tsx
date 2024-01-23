@@ -1,7 +1,13 @@
-import { Bold } from '@tremor/react'
+import { LineChart } from '@tremor/react'
 
 const ChartFailureState = ({ message }: { message: string }) => (
-  <Bold color="red">{message}</Bold>
+  <LineChart
+    className="mt-6"
+    data={[]}
+    index="ago"
+    categories={[]}
+    noDataText={message}
+  />
 )
 
 export default ChartFailureState

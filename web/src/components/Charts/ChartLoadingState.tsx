@@ -1,9 +1,17 @@
-import { Title } from '@tremor/react'
+import { LineChart } from '@tremor/react'
 
 const ChartLoadingState = ({
   message = 'Loading ...',
 }: {
   message?: string
-}) => <Title>{message}</Title>
+}) => (
+  <LineChart
+    className="mt-6"
+    data={[]}
+    index="ago"
+    categories={[]}
+    noDataText={message}
+  />
+)
 
 export default ChartLoadingState
