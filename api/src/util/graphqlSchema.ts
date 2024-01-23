@@ -9,6 +9,11 @@ import { print, visit } from 'graphql'
 import { rootSchema } from '@redwoodjs/graphql-server'
 import { getConfigPath, getPaths } from '@redwoodjs/project-config'
 
+import { logger } from 'src/lib/logger'
+
+// this seems a wrong way to import this type?
+import type { Relationship } from '../../types/graphql'
+
 export const getSchema = async () => {
   const studioRootDir = path.dirname(getConfigPath())
   const userProjectRootDir = path.dirname(
@@ -46,14 +51,15 @@ export const getSchema = async () => {
 }
 
 export const getGraphQLSchemaInfo = async () => {
-  const schema = getCachedDocumentNodeFromSchema(await getSchema())
+  const schema = await getSchema()
+  const documentNode = getCachedDocumentNodeFromSchema(schema)
 
-  const ast = JSON.stringify(schema.definitions)
+  const ast = JSON.stringify(documentNode.definitions)
   const id = crypto.createHash('md5').update(ast).digest('hex')
 
   const definitions = []
 
-  visit(schema, {
+  visit(documentNode, {
     DirectiveDefinition: (node) => {
       definitions.push(node)
     },
@@ -71,5 +77,55 @@ export const getGraphQLSchemaInfo = async () => {
     },
   })
 
-  return { id, ast, definitions }
+  const relationships = getGraphQLRelationships(definitions)
+
+  logger.info({ relationships }, 'GraphQL Relationships')
+
+  return { id, ast, definitions, relationships }
+}
+
+const getGraphQLRelationships = (definitions): Relationship[] => {
+  const relationships: Relationship[] = []
+
+  // The ObjectTypeDefinition will be types like your models
+  // and also any queries and mutations.
+  const objectTypeNames = definitions
+    .filter((definition) => {
+      return definition.kind === 'ObjectTypeDefinition'
+    })
+    .map((definition) => {
+      return definition.name.value
+    })
+
+  definitions.forEach((definition) => {
+    if (
+      definition.kind === 'ObjectTypeDefinition' ||
+      definition.kind === 'FieldDefinition'
+    ) {
+      const typeName = definition.name?.value
+
+      // Check if the type has fields
+      if (definition.fields) {
+        definition.fields.forEach((field) => {
+          const relatedFieldTypeName =
+            field.type?.type?.name?.value || field.type?.type?.type?.name?.value
+
+          // If one of these types has a field that is a known object type
+          // then it is a relationship
+          if (
+            relatedFieldTypeName &&
+            objectTypeNames.includes(relatedFieldTypeName)
+          ) {
+            relationships.push({
+              source: typeName,
+              target: relatedFieldTypeName,
+              label: field.name.value,
+            })
+          }
+        })
+      }
+    }
+  })
+
+  return relationships
 }

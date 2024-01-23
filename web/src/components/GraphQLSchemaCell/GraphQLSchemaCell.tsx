@@ -11,8 +11,12 @@ export const QUERY = gql`
   query FindGraphQLSchemaQuery {
     graphqlSchema {
       id
-      ast
       definitions
+      relationships {
+        source
+        target
+        label
+      }
     }
   }
 `
@@ -24,16 +28,6 @@ export const Empty = () => <div>Empty</div>
 export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
-
-function hashCode(str) {
-  return str
-    .split('')
-    .reduce(
-      (prevHash, currVal) =>
-        ((prevHash << 5) - prevHash + currVal.charCodeAt(0)) | 0,
-      0
-    )
-}
 
 export const Success = ({
   graphqlSchema,
@@ -59,14 +53,9 @@ export const Success = ({
   for (let i = 0; i < definitions.length; i++) {
     const definition = definitions[i]
 
-    console.log(definition)
-
     const kind = definition.kind
     const name = definition.name?.value || 'unknown-name'
-    const hash = hashCode(`${kind}-${name}`)
-    const id = `Def-${kind}-${hash}`
-
-    console.log(id, hash)
+    const id = name
 
     const node = {
       id: id,
@@ -76,8 +65,8 @@ export const Success = ({
       },
       position: { x: xOffSet, y: yOffSet },
       deletable: false,
-      draggable: false,
-      resizable: false,
+      draggable: true,
+      resizable: true,
     }
 
     nodes.push(node)
@@ -89,28 +78,15 @@ export const Success = ({
     }
   }
 
-  for (let i = 0; i < definitions.length; i++) {
-    const definition = definitions[i]
-    const kind = definition.kind
-    const hash = hashCode(JSON.stringify(definition))
-    const id = `Def-${kind}-${hash}`
-
-    definition.fields?.forEach((field) => {
-      console.log(field)
-      const fieldKind = field?.kind || 'unknown-field-type'
-      const fieldName = field?.name?.value || 'unknown-field-name'
-      const fieldHash = hashCode(`${fieldKind}-${fieldName}`)
-      const fieldId = `Def-${fieldKind}-${fieldHash}`
-
-      edges.push({
-        id: `e-${id}`,
-        source: id,
-        target: fieldId,
-      })
+  graphqlSchema.relationships.forEach((relationship) => {
+    edges.push({
+      id: `e-${relationship.source}-${relationship.target}`,
+      source: relationship.source,
+      target: relationship.target,
+      label: relationship.label || 'connect',
+      animated: true,
     })
-  }
-
-  console.log(nodes, edges)
+  })
 
   return (
     <div className="mt-6 h-[720px] w-full">
@@ -124,6 +100,12 @@ export const Success = ({
         <Background variant={BackgroundVariant.Dots} />
         <Controls className="bg-white" showInteractive={false} />
       </ReactFlow>
+      <div className="p-12 text-white">
+        {JSON.stringify(graphqlSchema.relationships, null, 2)}
+      </div>
+      <div className="p-12 text-white">
+        {JSON.stringify(graphqlSchema.definitions, null, 2)}
+      </div>
     </div>
   )
 }
