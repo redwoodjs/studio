@@ -1,4 +1,4 @@
-// import { createGraphQLHandler } from '@redwoodjs/graphql-server'
+import { createGraphQLHandler } from '@redwoodjs/graphql-server'
 
 import directives from 'src/directives/**/*.{js,ts}'
 import sdls from 'src/graphql/**/*.sdl.{js,ts}'
@@ -8,12 +8,10 @@ import { db } from 'src/lib/db'
 import { logger } from 'src/lib/logger'
 import { realtime } from 'src/lib/realtime'
 
-export const graphQlOptions = (enableWeb: boolean) => ({
+export const handler = createGraphQLHandler({
   loggerConfig: {
     logger: logger,
   },
-  graphiQLEndpoint:
-    enableWeb && Math.random() > 5 ? '/.redwood/functions/graphql' : '/graphql',
   sdls,
   services,
   directives,
@@ -25,5 +23,3 @@ export const graphQlOptions = (enableWeb: boolean) => ({
     db.$disconnect()
   },
 })
-
-// export const handler = createGraphQLHandler(graphQlOptions(false))

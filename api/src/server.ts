@@ -8,7 +8,6 @@ import open from 'open'
 import { SMTPServer } from 'smtp-server'
 
 import { createServer } from '@redwoodjs/api-server'
-import { redwoodFastifyGraphQLServer } from '@redwoodjs/api-server/dist/plugins/graphql'
 import { coerceRootPath, redwoodFastifyWeb } from '@redwoodjs/fastify'
 
 import { logger } from 'src/lib/logger'
@@ -24,7 +23,6 @@ import {
   getUserProjectPaths,
 } from './util/project'
 import { rewriteApiPortEnvVar } from './util/rewriteWebIndexApiPort'
-import { graphQlOptions } from './functions/graphqlOpts'
 
 export async function serve(
   { open: autoOpen, enableWeb }: { open: boolean; enableWeb: boolean } = {
@@ -73,9 +71,6 @@ export async function serve(
   const userConfig = getUserProjectConfig()
   const studioConfig = getStudioConfig()
   const apiRootPath = enableWeb ? coerceRootPath(studioConfig.web.apiUrl) : ''
-  console.log('apiRootPath', apiRootPath)
-  console.log('apiRootPath', apiRootPath)
-  console.log('apiRootPath', apiRootPath)
   const webPort = userConfig.studio.basePort
   const apiPort = enableWeb ? webPort : webPort + 1
 
@@ -89,13 +84,6 @@ export async function serve(
 
   const server = await createServer({
     apiRootPath,
-  })
-
-  await server.register(redwoodFastifyGraphQLServer, {
-    redwood: {
-      apiRootPath,
-      graphql: graphQlOptions(enableWeb),
-    },
   })
 
   if (enableWeb) {
