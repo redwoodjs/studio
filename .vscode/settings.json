@@ -9,8 +9,7 @@
     "editor.formatOnSave": true
   },
   "cSpell.words": [
-    "Graphi",
-    "Graphiql",
+    "graphiql",
     "headlessui",
     "heroicons",
     "opentelemetry",

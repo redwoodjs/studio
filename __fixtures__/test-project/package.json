@@ -7,8 +7,8 @@
     ]
   },
   "devDependencies": {
-    "@redwoodjs/core": "7.0.0-canary.785",
-    "@redwoodjs/studio": "7.0.0-canary.785"
+    "@redwoodjs/core": "7.0.0-canary.874",
+    "@redwoodjs/studio": "7.0.0-canary.874"
   },
   "eslintConfig": {
     "extends": "@redwoodjs/eslint-config",
@@ -28,6 +28,6 @@
     "studio:start": "yarn rw-studio | yarn rw-log-formatter"
   },
   "dependencies": {
-    "@redwoodjs/realtime": "7.0.0-canary.785"
+    "@redwoodjs/realtime": "7.0.0-canary.874"
   }
 }
