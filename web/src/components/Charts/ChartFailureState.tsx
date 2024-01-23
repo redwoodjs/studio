@@ -6,10 +6,6 @@ const ChartFailureState = ({ message }: { message: string }) => (
     data={[]}
     index="ago"
     categories={[]}
-    colors={[]}
-    yAxisWidth={40}
-    connectNulls={true}
-    allowDecimals={true}
     noDataText={message}
   />
 )
