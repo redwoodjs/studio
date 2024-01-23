@@ -5,16 +5,19 @@ import { Handle, Position } from 'reactflow'
 const getNodeCharacteristics = (definition) => {
   const name = definition.name.value || 'Unknown'
   const kind = definition.kind
-  const color = getNodeColorForKind(kind)
-  const emoji = getNodeEmojiForKind(kind)
+  const color = getNodeColorForKind(kind, name)
+  const emoji = getNodeEmojiForKind(kind, name)
 
   return { name, kind, color, emoji }
 }
 
-const getNodeColorForKind = (kind: string): string => {
+const getNodeColorForKind = (kind: string, name: string): string => {
   switch (kind) {
     case 'DirectiveDefinition':
-      return 'red'
+      if (name === 'skipAuth' || name === 'requireAuth') {
+        return 'red'
+      }
+      return 'fuchsia'
 
     case 'EnumTypeDefinition':
       return 'yellow'
@@ -26,6 +29,12 @@ const getNodeColorForKind = (kind: string): string => {
       return 'blue'
 
     case 'ObjectTypeDefinition':
+      if (name === 'Query') {
+        return 'teal'
+      }
+      if (name === 'Mutation') {
+        return 'cyan'
+      }
       return 'indigo'
 
     case 'ScalarTypeDefinition':
@@ -60,9 +69,13 @@ const getNodeColorForKind = (kind: string): string => {
   }
 }
 
-const getNodeEmojiForKind = (kind: string): string => {
+const getNodeEmojiForKind = (kind: string, name: string): string => {
   switch (kind) {
     case 'DirectiveDefinition':
+      if (name === 'skipAuth' || name === 'requireAuth') {
+        return '🔒'
+      }
+
       return '🛑'
 
     case 'EnumTypeDefinition':
@@ -75,7 +88,15 @@ const getNodeEmojiForKind = (kind: string): string => {
       return '🔄'
 
     case 'ObjectTypeDefinition':
-      return '🔍'
+      if (name === 'Query') {
+        return '🔍'
+      }
+
+      if (name === 'Mutation') {
+        return '🧬'
+      }
+
+      return '📦'
 
     case 'ScalarTypeDefinition':
       return '📊'
@@ -110,7 +131,7 @@ const getNodeEmojiForKind = (kind: string): string => {
 }
 
 const GraphQLSchemaDefinitionNode = ({ data }) => {
-  const { name, kind, color, emoji } = getNodeCharacteristics(data.definition)
+  const { name, color, emoji } = getNodeCharacteristics(data.definition)
 
   const textColor = `text-${color}-500`
   const borderColor = `border-${color}-700`
@@ -121,9 +142,9 @@ const GraphQLSchemaDefinitionNode = ({ data }) => {
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} />
       <div
-        className={`${borderColor} max-w-64 max-h-32 border-2 border-r-2 border-stone-400 bg-white px-4 py-2 shadow-md`}
+        className={`${borderColor} max-w-64 max-h-32 rounded-md border-2 border-r-2 border-stone-400 bg-white px-4 py-2 shadow-md`}
       >
-        <div className="flex">
+        <div className="flex items-center">
           <div
             className={`flex h-12 w-12 items-center justify-center rounded-full ${bgColor}`}
           >
@@ -131,7 +152,7 @@ const GraphQLSchemaDefinitionNode = ({ data }) => {
           </div>
           <div className="ml-2">
             <div className={`text-lg font-bold ${textColor}`}>{name}</div>
-            <div className={`${textColor}`}>{kind}</div>
+            <div className={`text-md${textColor}`}># fields</div>
           </div>
         </div>
       </div>

@@ -20,7 +20,7 @@ const Routes = () => {
         <Route path="/gql/playground" page={GraphQLPlaygroundPage} name="graphiql" />
         <Route path="/gql/inspector" page={GraphQLInspectorPage} name="graphQLInspector" />
         <Route path="/gql/operations" page={GraphQLOperationsPage} name="graphQLOperations" />
-        <Route path="/gql/schema" page={GraphQLSchemaPage} name="graphQLInspector" />
+        <Route path="/gql/schema" page={GraphQLSchemaPage} name="graphqlSchema" />
 
         <Route path="/mailer/inbox" page={MailerInboxPage} name="mailerInbox" />
         <Route path="/mailer/template-preview" page={MailerTemplatePreviewPage} name="mailerTemplatePreview" />

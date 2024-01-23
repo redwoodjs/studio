@@ -11,6 +11,7 @@ import {
   CloseIcon,
   DashboardIcon,
   ErdIcon,
+  GraphQLIcon,
   HomeIcon,
   InboxIcon,
   MenuIcon,
@@ -137,6 +138,11 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
       name: 'Operations',
       to: routes.graphQLOperations(),
       icon: OperationsIcon,
+    },
+    {
+      name: 'Schema Diagram',
+      to: routes.graphqlSchema(),
+      icon: GraphQLIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [

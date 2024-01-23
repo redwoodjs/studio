@@ -9,7 +9,7 @@ import { print, visit } from 'graphql'
 import { rootSchema } from '@redwoodjs/graphql-server'
 import { getConfigPath, getPaths } from '@redwoodjs/project-config'
 
-import { logger } from 'src/lib/logger'
+// import { logger } from 'src/lib/logger'
 
 // this seems a wrong way to import this type?
 import type { Relationship } from '../../types/graphql'
@@ -59,6 +59,8 @@ export const getGraphQLSchemaInfo = async () => {
 
   const definitions = []
 
+  // logger.info({ schema }, 'GraphQL schema')
+
   visit(documentNode, {
     DirectiveDefinition: (node) => {
       definitions.push(node)
@@ -79,9 +81,29 @@ export const getGraphQLSchemaInfo = async () => {
 
   const relationships = getGraphQLRelationships(definitions)
 
-  logger.info({ relationships }, 'GraphQL Relationships')
+  // logger.info({ relationships }, 'GraphQL Relationships')
 
   return { id, ast, definitions, relationships }
+}
+
+interface FieldType {
+  type?: FieldType
+  name?: {
+    value: string
+  }
+}
+
+// recurse to the get the name of the type
+const findNameAndValue = (field: FieldType): string | undefined => {
+  if (field.name?.value) {
+    return field.name.value
+  }
+
+  if (field.type) {
+    return findNameAndValue(field.type)
+  }
+
+  return undefined
 }
 
 const getGraphQLRelationships = (definitions): Relationship[] => {
@@ -107,8 +129,7 @@ const getGraphQLRelationships = (definitions): Relationship[] => {
       // Check if the type has fields
       if (definition.fields) {
         definition.fields.forEach((field) => {
-          const relatedFieldTypeName =
-            field.type?.type?.name?.value || field.type?.type?.type?.name?.value
+          const relatedFieldTypeName = findNameAndValue(field.type)
 
           // If one of these types has a field that is a known object type
           // then it is a relationship

@@ -57,24 +57,26 @@ export const Success = ({
     const name = definition.name?.value || 'unknown-name'
     const id = name
 
-    const node = {
-      id: id,
-      type: `${kind}Node`,
-      data: {
-        definition: definitions[i],
-      },
-      position: { x: xOffSet, y: yOffSet },
-      deletable: false,
-      draggable: true,
-      resizable: true,
-    }
+    if (kind === 'ObjectTypeDefinition' && name !== 'Redwood') {
+      const node = {
+        id: id,
+        type: `${kind}Node`,
+        data: {
+          definition: definitions[i],
+        },
+        position: { x: xOffSet, y: yOffSet },
+        deletable: false,
+        draggable: true,
+        resizable: true,
+      }
 
-    nodes.push(node)
+      nodes.push(node)
 
-    xOffSet += 300
-    if (xOffSet > 300 * 3) {
-      xOffSet = 0
-      yOffSet += 128
+      xOffSet += 300
+      if (xOffSet > 300 * 3) {
+        xOffSet = 0
+        yOffSet += 128
+      }
     }
   }
 
