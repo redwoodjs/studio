@@ -7,25 +7,25 @@ const Routes = () => {
   return (
     <Router>
       <Set wrap={SidebarLayout}>
-        <Route path="/" page={HomePage} name="home" />
+        <Route path="/" page={DashboardPage} name="home" />
 
-        {/* TODO: Implement functionality and restore the route */}
-        {/* <Route path="/graphql" page={GraphQLPage} name="graphql" /> */}
+        <Route path="/monitoring/traces" page={OpenTelemetryTracesPage} name="opentelemetryTraces" />
+        <Route path="/monitoring/traces/{id:String}" page={OpenTelemetryTracePage} name="opentelemetryTrace" />
+        <Route path="/monitoring/spans" page={OpenTelemetrySpansPage} name="opentelemetrySpans" />
+        <Route path="/monitoring/spans/{id:String}" page={OpenTelemetrySpanPage} name="opentelemetrySpan" />
 
-        {/* TODO: Implement functionality and restore the route */}
-        {/* <Route path="/prisma" page={PrismaPage} name="prisma" /> */}
+        <Route path="/database/erd" page={DatabaseErdPage} name="databaseErd" />
+        <Route path="/database/sql-statements" page={DatabaseSQLStatementsPage} name="databaseSqlStatements" />
 
-        <Route path="/opentelemetry/traces" page={OpenTelemetryTracesPage} name="opentelemetryTraces" />
-        <Route path="/opentelemetry/traces/{id:String}" page={OpenTelemetryTracePage} name="opentelemetryTrace" />
-        <Route path="/opentelemetry/spans" page={OpenTelemetrySpansPage} name="opentelemetrySpans" />
-        <Route path="/opentelemetry/spans/{id:String}" page={OpenTelemetrySpanPage} name="opentelemetrySpan" />
-
-        <Route path="/graphiql" page={GraphiqlPage} name="graphiql" />
+        <Route path="/gql/playground" page={GraphQLPlaygroundPage} name="graphiql" />
+        <Route path="/gql/inspector" page={GraphQLInspectorPage} name="graphQLInspector" />
+        <Route path="/gql/operations" page={GraphQLOperationsPage} name="graphQLOperations" />
         <Route path="/gql/schema" page={GraphQLSchemaPage} name="graphQLInspector" />
-        <Route path="/mailer-inbox" page={MailerInboxPage} name="mailerInbox" />
-        <Route path="/mailer-template-preview" page={MailerTemplatePreviewPage} name="mailerTemplatePreview" />
 
-        <Route path="/og-tag-preview" page={OGTagPreviewPage} name="ogTagPreview" />
+        <Route path="/mailer/inbox" page={MailerInboxPage} name="mailerInbox" />
+        <Route path="/mailer/template-preview" page={MailerTemplatePreviewPage} name="mailerTemplatePreview" />
+
+        <Route path="/ssr/og-tag-preview" page={OGTagPreviewPage} name="ogTagPreview" />
       </Set>
       <Route notfound page={NotFoundPage} />
     </Router>

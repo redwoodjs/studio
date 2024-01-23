@@ -48,6 +48,33 @@ If you do not see any traces or spans, check that your `redwood.toml` points to 
 	apiSdk = "/Users/dthyresson/Dropbox/Code/redwoodjs/studio/__fixtures__/test-project/api/dist/opentelemetry.js"
 ```
 
+### Adding New Prisma Models and Views
+
+RW_STUDIO_DATABASE_URL=file:./dummy.sqlite
+
+* In studio project root
+* yarn rw prisma migrate reset to make sure dummy was up-to-date
+
+If adding a view a view:
+
+* yarn rw prisma migrate dev span-attribute-view --create-only
+* Wrote view
+* Update prisma schema with the view "model"
+
+If adding a mode:
+
+* Update prisma schema with the new "model"
+* yarn rw prisma migrate dev
+
+Then ...
+
+* yarn rw prisma migrate reset
+* View was applied to "dummy.sqlite"
+* yarn studio:package
+* Deleted __fixtures__/test-project/.redwood/studio/prisma.sqlite to make sure migrate deploy really updated
+* Run studio via: yarn rw-studio to apply migrations
+
+
 ## Releasing
 
 `npm version [major|minor|patch]`
