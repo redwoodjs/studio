@@ -8,11 +8,15 @@ import {
   HomeIcon,
   EnvelopeIcon,
   InboxIcon,
+  Square2StackIcon as DashboardIcon,
   // CircleStackIcon,
-  AdjustmentsVerticalIcon,
+  PhotoIcon,
+  NewspaperIcon as ErdIcon,
+  CommandLineIcon as SqlStatementsIcon,
   CubeIcon,
   CubeTransparentIcon,
   ViewColumnsIcon,
+  ListBulletIcon,
 } from '@heroicons/react/24/outline'
 import { Flex, Subtitle, Title } from '@tremor/react'
 import { GetConnectionStatus } from 'types/graphql'
@@ -100,22 +104,8 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const navigation: TNavigationItem[] = [
-    { name: 'Dashboard', to: routes.home(), icon: HomeIcon },
+    { name: 'Dashboard', to: routes.home(), icon: DashboardIcon },
   ]
-  // const graphqlNavigation: TNavigationItem[] = [
-  //   {
-  //     name: 'GraphQL Schema',
-  //     to: routes.graphql(),
-  //     icon: GraphQLIcon,
-  //   },
-  // ]
-  // const databaseNavigation: TNavigationItem[] = [
-  //   {
-  //     name: 'Prisma Schema',
-  //     to: routes.prisma(),
-  //     icon: CircleStackIcon,
-  //   },
-  // ]
   const telemetryNavigation: TNavigationItem[] = [
     {
       name: 'Traces',
@@ -128,11 +118,28 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
       icon: CubeIcon,
     },
   ]
-  const apiNavigation: TNavigationItem[] = [
+  const databaseNavigation: TNavigationItem[] = [
     {
-      name: 'GraphiQL Playground',
+      name: 'SQL Statements',
+      to: routes.databaseSqlStatements(),
+      icon: SqlStatementsIcon,
+    },
+    {
+      name: 'Entity Relation Diagram',
+      to: routes.databaseErd(),
+      icon: ErdIcon,
+    },
+  ]
+  const graphQLNavigation: TNavigationItem[] = [
+    {
+      name: 'Playground',
       to: routes.graphiql(),
       icon: ViewColumnsIcon,
+    },
+    {
+      name: 'Operations',
+      to: routes.graphQLOperations(),
+      icon: ListBulletIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
@@ -147,7 +154,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
     {
       name: 'OG Tag Preview',
       to: routes.ogTagPreview(),
-      icon: AdjustmentsVerticalIcon,
+      icon: PhotoIcon,
     },
   ]
 
@@ -251,33 +258,9 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                             ))}
                           </ul>
                         </li>
-                        {/* <li>
-                          <div className="text-xs font-semibold leading-6 text-gray-400">
-                            GraphQL
-                          </div>
-                          <ul className="-mx-2 mt-2 space-y-1">
-                            {graphqlNavigation.map((item) => (
-                              <li key={item.name}>
-                                <NavigationItem item={item} />
-                              </li>
-                            ))}
-                          </ul>
-                        </li> */}
-                        {/* <li>
-                          <div className="text-xs font-semibold leading-6 text-gray-400">
-                            Database
-                          </div>
-                          <ul className="-mx-2 mt-2 space-y-1">
-                            {databaseNavigation.map((item) => (
-                              <li key={item.name}>
-                                <NavigationItem item={item} />
-                              </li>
-                            ))}
-                          </ul>
-                        </li> */}
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
-                            OpenTelemetry
+                            Monitoring
                           </div>
                           <ul className="-mx-2 mt-2 space-y-1">
                             {telemetryNavigation.map((item) => (
@@ -289,10 +272,22 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                         </li>
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
-                            APIs
+                            Database
                           </div>
                           <ul className="-mx-2 mt-2 space-y-1">
-                            {apiNavigation.map((item) => (
+                            {databaseNavigation.map((item) => (
+                              <li key={item.name}>
+                                <NavigationItem item={item} />
+                              </li>
+                            ))}
+                          </ul>
+                        </li>
+                        <li>
+                          <div className="text-xs font-semibold leading-6 text-gray-400">
+                            GraphQL
+                          </div>
+                          <ul className="-mx-2 mt-2 space-y-1">
+                            {graphQLNavigation.map((item) => (
                               <li key={item.name}>
                                 <NavigationItem item={item} />
                               </li>
@@ -369,33 +364,9 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     ))}
                   </ul>
                 </li>
-                {/* <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
-                    GraphQL
-                  </div>
-                  <ul className="-mx-2 mt-2 space-y-1">
-                    {graphqlNavigation.map((item) => (
-                      <li key={item.name}>
-                        <NavigationItem item={item} />
-                      </li>
-                    ))}
-                  </ul>
-                </li> */}
-                {/* <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
-                    Database
-                  </div>
-                  <ul className="-mx-2 mt-2 space-y-1">
-                    {databaseNavigation.map((item) => (
-                      <li key={item.name}>
-                        <NavigationItem item={item} />
-                      </li>
-                    ))}
-                  </ul>
-                </li> */}
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
-                    OpenTelemetry
+                    Monitoring
                   </div>
                   <ul className="-mx-2 mt-2 space-y-1">
                     {telemetryNavigation.map((item) => (
@@ -407,10 +378,22 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                 </li>
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
-                    APIs
+                    GraphQL
                   </div>
                   <ul className="-mx-2 mt-2 space-y-1">
-                    {apiNavigation.map((item) => (
+                    {graphQLNavigation.map((item) => (
+                      <li key={item.name}>
+                        <NavigationItem item={item} />
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+                <li>
+                  <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
+                    Database
+                  </div>
+                  <ul className="-mx-2 mt-2 space-y-1">
+                    {databaseNavigation.map((item) => (
                       <li key={item.name}>
                         <NavigationItem item={item} />
                       </li>
