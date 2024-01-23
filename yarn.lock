@@ -13829,6 +13829,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"date-fns@npm:^3.2.0":
+  version: 3.3.1
+  resolution: "date-fns@npm:3.3.1"
+  checksum: e04ff79244010e03b912d791cd3250af5f18866ce868604958d76bd87e5fb0b79f0a810b8e7066248452b41779b288c4fd21de1cac2cd4b6d384e9dd931c9674
+  languageName: node
+  linkType: hard
+
 "debounce@npm:^1.2.0":
   version: 1.2.1
   resolution: "debounce@npm:1.2.1"
@@ -27705,6 +27712,7 @@ __metadata:
     "@types/react-dom": "npm:18.2.15"
     autoprefixer: "npm:10.4.15"
     buffer: "npm:6.0.3"
+    date-fns: "npm:^3.2.0"
     graphiql: "npm:3.0.10"
     json-bigint-patch: "npm:0.0.8"
     open-graph-scraper: "npm:^6.2.2"

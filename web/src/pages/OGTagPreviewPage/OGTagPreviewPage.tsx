@@ -2,14 +2,6 @@ import { useState } from 'react'
 
 import { useLazyQuery } from '@apollo/client'
 import {
-  CodeBracketIcon,
-  RectangleStackIcon,
-  ExclamationTriangleIcon,
-  EyeIcon,
-  LinkIcon,
-  ArrowPathIcon,
-} from '@heroicons/react/24/outline'
-import {
   Title,
   Grid,
   Col,
@@ -27,6 +19,15 @@ import {
 } from '@tremor/react'
 
 import { MetaTags } from '@redwoodjs/web'
+
+import {
+  CodeBracketIcon,
+  ErrorIcon,
+  EyeIcon,
+  LinkIcon,
+  RectangleStackIcon,
+  RefreshIcon,
+} from 'src/icons/Icons'
 
 const OG_TAG_PREVIEW_QUERY = gql`
   query OGTagPreview($url: String!, $customUserAgent: String) {
@@ -111,7 +112,7 @@ const OgTagPreviewPage = () => {
               <div className="h-full">
                 <Button
                   className="h-full"
-                  icon={ArrowPathIcon}
+                  icon={RefreshIcon}
                   onClick={async () => executeFetch(url, customUserAgent)}
                   disabled={!isValidHttpUrl(url)}
                 >
@@ -130,11 +131,7 @@ const OgTagPreviewPage = () => {
         ) : ogTagPreviewQuery.error ? (
           <Col numColSpanLg={3}>
             <Card className="h-full p-6">
-              <Callout
-                title="Error"
-                icon={ExclamationTriangleIcon}
-                color="rose"
-              >
+              <Callout title="Error" icon={ErrorIcon} color="rose">
                 <div className="h-full w-full overflow-x-auto">
                   <pre className="text-gray-500 dark:text-gray-600">
                     {JSON.stringify(ogTagPreviewQuery.error, undefined, 2)}
