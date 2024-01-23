@@ -1,8 +1,8 @@
-import { Title, Grid, Col, Card, Text, Subtitle } from '@tremor/react'
+import { Title, Grid, Col, Card, Text } from '@tremor/react'
 
 import { MetaTags } from '@redwoodjs/web'
 
-import GraphQlSchemaCell from 'src/components/GraphQLSchemaCell'
+import GraphQLSchemaCell from 'src/components/GraphQLSchemaCell'
 
 const GraphQLSchemaPage = () => {
   return (
@@ -16,8 +16,7 @@ const GraphQLSchemaPage = () => {
         {/* Schema visualisation panel */}
         <Col>
           <Card className="h-full w-full p-6">
-            <Subtitle>Schema</Subtitle>
-            <GraphQlSchemaCell />
+            <GraphQLSchemaCell />
           </Card>
         </Col>
       </Grid>

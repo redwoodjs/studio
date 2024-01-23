@@ -8,7 +8,6 @@ export const schema = gql`
     id: ID!
 
     # TODO: This should really return much more granular information/types
-    ast: String!
     definitions: String!
     relationships: [Relationship!]!
   }
