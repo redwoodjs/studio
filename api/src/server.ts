@@ -2,11 +2,13 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import chalk from 'chalk'
+import { config } from 'dotenv-defaults'
 import execa from 'execa'
 import open from 'open'
 import { SMTPServer } from 'smtp-server'
 
 import { createServer } from '@redwoodjs/api-server'
+import { redwoodFastifyGraphQLServer } from '@redwoodjs/api-server/dist/plugins/graphql'
 import { coerceRootPath, redwoodFastifyWeb } from '@redwoodjs/fastify'
 
 import { logger } from 'src/lib/logger'
@@ -19,8 +21,10 @@ import {
   getStudioConfig,
   getStudioStatePath,
   getUserProjectConfig,
+  getUserProjectPaths,
 } from './util/project'
 import { rewriteApiPortEnvVar } from './util/rewriteWebIndexApiPort'
+import { graphQlOptions } from './functions/graphqlOpts'
 
 export async function serve(
   { open: autoOpen, enableWeb }: { open: boolean; enableWeb: boolean } = {
@@ -65,11 +69,21 @@ export async function serve(
   })
 
   // Load config
+  const userPaths = getUserProjectPaths()
   const userConfig = getUserProjectConfig()
   const studioConfig = getStudioConfig()
   const apiRootPath = enableWeb ? coerceRootPath(studioConfig.web.apiUrl) : ''
+  console.log('apiRootPath', apiRootPath)
+  console.log('apiRootPath', apiRootPath)
+  console.log('apiRootPath', apiRootPath)
   const webPort = userConfig.studio.basePort
   const apiPort = enableWeb ? webPort : webPort + 1
+
+  config({
+    path: path.join(userPaths.base, '.env'),
+    defaults: path.join(userPaths.base, '.env.defaults'),
+    multiline: true,
+  })
 
   rewriteApiPortEnvVar(apiPort)
 
@@ -77,8 +91,15 @@ export async function serve(
     apiRootPath,
   })
 
+  await server.register(redwoodFastifyGraphQLServer, {
+    redwood: {
+      apiRootPath,
+      graphql: graphQlOptions(enableWeb),
+    },
+  })
+
   if (enableWeb) {
-    // await server.register(redwoodFastifyWeb)
+    await server.register(redwoodFastifyWeb)
   }
 
   await server.register(graphqlProxy)
