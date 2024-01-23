@@ -6,7 +6,7 @@ import ChartHeading from './ChartHeading'
 
 interface ChartCardProps {
   caption: string
-  icon: React.ComponentType<any> // Adjust the type according to the actual type of DatabasePerformanceIcon
+  icon: React.ElementType
   tooltip?: string
   children: ReactNode
 }
