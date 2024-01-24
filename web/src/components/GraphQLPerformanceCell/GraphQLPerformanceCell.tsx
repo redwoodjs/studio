@@ -1,4 +1,3 @@
-import { Card } from '@tremor/react'
 import type {
   GetGraphQLPerformanceQuery,
   GetGraphQLPerformanceQueryVariables,
