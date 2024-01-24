@@ -1,13 +1,4 @@
-import { useCallback, useEffect } from 'react'
-
-import ReactFlow, {
-  Background,
-  Controls,
-  useNodesState,
-  useEdgesState,
-  MiniMap,
-  addEdge,
-} from 'reactflow'
+import ReactFlow, { Background, Controls } from 'reactflow'
 import type { FindPrismaSchemaQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
@@ -31,49 +22,52 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
+function extractNodesAndEdges(jsonSchema) {
+  const objectNodeKeys = Object.keys(jsonSchema?.definitions ?? {})
+  const edges = []
+
+  const nodes = objectNodeKeys.map((node, index) => ({
+    id: `Def-${node}`,
+    type: 'default',
+    data: { label: node },
+    position: { x: 0, y: index * 128 },
+  }))
+
+  objectNodeKeys.forEach((node) => {
+    const nodeSchema = jsonSchema.definitions[node]
+    const properties = nodeSchema.properties
+
+    Object.keys(properties).forEach((property) => {
+      const propertySchema = properties[property]
+      if (propertySchema.$ref) {
+        const target = propertySchema.$ref.split('/').pop()
+        if (target) {
+          edges.push({
+            id: `${node}-${property}`,
+            source: `Def-${node}`,
+            target: `Def-${target}`,
+            label: property,
+          })
+        }
+      }
+    })
+  })
+  return { nodes, edges }
+}
+
 export const Success = ({
   prismaSchema,
 }: CellSuccessProps<FindPrismaSchemaQuery>) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState([])
-  const [_edges, setEdges, onEdgesChange] = useEdgesState([])
-
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
-  )
-
-  useEffect(() => {
-    const schemaDefinitions = Object.keys(
-      prismaSchema?.schema?.definitions ?? {}
-    )
-    const newNodePositions = []
-    const newNodes = []
-    for (let i = 0; i < schemaDefinitions.length; i++) {
-      const x = (i % schemaDefinitions.length) * 175
-      const y = Math.floor(i / schemaDefinitions.length) * 100
-      newNodes.push({
-        id: `Def-${schemaDefinitions[i]}`,
-        data: { label: schemaDefinitions[i] },
-        position: { x, y },
-      })
-      newNodePositions.push({ x, y })
-    }
-    setNodes(newNodes)
-  }, [prismaSchema, setNodes])
+  const { nodes, edges } = extractNodesAndEdges(prismaSchema.schema)
 
   return (
-    <div style={{ width: '100%', height: '640px', padding: '4px' }}>
-      <ReactFlow
-        nodes={nodes}
-        fitView
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-      >
-        <Background />
-        <Controls />
-        <MiniMap style={{ height: 120 }} zoomable pannable />
-      </ReactFlow>
-    </div>
+    <>
+      <div className="h-[640px] w-full p-4">
+        <ReactFlow nodes={nodes} edges={edges} fitView>
+          <Background />
+          <Controls />
+        </ReactFlow>
+      </div>
+    </>
   )
 }
