@@ -46,8 +46,8 @@ async function main() {
   const { verbose, release } = options
   $.verbose = verbose
   const studioPath = path.join(__dirname, '..')
-  const rootPackageJSON = fs.readJSONSync(path.join(studioPath, 'package.json'))
-  const studioRwVersion = rootPackageJSON.devDependencies['@redwoodjs/core']
+  const rootPackageJson = fs.readJSONSync(path.join(studioPath, 'package.json'))
+  const studioRwVersion = rootPackageJson.devDependencies['@redwoodjs/core']
   const testProjectPath = path.join(
     __dirname,
     '..',
@@ -129,7 +129,7 @@ async function main() {
   })
   const modified = original.replaceAll(
     '__RW_STUDIO_VERSION__',
-    'v' + rootPackageJSON.version
+    'v' + rootPackageJson.version
   )
   fs.writeFileSync(indexHTMLPath, modified)
 
@@ -141,7 +141,7 @@ async function main() {
     })
     const modified200 = original200.replaceAll(
       '__RW_STUDIO_VERSION__',
-      'v' + rootPackageJSON.version
+      'v' + rootPackageJson.version
     )
     fs.writeFileSync(twoHundredHtmlPath, modified200)
   }
@@ -177,23 +177,25 @@ async function main() {
     spinner.start('Setting dependencies...')
   }
 
-  // Note that we're not adding any kind of dependencies to package.json.
-  // The list of dependencies (and peerDependencies) are there to let
-  // the package manager know what to install when someone does
-  // `yarn add <package>` or similar. But we don't expect users to do that
-  // for Redwood Studio. Instead, we expect them to just run it using
-  // `yarn rw studio`, and that script will install it on the first run.
-  // It's true that `yarn rw studio` in turn will use yarn to install Studio,
-  // but we can still control exactly what dependencies are needed and handle
-  // installing them separately. Mostly we don't want anything to be installed
-  // apart from Studio itself and what's bundled with it. Other dependencies
-  // should mostly already be available in the user's project seeing as that's
-  // also a RW project.
+  const apiPackageJson = fs.readJSONSync(
+    path.join(studioPath, 'api', 'package.json')
+  )
+
+  // Note that we're not adding any @redwoodjs packages to the list of
+  // dependencies in the package.json file. We want to reuse the version of RW
+  // the user already has, not install another version nested inside the
+  // node_modules folder of Studio in the user's project.
+  //
+  // We don't expect users to manually install Studio using their package
+  // manager. Instead, we expect them to just run it using `yarn rw studio`,
+  // and that script will install it on the first run. So we'll make sure
+  // that script also installs any additional @redwoodjs packages that are
+  // needed, using the same version as other RW pages already installed.
   fs.writeJSONSync(
     path.join(packagedDir, 'package.json'),
     {
       name: '@redwoodjs/studio',
-      version: rootPackageJSON.version,
+      version: rootPackageJson.version,
       description: "Redwood's development studio",
       repository: {
         type: 'git',
@@ -204,6 +206,19 @@ async function main() {
       files: ['api', 'web', 'redwood.toml'],
       bin: {
         'rw-studio': './api/dist/bin/rw-studio.js',
+      },
+      dependencies: {
+        // Filter out @redwoodjs packages
+        ...Object.entries(apiPackageJson.dependencies).reduce(
+          (dependencies, [packageName, version]) => {
+            if (!packageName.startsWith('@redwoodjs/')) {
+              dependencies[packageName] = version
+            }
+
+            return dependencies
+          },
+          {}
+        ),
       },
     },
     { spaces: 2 }

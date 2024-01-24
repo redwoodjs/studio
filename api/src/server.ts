@@ -82,6 +82,10 @@ export async function serve(
 
   rewriteApiPortEnvVar(apiPort)
 
+  // `createServer` reads process.argv, and will error out when it finds
+  // arguments it doesn't recognize. We're calling it programmatically, so
+  // don't want to forward any cli args to it
+  process.argv = []
   const server = await createServer({
     apiRootPath,
   })
