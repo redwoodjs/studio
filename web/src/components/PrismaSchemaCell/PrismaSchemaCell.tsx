@@ -47,6 +47,7 @@ function extractNodesAndEdges(jsonSchema) {
             source: `Def-${node}`,
             target: `Def-${target}`,
             label: property,
+            animated: true,
           })
         }
       }
