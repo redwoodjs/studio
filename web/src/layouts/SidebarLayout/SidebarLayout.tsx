@@ -43,6 +43,9 @@ type TNavigationItem = {
   icon: typeof HomeIcon
 }
 
+ // v7 ships with SSR section disabled as Bighorn introduces the feature
+const includeSSR = false
+
 const NavigationItem = ({ item }: { item: TNavigationItem }) => {
   return (
     <div className="flex w-full">
@@ -309,6 +312,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                             ))}
                           </ul>
                         </li>
+                        {includeSSR && (
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
                             SSR
@@ -321,6 +325,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                             ))}
                           </ul>
                         </li>
+                        )}
                         <li className="mb-6 mt-auto">
                           <div className="text-xs font-semibold leading-6 text-gray-400">
                             Development Server
@@ -415,6 +420,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     ))}
                   </ul>
                 </li>
+                {includeSSR && (
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
                     SSR
@@ -427,6 +433,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     ))}
                   </ul>
                 </li>
+                )}
                 <li className="mb-6 mt-auto">
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
                     Development Server
