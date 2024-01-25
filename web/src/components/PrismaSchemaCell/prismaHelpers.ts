@@ -4,11 +4,25 @@ const parseProperties = (properties) => {
   if (properties) {
     for (const propertyName in properties) {
       const property = properties[propertyName]
-      const field = { type: property.type, relationship: null }
+      const type =
+        property.type instanceof Array
+          ? property.type.join(', ')
+          : property.type
+      const format = property.format
+      const field = {
+        type,
+        format,
+        relationship: null,
+        relatedModel: null,
+      }
 
       if (property.$ref) {
+        const relatedModel = property.$ref.split('/').pop()
+
         field.type = 'object'
-        field.relationship = `Model-${property.$ref.split('/').pop()}`
+        field.relatedModel = relatedModel
+        // edge for connecting nodes in diagram
+        field.relationship = `Model-${relatedModel}`
       }
 
       fields[propertyName] = field
@@ -69,4 +83,31 @@ export const extractNodesAndEdges = (jsonSchema) => {
   })
 
   return { nodes, edges }
+}
+
+export const getTableDataForSchema = (schema) => {
+  const tableData = []
+
+  const { nodes } = extractNodesAndEdges(schema)
+
+  nodes.forEach((node) => {
+    const { name, fields } = node.data
+    const row = { name, fields: [] }
+
+    Object.keys(fields).forEach((fieldName) => {
+      const field = fields[fieldName]
+      const { type, format, relationship, relatedModel } = field
+      row.fields.push({
+        name: fieldName,
+        type,
+        relationship,
+        relatedModel,
+        format,
+      })
+    })
+
+    tableData.push(row)
+  })
+
+  return tableData
 }

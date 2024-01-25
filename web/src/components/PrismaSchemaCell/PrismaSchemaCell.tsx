@@ -1,3 +1,4 @@
+import { Grid, Col } from '@tremor/react'
 import type { FindPrismaSchemaQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
@@ -6,6 +7,7 @@ import 'reactflow/dist/style.css'
 
 import PrismaEntityRelationshipDiagram from './PrismaEntityRelationshipDiagram'
 import PrismaModelList from './PrismaModelList'
+import PrismaTableViews from './PrismaTableViews'
 
 export const QUERY = gql`
   query FindPrismaSchemaQuery {
@@ -29,8 +31,16 @@ export const Success = ({
 }: CellSuccessProps<FindPrismaSchemaQuery>) => {
   return (
     <>
-      <PrismaEntityRelationshipDiagram prismaSchema={prismaSchema} />
-      <PrismaModelList prismaSchema={prismaSchema} />
+      <Grid numItems={2} numItemsSm={1} numItemsLg={3} className="mb-4 gap-4">
+        <Col numColSpanLg={2}>
+          <PrismaEntityRelationshipDiagram prismaSchema={prismaSchema} />
+        </Col>
+        <Col numColSpanLg={1}>
+          <PrismaModelList prismaSchema={prismaSchema} />
+        </Col>
+      </Grid>
+
+      <PrismaTableViews prismaSchema={prismaSchema} />
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { Title } from '@tremor/react'
+import { Card, Title } from '@tremor/react'
 import ReactFlow, { Background, BackgroundVariant, Controls } from 'reactflow'
 import type {
   PrismaSchema,
@@ -19,7 +19,7 @@ const PrismaEntityRelationshipDiagram = ({
   const nodeTypes = { PrismaModel: PrismaSchemaNode }
 
   return (
-    <>
+    <Card>
       <Title className="mb-4">Prisma Schema</Title>
       <div className="h-[640px] w-full py-2">
         <ReactFlow
@@ -33,7 +33,7 @@ const PrismaEntityRelationshipDiagram = ({
           <Controls className="bg-white" showInteractive={false} />
         </ReactFlow>
       </div>
-    </>
+    </Card>
   )
 }
 
