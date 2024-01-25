@@ -4,12 +4,12 @@ import { MetaTags } from '@redwoodjs/web'
 
 import PrismaSchemaCell from 'src/components/PrismaSchemaCell'
 
-const DatabaseErdPage = () => {
+const DatabaseSchemaPage = () => {
   return (
     <>
       <MetaTags
-        title="Database Entity Relationship Diagram"
-        description="ER diagram of the database schema"
+        title="Database Schema"
+        description="Explore your database schema."
       />
 
       <Title>Database Schema</Title>
@@ -22,4 +22,4 @@ const DatabaseErdPage = () => {
   )
 }
 
-export default DatabaseErdPage
+export default DatabaseSchemaPage

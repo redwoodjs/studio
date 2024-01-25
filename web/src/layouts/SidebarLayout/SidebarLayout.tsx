@@ -120,7 +120,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   const databaseNavigation: TNavigationItem[] = [
     {
       name: 'Schema',
-      to: routes.databaseErd(),
+      to: routes.databaseSchema(),
       icon: ErdIcon,
     },
     {
