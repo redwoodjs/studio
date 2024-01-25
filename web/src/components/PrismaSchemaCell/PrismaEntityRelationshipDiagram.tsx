@@ -9,16 +9,54 @@ import PrismaSchemaNode from './PrismaSchemaNode'
 
 import 'reactflow/dist/style.css'
 
+function parseProperties(properties) {
+  const fields = {}
+
+  if (properties) {
+    for (const propertyName in properties) {
+      const property = properties[propertyName]
+      const field = { type: property.type, relationship: null }
+
+      if (property.$ref) {
+        field.type = 'object'
+        field.relationship = `Model-${property.$ref.split('/').pop()}`
+      }
+
+      fields[propertyName] = field
+    }
+  }
+
+  return fields
+}
+
 const extractNodesAndEdges = (jsonSchema) => {
-  const objectNodeKeys = Object.keys(jsonSchema?.definitions ?? {})
+  const definitions = jsonSchema?.definitions ?? {}
+  const objectNodeKeys = [] //Object.keys(jsonSchema?.definitions ?? {})
+  const nodes = []
   const edges = []
 
-  const nodes = objectNodeKeys.map((node, index) => ({
-    id: `Def-${node}`,
-    type: 'PrismaModel',
-    data: { label: node },
-    position: { x: 0, y: index * 128 },
-  }))
+  let index = 0
+
+  if (definitions) {
+    for (const definitionName in definitions) {
+      const definition = definitions[definitionName]
+      const id = `Model-${definitionName}`
+      const model = {
+        id,
+        type: 'PrismaModel',
+        data: {
+          name: definitionName,
+          type: definition.type || 'object',
+          fields: parseProperties(definition.properties),
+          fieldCount: Object.keys(definition.properties || {}).length,
+        },
+        position: { x: 0, y: index * 128 },
+      }
+      objectNodeKeys.push(definitionName)
+      nodes.push(model)
+      index++
+    }
+  }
 
   objectNodeKeys.forEach((node) => {
     const nodeSchema = jsonSchema.definitions[node]
@@ -31,8 +69,8 @@ const extractNodesAndEdges = (jsonSchema) => {
         if (target) {
           edges.push({
             id: `e-${node}-${property}`,
-            source: `Def-${node}`,
-            target: `Def-${target}`,
+            source: `Model-${node}`,
+            target: `Model-${target}`,
             label: property,
             animated: true,
           })
@@ -40,6 +78,7 @@ const extractNodesAndEdges = (jsonSchema) => {
       }
     })
   })
+
   return { nodes, edges }
 }
 
@@ -53,14 +92,14 @@ export const PrismaEntityRelationshipDiagram = ({
 
   return (
     <>
-      <Title className="mb-4">Diagram</Title>
+      <Title className="mb-4">Prisma Schema</Title>
       <div className="h-[640px] w-full py-2">
         <ReactFlow
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
           fitView
-          className="bg-teal-50"
+          className="bg-zinc-50"
         >
           <Background variant={BackgroundVariant.Dots} />
           <Controls className="bg-white" showInteractive={false} />

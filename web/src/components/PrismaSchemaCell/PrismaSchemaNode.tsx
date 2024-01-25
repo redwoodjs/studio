@@ -5,21 +5,22 @@ import { Handle, Position } from 'reactflow'
 const PrismaSchemaNode = ({ data }) => {
   console.log(data)
   const { name, color, emoji } = {
-    name: data.label,
-    color: 'indigo',
+    name: data.name,
+    color: 'zinc',
     emoji: '📦',
   }
 
-  const textColor = `text-${color}-500`
+  const textColor = `text-${color}-600`
   const borderColor = `border-${color}-700`
-  const bgColor = `bg-${color}-100`
+  const bgColor = `bg-${color}-200`
+  const captionColor = `text-${color}-400`
 
   return (
     <>
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} />
       <div
-        className={`${borderColor} max-w-64 max-h-32 rounded-md border-2 border-r-2 border-stone-400 bg-white px-4 py-2 shadow-md`}
+        className={`${borderColor} max-w-64 max-h-32 rounded-md border-2 border-r-2 ${borderColor} bg-white px-4 py-2 shadow-md`}
       >
         <div className="flex items-center">
           <div
@@ -29,7 +30,9 @@ const PrismaSchemaNode = ({ data }) => {
           </div>
           <div className="ml-2">
             <div className={`text-lg font-bold ${textColor}`}>{name}</div>
-            <div className={`text-md${textColor}`}># fields</div>
+            <div className={`text-sm ${captionColor}`}>
+              {data.fieldCount} fields
+            </div>
           </div>
         </div>
       </div>
