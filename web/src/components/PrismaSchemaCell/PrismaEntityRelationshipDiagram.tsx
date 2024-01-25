@@ -20,7 +20,7 @@ const PrismaEntityRelationshipDiagram = ({
 
   return (
     <Card>
-      <Title className="mb-4">Prisma Schema</Title>
+      <Title className="mb-4">ERD</Title>
       <div className="h-[640px] w-full py-2">
         <ReactFlow
           nodes={nodes}

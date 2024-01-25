@@ -12,7 +12,7 @@ const DatabaseErdPage = () => {
         description="ER diagram of the database schema"
       />
 
-      <Title>Database ERD</Title>
+      <Title>Database Schema</Title>
       <Subtitle>Explore your database schema.</Subtitle>
 
       <Card className="mt-6 h-full p-6">

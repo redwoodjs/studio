@@ -16,10 +16,10 @@ const PrismaModelList = ({ prismaSchema }: { prismaSchema: PrismaSchema }) => {
 
   return (
     <Card className="w-full">
-      <Title>Prisma Models</Title>
+      <Title>Models</Title>
       <Flex className="mt-4">
         <Text>
-          <Bold>Model</Bold>
+          <Bold>Name</Bold>
         </Text>
         <Text>
           <Bold>Fields</Bold>
