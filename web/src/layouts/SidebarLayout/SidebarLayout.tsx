@@ -119,14 +119,14 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   ]
   const databaseNavigation: TNavigationItem[] = [
     {
-      name: 'SQL Statements',
-      to: routes.databaseSqlStatements(),
-      icon: SqlStatementsIcon,
-    },
-    {
       name: 'Schema',
       to: routes.databaseErd(),
       icon: ErdIcon,
+    },
+    {
+      name: 'SQL Statements',
+      to: routes.databaseSqlStatements(),
+      icon: SqlStatementsIcon,
     },
   ]
 
