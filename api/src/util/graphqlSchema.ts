@@ -9,9 +9,6 @@ import { print, visit } from 'graphql'
 import { rootSchema } from '@redwoodjs/graphql-server'
 import { getConfigPath, getPaths } from '@redwoodjs/project-config'
 
-// import { logger } from 'src/lib/logger'
-
-// this seems a wrong way to import this type?
 import type { Relationship } from '../../types/graphql'
 
 export const getSchema = async () => {
@@ -58,8 +55,6 @@ export const getGraphQLSchemaInfo = async () => {
   const id = crypto.createHash('md5').update(ast).digest('hex')
 
   const definitions = []
-
-  // logger.info({ schema }, 'GraphQL schema')
 
   visit(documentNode, {
     DirectiveDefinition: (node) => {
