@@ -1,7 +1,6 @@
 import { Router, Route, Set } from '@redwoodjs/router'
 
 import SidebarLayout from 'src/layouts/SidebarLayout'
-import GraphQLSchemaPage from 'src/pages/GraphQLSchemaPage/GraphQLSchemaPage'
 
 const Routes = () => {
   return (
@@ -18,7 +17,6 @@ const Routes = () => {
         <Route path="/database/sql-statements" page={DatabaseSQLStatementsPage} name="databaseSqlStatements" />
 
         <Route path="/gql/playground" page={GraphQLPlaygroundPage} name="graphiql" />
-        <Route path="/gql/inspector" page={GraphQLInspectorPage} name="graphQLInspector" />
         <Route path="/gql/operations" page={GraphQLOperationsPage} name="graphQLOperations" />
         <Route path="/gql/schema" page={GraphQLSchemaPage} name="graphqlSchema" />
 
