@@ -3,7 +3,6 @@ import React, { memo } from 'react'
 import { Handle, Position } from 'reactflow'
 
 const PrismaSchemaNode = ({ data }) => {
-  console.log(data)
   const { name, color, emoji } = {
     name: data.name,
     color: 'zinc',
