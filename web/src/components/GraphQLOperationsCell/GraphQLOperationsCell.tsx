@@ -64,7 +64,7 @@ export const Success = ({
         <TableHead>
           <TableRow>
             <TableHeaderCell></TableHeaderCell>
-            <TableHeaderCell>Operation</TableHeaderCell>
+            <TableHeaderCell className="max-w-96">Operation</TableHeaderCell>
             <TableHeaderCell>Started At</TableHeaderCell>
             <TableHeaderCell>Ended At</TableHeaderCell>
             <TableHeaderCell className="text-right">
@@ -84,7 +84,7 @@ export const Success = ({
                     to={routes.opentelemetrySpan({ id: item.spanId })}
                   />
                 </TableCell>
-                <TableCell className="text-wrap max-w-32">
+                <TableCell className="!text-wrap max-w-96 !whitespace-normal !break-all">
                   {item.attributeValue}
                 </TableCell>
                 <TableCell>{item.startedAt}</TableCell>
