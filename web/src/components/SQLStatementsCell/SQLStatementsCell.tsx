@@ -9,6 +9,7 @@ import {
   Bold,
   Subtitle,
 } from '@tremor/react'
+import { formatDistanceToNow, parseISO } from 'date-fns'
 import type { SQLStatementsQuery } from 'types/graphql'
 
 import { routes } from '@redwoodjs/router'
@@ -30,7 +31,6 @@ export const QUERY = gql`
       id
       spanId
       startedAt
-      endedAt
       durationMs
       durationSec
       attributeKey
@@ -65,8 +65,7 @@ export const Success = ({
             <TableHeaderCell className="max-w-96">
               SQL Statement
             </TableHeaderCell>
-            <TableHeaderCell>Started At</TableHeaderCell>
-            <TableHeaderCell>Ended At</TableHeaderCell>
+            <TableHeaderCell>Ago</TableHeaderCell>
             <TableHeaderCell className="text-right">
               Duration (msec)
             </TableHeaderCell>
@@ -87,8 +86,12 @@ export const Success = ({
                 <TableCell className="!text-wrap max-w-96 !whitespace-normal !break-all">
                   {item.attributeValue}
                 </TableCell>
-                <TableCell>{item.startedAt}</TableCell>
-                <TableCell>{item.endedAt}</TableCell>
+                <TableCell>
+                  {formatDistanceToNow(parseISO(item.startedAt), {
+                    includeSeconds: true,
+                    addSuffix: true,
+                  })}
+                </TableCell>
                 <TableCell className="text-right">{item.durationMs}</TableCell>
                 <TableCell className="text-right">{item.durationSec}</TableCell>
               </TableRow>

@@ -11,7 +11,7 @@ const spansByAttributeKeyAndType = async ({
   typeId,
   attributeKey,
   attributeValue,
-  secondsAgo = 5 * 60, // default to 5 minutes
+  secondsAgo,
 }: {
   typeId: string
   attributeKey: string
@@ -50,15 +50,44 @@ WHERE
   AND (${secondsAgo} IS NULL OR s.startTimeNano / 1000000000.000 >= strftime('%s', 'now') - ${secondsAgo})
 
 ORDER BY
-  s.createdAt DESC`
+  s.createdAt DESC
+LIMIT 200`
 // ^^ just recent ones
+
+const recentSpans = async ({
+  typeId,
+  attributeKey,
+  attributeValue,
+}: {
+  typeId: string
+  attributeKey: string
+  attributeValue?: string
+  secondsAgo?: number
+}) => {
+  let results = []
+  results = await spansByAttributeKeyAndType({
+    typeId,
+    attributeKey,
+    attributeValue,
+    secondsAgo: 10 * 60,
+  })
+
+  if (results.length === 0) {
+    results = await spansByAttributeKeyAndType({
+      typeId,
+      attributeKey,
+      attributeValue,
+    })
+  }
+  return results
+}
 
 export const sqlStatementSpans: QueryResolvers['sqlStatementSpans'] =
   async () => {
     const typeId = 'SQL'
     const attributeKey = 'db.statement'
 
-    return await spansByAttributeKeyAndType({ typeId, attributeKey })
+    return await recentSpans({ typeId, attributeKey })
   }
 
 export const prismaModelSpans: QueryResolvers['sqlStatementSpans'] =
@@ -66,7 +95,7 @@ export const prismaModelSpans: QueryResolvers['sqlStatementSpans'] =
     const typeId = 'PRISMA'
     const attributeKey = 'model'
 
-    return await spansByAttributeKeyAndType({ typeId, attributeKey })
+    return await recentSpans({ typeId, attributeKey })
   }
 
 export const graphQLOperationSpans: QueryResolvers['graphQLOperationSpans'] =
@@ -74,7 +103,7 @@ export const graphQLOperationSpans: QueryResolvers['graphQLOperationSpans'] =
     const typeId = 'GRAPHQL'
     const attributeKey = 'graphql.execute.operationName'
 
-    return await spansByAttributeKeyAndType({ typeId, attributeKey })
+    return await recentSpans({ typeId, attributeKey })
   }
 
 export const anonymousGraphQLOperationSpans: QueryResolvers['anonymousGraphQLOperationSpans'] =
@@ -83,11 +112,7 @@ export const anonymousGraphQLOperationSpans: QueryResolvers['anonymousGraphQLOpe
     const attributeKey = 'graphql.execute.operationName'
     const attributeValue = '"Anonymous Operation"' // has quotes in data
 
-    return await spansByAttributeKeyAndType({
-      typeId,
-      attributeKey,
-      attributeValue,
-    })
+    return await recentSpans({ typeId, attributeKey, attributeValue })
   }
 
 // TODO: I wanted to generalize this function, but SQLite and Prisma isn't happy with interpolating variables with the IN clause
