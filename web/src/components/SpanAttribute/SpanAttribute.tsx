@@ -18,7 +18,7 @@ export const SpanAttribute = ({
   try {
     const parsed = JSON.parse(value)
     valueComp = (
-      <pre className="text-sm text-tremor-content dark:text-dark-tremor-content">
+      <pre className="!text-wrap my-4 !whitespace-normal !break-words text-sm text-tremor-content first:text-sm dark:text-dark-tremor-content">
         {JSON.stringify(parsed, undefined, 2)}
       </pre>
     )
