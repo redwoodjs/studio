@@ -146,16 +146,16 @@ export const Success = ({
                 </span>
               </ListItem>
               <ListItem>
-                <span>Start (ns)</span>
-                <span>{startTimeNano.toString()}</span>
-              </ListItem>
-              <ListItem>
-                <span>End (ns)</span>
-                <span>{endTimeNano.toString()}</span>
-              </ListItem>
-              <ListItem>
                 <span>Duration (ns)</span>
                 <span>{durationNano.toLocaleString()}</span>
+              </ListItem>
+              <ListItem>
+                <span>Duration (msec)</span>
+                <span>{(durationNano / 1_000_000.0).toLocaleString()}</span>
+              </ListItem>
+              <ListItem>
+                <span>Duration (sec)</span>
+                <span>{(durationNano / 1_000_000_000.0).toLocaleString()}</span>
               </ListItem>
             </List>
           </Card>

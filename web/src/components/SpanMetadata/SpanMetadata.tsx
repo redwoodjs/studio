@@ -1,4 +1,5 @@
 import { Flex, List, ListItem } from '@tremor/react'
+import { toDate, formatISO } from 'date-fns'
 
 import { routes } from '@redwoodjs/router'
 
@@ -103,16 +104,28 @@ export const SpanMetadata = ({
         <span>{statusMessage ?? '-'}</span>
       </ListItem>
       <ListItem>
-        <span>Start (ns)</span>
-        <span>{startTimeNano}</span>
+        <span>Started At</span>
+        <span>
+          {formatISO(toDate(parseInt(startTimeNano) / 1_000_000_000.0))}
+        </span>
       </ListItem>
       <ListItem>
-        <span>End (ns)</span>
-        <span>{endTimeNano}</span>
+        <span>Ended At</span>
+        <span>
+          {formatISO(toDate(parseInt(endTimeNano) / 1_000_000_000.0))}
+        </span>
       </ListItem>
       <ListItem>
         <span>Duration (ns)</span>
         <span>{durationNano.toLocaleString()}</span>
+      </ListItem>
+      <ListItem>
+        <span>Duration (msec)</span>
+        <span>{(durationNano / 1_000_000.0).toLocaleString()}</span>
+      </ListItem>
+      <ListItem>
+        <span>Duration (sec)</span>
+        <span>{(durationNano / 1_000_000_000.0).toLocaleString()}</span>
       </ListItem>
     </List>
   )
