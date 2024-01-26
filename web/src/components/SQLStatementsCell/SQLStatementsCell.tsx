@@ -7,10 +7,14 @@ import {
   TableRow,
   TableCell,
   Bold,
+  Subtitle,
 } from '@tremor/react'
 import type { SQLStatementsQuery } from 'types/graphql'
 
+import { routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
+
+import { LinkingIcon } from '../LinkingIcon/LinkingIcon'
 
 export const beforeQuery = (props) => {
   return {
@@ -24,6 +28,7 @@ export const QUERY = gql`
   query SQLStatementsQuery {
     sqlStatements: sqlStatementSpans {
       id
+      spanId
       startedAt
       endedAt
       durationMs
@@ -34,9 +39,14 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => <Subtitle>Loading...</Subtitle>
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => (
+  <Card>
+    <Subtitle>Recent GraphQL Operations</Subtitle>
+    <Bold>No recent records.</Bold>
+  </Card>
+)
 
 export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
@@ -47,9 +57,11 @@ export const Success = ({
 }: CellSuccessProps<SQLStatementsQuery>) => {
   return (
     <Card>
+      <Subtitle>Recent SQL Statements</Subtitle>
       <Table className="mt-5">
         <TableHead>
           <TableRow>
+            <TableHeaderCell></TableHeaderCell>
             <TableHeaderCell>SQL Statement</TableHeaderCell>
             <TableHeaderCell>Started At</TableHeaderCell>
             <TableHeaderCell>Ended At</TableHeaderCell>
@@ -66,11 +78,12 @@ export const Success = ({
             return (
               <TableRow key={item.id}>
                 <TableCell>
-                  <div className="text-wrap max-w-32">
-                    <Bold className="text-wrap max-w-32">
-                      {item.attributeValue}
-                    </Bold>
-                  </div>
+                  <LinkingIcon
+                    to={routes.opentelemetrySpan({ id: item.spanId })}
+                  />
+                </TableCell>
+                <TableCell>
+                  <Bold>{item.attributeValue}</Bold>
                 </TableCell>
                 <TableCell>{item.startedAt}</TableCell>
                 <TableCell>{item.endedAt}</TableCell>

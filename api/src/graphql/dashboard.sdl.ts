@@ -1,6 +1,7 @@
 export const schema = gql`
   type SpansByAttributeKeyAndType {
     id: String!
+    spanId: String!
     createdAt: DateTime!
     updatedAt: DateTime!
     statusCode: Int!
@@ -22,6 +23,7 @@ export const schema = gql`
 
   type PerformanceDataPoint {
     id: String!
+    spanId: String!
     spanType: String!
     spanTypeName: String!
     startedAt: DateTime!
