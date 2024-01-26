@@ -3,6 +3,7 @@ import {
   SpansByAttributeKeyAndType,
   PerformanceDataPoint,
   PerformanceFilterCriteria,
+  PageInfo,
 } from 'types/graphql'
 
 import { db } from 'src/lib/db'
@@ -73,6 +74,47 @@ WHERE
 ORDER BY
   s.createdAt DESC`
 
+type SpansByAttributeKeyAndTypePageInfo = {
+  hasNextPage: number
+  hasPreviousPage: number
+  startCursor: string
+  endCursor: string
+}
+
+const spansByAttributeKeyAndTypePageInfo = async (
+  typeId: string,
+  attributeKey?: string | null,
+  attributeValue?: string | null
+): Promise<PageInfo> => {
+  const results = await db.$queryRaw<SpansByAttributeKeyAndTypePageInfo[]>`
+SELECT
+  EXISTS (SELECT 1) as hasNextPage,
+  EXISTS (SELECT 1) as hasPreviousPage,
+  MIN(s.id || '-' || a.hash) as startCursor,
+  MAX(s.id || '-' || a.hash) as endCursor
+FROM
+  OTelTraceSpan s
+  JOIN OTelTraceSpanType t ON t. "id" = s.typeId
+  -- here we use the Prisma implicit join table to join attributes A to spans B
+  JOIN _OTelTraceAttributeToOTelTraceSpan atos on atos.A = a.id and atos.B = s.id
+  JOIN OTelTraceAttribute a ON atos.A = a.id
+WHERE
+  t.id = ${typeId}
+  AND (${attributeKey} IS NULL OR a.key = ${attributeKey})
+  AND (${attributeValue} IS NULL OR a.value = ${attributeValue})
+ORDER BY
+  s.createdAt DESC`
+
+  const pageInfo = {
+    hasNextPage: results[0].hasNextPage == 1,
+    hasPreviousPage: results[0].hasPreviousPage == 1,
+    startCursor: results[0].startCursor,
+    endCursor: results[0].endCursor,
+  }
+
+  return pageInfo
+}
+
 export const sqlStatementSpans: QueryResolvers['sqlStatementSpans'] =
   async () => {
     const typeId = 'SQL'
@@ -83,16 +125,17 @@ export const sqlStatementSpans: QueryResolvers['sqlStatementSpans'] =
       typeId,
       attributeKey
     )
+    const pageInfo = await spansByAttributeKeyAndTypePageInfo(
+      typeId,
+      attributeKey
+    )
+
+    logger.info({ totalCountResults, pageInfo })
 
     return {
       results,
       totalCount: totalCountResults[0].totalCount,
-      pageInfo: {
-        hasNextPage: true,
-        hasPreviousPage: false,
-        startCursor: '1',
-        endCursor: '1',
-      },
+      pageInfo,
     }
   }
 
