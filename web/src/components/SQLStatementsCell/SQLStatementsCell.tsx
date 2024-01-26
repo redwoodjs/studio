@@ -23,13 +23,22 @@ export const beforeQuery = (props) => {
 export const QUERY = gql`
   query SQLStatementsQuery {
     sqlStatements: sqlStatementSpans {
-      id
-      startedAt
-      endedAt
-      durationMs
-      durationSec
-      attributeKey
-      attributeValue
+      results {
+        id
+        startedAt
+        endedAt
+        durationMs
+        durationSec
+        attributeKey
+        attributeValue
+      }
+      totalCount
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
     }
   }
 `
@@ -62,7 +71,7 @@ export const Success = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {sqlStatements.map((item) => {
+          {sqlStatements.results.map((item) => {
             return (
               <TableRow key={item.id}>
                 <TableCell>

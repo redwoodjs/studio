@@ -6,11 +6,15 @@ import {
 } from 'types/graphql'
 
 import { db } from 'src/lib/db'
+import { logger } from 'src/lib/logger'
+
+const PAGE_LIMIT = 30
 
 const spansByAttributeKeyAndType = async (
   typeId: string,
   attributeKey?: string | null,
-  attributeValue?: string | null
+  attributeValue?: string | null,
+  limit = PAGE_LIMIT
 ) =>
   await db.$queryRaw<SpansByAttributeKeyAndType[]>`
 SELECT
@@ -42,15 +46,54 @@ WHERE
   AND (${attributeValue} IS NULL OR a.value = ${attributeValue})
 ORDER BY
   s.createdAt DESC
-LIMIT 200`
-// ^^ until we paginate
+LIMIT ${limit}`
+
+type SpansByAttributeKeyAndTypeTotalCount = {
+  totalCount: number
+}
+
+const spansByAttributeKeyAndTypeTotalCount = async (
+  typeId: string,
+  attributeKey?: string | null,
+  attributeValue?: string | null
+) =>
+  await db.$queryRaw<SpansByAttributeKeyAndTypeTotalCount[]>`
+SELECT
+  count(*) as totalCount
+FROM
+  OTelTraceSpan s
+  JOIN OTelTraceSpanType t ON t. "id" = s.typeId
+  -- here we use the Prisma implicit join table to join attributes A to spans B
+  JOIN _OTelTraceAttributeToOTelTraceSpan atos on atos.A = a.id and atos.B = s.id
+  JOIN OTelTraceAttribute a ON atos.A = a.id
+WHERE
+  t.id = ${typeId}
+  AND (${attributeKey} IS NULL OR a.key = ${attributeKey})
+  AND (${attributeValue} IS NULL OR a.value = ${attributeValue})
+ORDER BY
+  s.createdAt DESC`
 
 export const sqlStatementSpans: QueryResolvers['sqlStatementSpans'] =
   async () => {
     const typeId = 'SQL'
     const attributeKey = 'db.statement'
 
-    return await spansByAttributeKeyAndType(typeId, attributeKey)
+    const results = await spansByAttributeKeyAndType(typeId, attributeKey)
+    const totalCountResults = await spansByAttributeKeyAndTypeTotalCount(
+      typeId,
+      attributeKey
+    )
+
+    return {
+      results,
+      totalCount: totalCountResults[0].totalCount,
+      pageInfo: {
+        hasNextPage: true,
+        hasPreviousPage: false,
+        startCursor: '1',
+        endCursor: '1',
+      },
+    }
   }
 
 export const prismaModelSpans: QueryResolvers['sqlStatementSpans'] =
@@ -58,7 +101,22 @@ export const prismaModelSpans: QueryResolvers['sqlStatementSpans'] =
     const typeId = 'PRISMA'
     const attributeKey = 'model'
 
-    return await spansByAttributeKeyAndType(typeId, attributeKey)
+    const results = await spansByAttributeKeyAndType(typeId, attributeKey)
+    const totalCountResults = await spansByAttributeKeyAndTypeTotalCount(
+      typeId,
+      attributeKey
+    )
+
+    return {
+      results,
+      totalCount: totalCountResults[0].totalCount,
+      pageInfo: {
+        hasNextPage: true,
+        hasPreviousPage: false,
+        startCursor: '1',
+        endCursor: '1',
+      },
+    }
   }
 
 export const graphQLOperationSpans: QueryResolvers['graphQLOperationSpans'] =
@@ -66,7 +124,22 @@ export const graphQLOperationSpans: QueryResolvers['graphQLOperationSpans'] =
     const typeId = 'GRAPHQL'
     const attributeKey = 'graphql.execute.operationName'
 
-    return await spansByAttributeKeyAndType(typeId, attributeKey)
+    const results = await spansByAttributeKeyAndType(typeId, attributeKey)
+    const totalCountResults = await spansByAttributeKeyAndTypeTotalCount(
+      typeId,
+      attributeKey
+    )
+
+    return {
+      results,
+      totalCount: totalCountResults[0].totalCount,
+      pageInfo: {
+        hasNextPage: true,
+        hasPreviousPage: false,
+        startCursor: '1',
+        endCursor: '1',
+      },
+    }
   }
 
 export const anonymousGraphQLOperationSpans: QueryResolvers['anonymousGraphQLOperationSpans'] =
@@ -75,11 +148,28 @@ export const anonymousGraphQLOperationSpans: QueryResolvers['anonymousGraphQLOpe
     const attributeKey = 'graphql.execute.operationName'
     const attributeValue = '"Anonymous Operation"' // has quotes in data
 
-    return await spansByAttributeKeyAndType(
+    const results = await spansByAttributeKeyAndType(
       typeId,
       attributeKey,
       attributeValue
     )
+
+    const totalCountResults = await spansByAttributeKeyAndTypeTotalCount(
+      typeId,
+      attributeKey,
+      attributeValue
+    )
+
+    return {
+      results,
+      totalCount: totalCountResults[0].totalCount,
+      pageInfo: {
+        hasNextPage: true,
+        hasPreviousPage: false,
+        startCursor: '1',
+        endCursor: '1',
+      },
+    }
   }
 
 // TODO: I wanted to generalize this function, but SQLite and Prisma isn't happy with interpolating variables with the IN clause

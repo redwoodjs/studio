@@ -1,4 +1,16 @@
 export const schema = gql`
+  type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
+  }
+
+  interface Paginated {
+    pageInfo: PageInfo!
+    totalCount: BigInt!
+  }
+
   type SpansByAttributeKeyAndType {
     id: String!
     createdAt: DateTime!
@@ -13,11 +25,18 @@ export const schema = gql`
     attributeValue: String
   }
 
+  type PaginatedSpansByAttributeKeyAndType implements Paginated {
+    results: [SpansByAttributeKeyAndType!]!
+    pageInfo: PageInfo!
+    totalCount: BigInt!
+  }
+
   type Query {
-    sqlStatementSpans: [SpansByAttributeKeyAndType!] @skipAuth
-    prismaModelSpans: [SpansByAttributeKeyAndType!] @skipAuth
-    graphQLOperationSpans: [SpansByAttributeKeyAndType!] @skipAuth
-    anonymousGraphQLOperationSpans: [SpansByAttributeKeyAndType!] @skipAuth
+    sqlStatementSpans: PaginatedSpansByAttributeKeyAndType! @skipAuth
+    prismaModelSpans: PaginatedSpansByAttributeKeyAndType! @skipAuth
+    graphQLOperationSpans: PaginatedSpansByAttributeKeyAndType! @skipAuth
+    anonymousGraphQLOperationSpans: PaginatedSpansByAttributeKeyAndType!
+      @skipAuth
   }
 
   type PerformanceDataPoint {
