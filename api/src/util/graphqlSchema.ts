@@ -76,8 +76,6 @@ export const getGraphQLSchemaInfo = async () => {
 
   const relationships = getGraphQLRelationships(definitions)
 
-  // logger.info({ relationships }, 'GraphQL Relationships')
-
   return { id, ast, definitions, relationships }
 }
 
