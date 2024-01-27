@@ -1,15 +1,37 @@
-const parseProperties = (properties) => {
-  const fields = {}
+import type { Node, Edge } from 'reactflow'
+import type { PrismaSchema } from 'types/graphql'
+
+interface Property {
+  type: string | string[]
+  $ref?: string
+  format: string
+}
+
+interface Field {
+  type: string
+  format: string | null
+  relationship: string | null
+  relatedModel: string | null
+}
+
+interface NodeData {
+  name: string
+  type: string
+  fields: Record<string, Field>
+  fieldCount: number
+}
+
+const parseProperties = (properties: Record<string, Property>) => {
+  const fields: Record<string, Field> = {}
 
   if (properties) {
     for (const propertyName in properties) {
       const property = properties[propertyName]
-      const type =
-        property.type instanceof Array
-          ? property.type.join(', ')
-          : property.type
+      const type = Array.isArray(property.type)
+        ? property.type.join(', ')
+        : property.type
       const format = property.format
-      const field = {
+      const field: Field = {
         type,
         format,
         relationship: null,
@@ -32,11 +54,11 @@ const parseProperties = (properties) => {
   return fields
 }
 
-export const extractNodesAndEdges = (jsonSchema) => {
+export const extractNodesAndEdges = (jsonSchema?: PrismaSchema['schema']) => {
   const definitions = jsonSchema?.definitions ?? {}
-  const objectNodeKeys = [] //Object.keys(jsonSchema?.definitions ?? {})
-  const nodes = []
-  const edges = []
+  const objectNodeKeys: Array<string> = []
+  const nodes: Array<Node<NodeData>> = []
+  const edges: Array<Edge> = []
 
   let index = 0
 
@@ -44,7 +66,7 @@ export const extractNodesAndEdges = (jsonSchema) => {
     for (const definitionName in definitions) {
       const definition = definitions[definitionName]
       const id = `Model-${definitionName}`
-      const model = {
+      const model: Node<NodeData> = {
         id,
         type: 'PrismaModel',
         data: {
@@ -85,25 +107,22 @@ export const extractNodesAndEdges = (jsonSchema) => {
   return { nodes, edges }
 }
 
-export const getTableDataForSchema = (schema) => {
-  const tableData = []
+interface TableRow {
+  name: string
+  fields: Array<Field & { name: string }>
+}
+
+export const getTableDataForSchema = (schema: PrismaSchema['schema']) => {
+  const tableData: Array<TableRow> = []
 
   const { nodes } = extractNodesAndEdges(schema)
 
   nodes.forEach((node) => {
     const { name, fields } = node.data
-    const row = { name, fields: [] }
+    const row: TableRow = { name, fields: [] }
 
     Object.keys(fields).forEach((fieldName) => {
-      const field = fields[fieldName]
-      const { type, format, relationship, relatedModel } = field
-      row.fields.push({
-        name: fieldName,
-        type,
-        relationship,
-        relatedModel,
-        format,
-      })
+      row.fields.push({ name: fieldName, ...fields[fieldName] })
     })
 
     tableData.push(row)

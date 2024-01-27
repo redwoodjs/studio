@@ -2,7 +2,9 @@ import { useCallback, useEffect } from 'react'
 
 import ReactFlow, {
   Background,
+  Connection,
   Controls,
+  Edge,
   MiniMap,
   addEdge,
   useEdgesState,
@@ -39,7 +41,7 @@ export const Success = ({
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
 
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
+    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   )
 

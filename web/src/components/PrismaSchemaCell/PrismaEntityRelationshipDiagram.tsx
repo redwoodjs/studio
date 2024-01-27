@@ -1,20 +1,17 @@
 import { Card, Title } from '@tremor/react'
 import ReactFlow, { Background, BackgroundVariant, Controls } from 'reactflow'
-import type {
-  PrismaSchema,
-  //Relationship
-} from 'types/graphql'
+import type { PrismaSchema } from 'types/graphql'
 
 import { extractNodesAndEdges } from './prismaHelpers'
 import PrismaSchemaNode from './PrismaSchemaNode'
 
 import 'reactflow/dist/style.css'
 
-const PrismaEntityRelationshipDiagram = ({
-  prismaSchema,
-}: {
-  prismaSchema: PrismaSchema
-}) => {
+interface Props {
+  prismaSchema?: PrismaSchema
+}
+
+const PrismaEntityRelationshipDiagram = ({ prismaSchema }: Props) => {
   const { nodes, edges } = extractNodesAndEdges(prismaSchema.schema)
   const nodeTypes = { PrismaModel: PrismaSchemaNode }
 
