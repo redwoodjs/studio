@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 
+import { getUserProjectAuthCookieName } from 'src/util/project'
+
 const isNumeric = (id: string) => {
   return /^\d+$/.test(id)
 }
@@ -27,7 +29,7 @@ export const getDBAuthHeader = async (userId?: string) => {
 
   return {
     authProvider: 'dbAuth',
-    cookie: `session=${cookie}`,
+    cookie: `${(await getUserProjectAuthCookieName())}=${cookie}`,
     authorization: `Bearer ${userId}`,
   }
 }
