@@ -13,7 +13,7 @@ const Routes = () => {
         <Route path="/monitoring/spans" page={OpenTelemetrySpansPage} name="opentelemetrySpans" />
         <Route path="/monitoring/spans/{id:String}" page={OpenTelemetrySpanPage} name="opentelemetrySpan" />
 
-        <Route path="/database/erd" page={DatabaseErdPage} name="databaseErd" />
+        <Route path="/database/schema" page={DatabaseSchemaPage} name="databaseSchema" />
         <Route path="/database/sql-statements" page={DatabaseSQLStatementsPage} name="databaseSqlStatements" />
 
         <Route path="/gql/playground" page={GraphQLPlaygroundPage} name="graphiql" />

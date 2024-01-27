@@ -1,13 +1,38 @@
 import { Title } from '@tremor/react'
-import ReactFlow, { Background, BackgroundVariant, Controls } from 'reactflow'
+import ReactFlow, {
+  Background,
+  BackgroundVariant,
+  Controls,
+  Edge,
+  Node,
+  NodeTypes,
+} from 'reactflow'
 import type { GraphQLSchema, Relationship } from 'types/graphql'
 
 import GraphQLSchemaDefinitionNode from './GraphQLSchemaDefinitionNode'
 
 import 'reactflow/dist/style.css'
 
-const getNodeTypes = (definitions) => {
-  const nodeTypes = {}
+interface Definition {
+  kind: string
+  name: {
+    value: string
+  }
+  fields: Array<{
+    name: {
+      value: string
+    }
+    type: {
+      kind: string
+      name: {
+        value: string
+      }
+    }
+  }>
+}
+
+function getNodeTypes(definitions: Array<Definition>) {
+  const nodeTypes: NodeTypes = {}
 
   const definitionTypes = Array.from(
     new Set(definitions.map((definition) => definition.kind))
@@ -20,8 +45,8 @@ const getNodeTypes = (definitions) => {
   return nodeTypes
 }
 
-const getNodes = (definitions) => {
-  const nodes = []
+function getNodes(definitions: Array<Definition>) {
+  const nodes: Array<Node> = []
   let xOffSet = 0
   let yOffSet = 0
 
@@ -58,8 +83,8 @@ const getNodes = (definitions) => {
   return nodes
 }
 
-const getEdges = (relationships: Relationship[]) => {
-  const edges = []
+function getEdges(relationships: Relationship[]) {
+  const edges: Array<Edge> = []
 
   relationships?.forEach((relationship) => {
     edges.push({

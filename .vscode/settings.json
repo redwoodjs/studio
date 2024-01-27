@@ -14,6 +14,9 @@
     "heroicons",
     "opentelemetry",
     "otel",
-    "STARTTLS"
+    "pannable",
+    "reactflow",
+    "STARTTLS",
+    "zoomable"
   ]
 }
