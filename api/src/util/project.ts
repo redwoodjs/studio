@@ -52,21 +52,6 @@ export function getStudioStatePath() {
 
 // --- More specific targets ---
 
-export async function getUserProjectAuthCookieName(): Promise<string | null> {
-  const distAuthPath = path.join(
-    getUserProjectPaths().api.dist,
-    'lib',
-    'auth.js'
-  )
-  if (!fs.existsSync(distAuthPath)) {
-    return null
-  }
-  const projectCookieName = (await importFresh(distAuthPath))?.cookieName
-  const projectApiPort = getUserProjectConfig().api.port
-
-  return projectCookieName?.replace('%port%', '' + projectApiPort) ?? 'session'
-}
-
 export async function getUserProjectMailer(): Promise<unknown | null> {
   const distMailerPath = path.join(
     getUserProjectPaths().api.dist,
