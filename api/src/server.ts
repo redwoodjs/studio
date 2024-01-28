@@ -8,7 +8,7 @@ import open from 'open'
 import { SMTPServer } from 'smtp-server'
 
 import { createServer } from '@redwoodjs/api-server'
-import { coerceRootPath, redwoodFastifyWeb } from '@redwoodjs/fastify'
+import { coerceRootPath, redwoodFastifyWeb } from '@redwoodjs/fastify-web'
 
 import { logger } from 'src/lib/logger'
 
