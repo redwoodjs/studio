@@ -11,6 +11,7 @@ import {
   CloseIcon,
   DashboardIcon,
   ErdIcon,
+  GraphQLIcon,
   HomeIcon,
   InboxIcon,
   MenuIcon,
@@ -42,7 +43,7 @@ type TNavigationItem = {
   icon: typeof HomeIcon
 }
 
- // v7 ships with SSR section disabled as Bighorn introduces the feature
+// v7 ships with SSR section disabled as Bighorn introduces the feature
 const includeSSR = false
 
 const NavigationItem = ({ item }: { item: TNavigationItem }) => {
@@ -119,14 +120,14 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   ]
   const databaseNavigation: TNavigationItem[] = [
     {
+      name: 'Schema',
+      to: routes.databaseSchema(),
+      icon: ErdIcon,
+    },
+    {
       name: 'SQL Statements',
       to: routes.databaseSqlStatements(),
       icon: SqlStatementsIcon,
-    },
-    {
-      name: 'Entity Relation Diagram',
-      to: routes.databaseErd(),
-      icon: ErdIcon,
     },
   ]
 
@@ -140,6 +141,11 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
       name: 'Operations',
       to: routes.graphQLOperations(),
       icon: OperationsIcon,
+    },
+    {
+      name: 'Schema Diagram',
+      to: routes.graphqlSchema(),
+      icon: GraphQLIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [
@@ -307,18 +313,18 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                           </ul>
                         </li>
                         {includeSSR && (
-                        <li>
-                          <div className="text-xs font-semibold leading-6 text-gray-400">
-                            SSR
-                          </div>
-                          <ul className="-mx-2 mt-2 space-y-1">
-                            {ssrNavigation.map((item) => (
-                              <li key={item.name}>
-                                <NavigationItem item={item} />
-                              </li>
-                            ))}
-                          </ul>
-                        </li>
+                          <li>
+                            <div className="text-xs font-semibold leading-6 text-gray-400">
+                              SSR
+                            </div>
+                            <ul className="-mx-2 mt-2 space-y-1">
+                              {ssrNavigation.map((item) => (
+                                <li key={item.name}>
+                                  <NavigationItem item={item} />
+                                </li>
+                              ))}
+                            </ul>
+                          </li>
                         )}
                         <li className="mb-6 mt-auto">
                           <div className="text-xs font-semibold leading-6 text-gray-400">
@@ -415,18 +421,18 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                   </ul>
                 </li>
                 {includeSSR && (
-                <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
-                    SSR
-                  </div>
-                  <ul className="-mx-2 mt-2 space-y-1">
-                    {ssrNavigation.map((item) => (
-                      <li key={item.name}>
-                        <NavigationItem item={item} />
-                      </li>
-                    ))}
-                  </ul>
-                </li>
+                  <li>
+                    <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
+                      SSR
+                    </div>
+                    <ul className="-mx-2 mt-2 space-y-1">
+                      {ssrNavigation.map((item) => (
+                        <li key={item.name}>
+                          <NavigationItem item={item} />
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
                 )}
                 <li className="mb-6 mt-auto">
                   <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
