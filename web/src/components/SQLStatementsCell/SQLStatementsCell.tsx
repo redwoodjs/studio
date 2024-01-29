@@ -123,7 +123,7 @@ export const Success = ({
             </Col>
             <Col numColSpanSm={2} numColSpanLg={3}>
               <Card>
-                <Subtitle>SQL Statement Stats Overall</Subtitle>
+                <Subtitle>Stats Overall</Subtitle>
                 <Table className="mt-5">
                   <TableHead>
                     <TableRow>
