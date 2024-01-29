@@ -35,6 +35,7 @@ export const spanStatistics: QueryResolvers['spanStatistics'] = async ({
   ),
   t2 AS (
     SELECT
+      count (intervalStartedAt) AS statisticCount,
       intervalStartedAt,
       MIN(duration) AS minDuration,
       MAX(duration) AS maxDuration,
@@ -45,6 +46,7 @@ export const spanStatistics: QueryResolvers['spanStatistics'] = async ({
       intervalStartedAt
   )
   SELECT
+    statisticCount,
     intervalStartedAt,
     minDuration,
     maxDuration,

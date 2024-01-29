@@ -1,6 +1,34 @@
 export const schema = gql`
-  type SpanStatistics {
+  interface PerformanceStatistic {
+    statisticCount: BigInt!
+    minDuration: BigInt!
+    maxDuration: BigInt!
+    avgDuration: Float!
+    minDurationMs: Float!
+    minDurationSec: Float!
+    maxDurationMs: Float!
+    maxDurationSec: Float!
+    avgDurationMs: Float!
+    avgDurationSec: Float!
+  }
+
+  type SpanStatistics implements PerformanceStatistic {
     intervalStartedAt: DateTime!
+    statisticCount: BigInt!
+    minDuration: BigInt!
+    maxDuration: BigInt!
+    avgDuration: Float!
+    minDurationMs: Float!
+    minDurationSec: Float!
+    maxDurationMs: Float!
+    maxDurationSec: Float!
+    avgDurationMs: Float!
+    avgDurationSec: Float!
+  }
+
+  type SpanAttributeStatistics implements PerformanceStatistic {
+    attributeValue: String!
+    statisticCount: BigInt!
     minDuration: BigInt!
     maxDuration: BigInt!
     avgDuration: Float!
