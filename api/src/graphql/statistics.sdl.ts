@@ -26,6 +26,13 @@ export const schema = gql`
     avgDurationSec: Float!
   }
 
+  type Query {
+    spanStatistics: [SpanStatistics!]! @skipAuth
+    sqlStatementStatistics(intervalMins: Int): [SpanStatistics!]! @skipAuth
+    graphQLOperationStatistics(intervalMins: Int): [SpanStatistics!]! @skipAuth
+    anonymousGraphQLOperationStatistics(intervalMins: Int): [SpanStatistics!]!
+      @skipAuth
+  }
   type SpanAttributeStatistics implements PerformanceStatistic {
     attributeValue: String!
     statisticCount: BigInt!
@@ -41,10 +48,10 @@ export const schema = gql`
   }
 
   type Query {
-    spanStatistics: [SpanStatistics!]! @skipAuth
-    sqlStatementStatistics(intervalMins: Int): [SpanStatistics!]! @skipAuth
-    graphQLOperationStatistics(intervalMins: Int): [SpanStatistics!]! @skipAuth
-    anonymousGraphQLOperationStatistics(intervalMins: Int): [SpanStatistics!]!
+    spanAttributeStatistics: [SpanAttributeStatistics!]! @skipAuth
+    sqlStatementAttributeStatistics: [SpanAttributeStatistics!]! @skipAuth
+    graphQLOperationAttributeStatistics: [SpanAttributeStatistics!]! @skipAuth
+    anonymousGraphQLOperationAttributeStatistics: [SpanAttributeStatistics!]!
       @skipAuth
   }
 `
