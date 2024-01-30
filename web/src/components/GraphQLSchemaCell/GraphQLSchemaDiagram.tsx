@@ -107,7 +107,6 @@ export const GraphQLSchemaDiagram = ({ schema }: { schema: GraphQLSchema }) => {
 
   return (
     <>
-      <Title className="mb-4">Diagram</Title>
       <ReactFlow
         nodes={nodes}
         edges={edges}

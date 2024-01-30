@@ -1,10 +1,18 @@
-import { Title } from '@tremor/react'
+import {
+  Title,
+  TabGroup,
+  Tab,
+  TabList,
+  TabPanels,
+  TabPanel,
+} from '@tremor/react'
 import type { FindGraphQLSchemaQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import { GraphQLRelationshipsTable } from './GraphQLRelationshipsTable'
 import { GraphQLSchemaDiagram } from './GraphQLSchemaDiagram'
+import { GraphQLSchemaTables } from './GraphQLSchemaTables'
 
 export const QUERY = gql`
   query FindGraphQLSchemaQuery {
@@ -32,14 +40,29 @@ export const Success = ({
   schema,
 }: CellSuccessProps<FindGraphQLSchemaQuery>) => {
   return (
-    <div className="space-y-12">
-      <div className="h-[640px] w-full py-2">
-        <GraphQLSchemaDiagram schema={schema} />
-      </div>
-
-      <div className="py-2">
-        <GraphQLRelationshipsTable relationships={schema.relationships} />
-      </div>
-    </div>
+    <TabGroup>
+      <TabList className="mt-8">
+        <Tab>Diagram</Tab>
+        <Tab>Details</Tab>
+        <Tab>Relationships</Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>
+          <div className="h-[640px] w-full py-2">
+            <GraphQLSchemaDiagram schema={schema} />
+          </div>
+        </TabPanel>
+        <TabPanel>
+          <div className="py-2">
+            <GraphQLSchemaTables schema={schema} />
+          </div>
+        </TabPanel>
+        <TabPanel>
+          <div className="py-2">
+            <GraphQLRelationshipsTable relationships={schema.relationships} />
+          </div>
+        </TabPanel>
+      </TabPanels>
+    </TabGroup>
   )
 }

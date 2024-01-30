@@ -13,7 +13,6 @@ const GraphQLSchemaPage = () => {
       <Text>Your schema.</Text>
 
       <Grid numItems={1} numItemsLg={1} className="mt-6 gap-6">
-        {/* Schema visualisation panel */}
         <Col>
           <Card className="h-full w-full p-6">
             <GraphQLSchemaCell />

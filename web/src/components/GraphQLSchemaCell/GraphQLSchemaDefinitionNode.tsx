@@ -7,8 +7,9 @@ const getNodeCharacteristics = (definition) => {
   const kind = definition.kind
   const color = getNodeColorForKind(kind, name)
   const emoji = getNodeEmojiForKind(kind, name)
+  const numFields = definition.fields ? definition.fields.length : 0
 
-  return { name, kind, color, emoji }
+  return { name, kind, color, emoji, numFields }
 }
 
 const getNodeColorForKind = (kind: string, name: string): string => {
@@ -131,7 +132,10 @@ const getNodeEmojiForKind = (kind: string, name: string): string => {
 }
 
 const GraphQLSchemaDefinitionNode = ({ data }) => {
-  const { name, color, emoji } = getNodeCharacteristics(data.definition)
+  console.log('GraphQLSchemaDefinitionNode', data)
+  const { name, color, emoji, numFields } = getNodeCharacteristics(
+    data.definition
+  )
 
   const textColor = `text-${color}-500`
   const borderColor = `border-${color}-700`
@@ -152,7 +156,7 @@ const GraphQLSchemaDefinitionNode = ({ data }) => {
           </div>
           <div className="ml-2">
             <div className={`text-lg font-bold ${textColor}`}>{name}</div>
-            <div className={`text-md${textColor}`}># fields</div>
+            <div className={`text-sm ${textColor}`}>{numFields} fields</div>
           </div>
         </div>
       </div>

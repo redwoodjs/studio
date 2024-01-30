@@ -143,7 +143,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
       icon: OperationsIcon,
     },
     {
-      name: 'Schema Diagram',
+      name: 'Schema',
       to: routes.graphqlSchema(),
       icon: GraphQLIcon,
     },
