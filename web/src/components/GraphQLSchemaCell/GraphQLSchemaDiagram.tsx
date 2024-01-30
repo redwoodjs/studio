@@ -1,5 +1,7 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 
+import Dagre from '@dagrejs/dagre'
+import { Button, Flex } from '@tremor/react'
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -7,10 +9,17 @@ import ReactFlow, {
   Edge,
   Node,
   NodeTypes,
-  applyNodeChanges,
-  applyEdgeChanges,
+  // applyNodeChanges,
+  // applyEdgeChanges,
+  ReactFlowProvider,
+  useNodesState,
+  useEdgesState,
+  useReactFlow,
+  Panel,
 } from 'reactflow'
 import type { GraphQLSchema, Relationship } from 'types/graphql'
+
+import { HorizontalIcon, VerticalIcon } from 'src/icons/Icons'
 
 import GraphQLSchemaDefinitionNode from './GraphQLSchemaDefinitionNode'
 
@@ -102,23 +111,50 @@ function getEdges(relationships: Relationship[]) {
   return edges
 }
 
-export const GraphQLSchemaDiagram = ({ schema }: { schema: GraphQLSchema }) => {
+const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
+
+const getLayoutedElements = (nodes, edges, options) => {
+  g.setGraph({ rankdir: options.direction })
+
+  edges.forEach((edge) => g.setEdge(edge.source, edge.target))
+  nodes.forEach((node) => g.setNode(node.id, node))
+
+  Dagre.layout(g)
+
+  return {
+    nodes: nodes.map((node) => {
+      const { x, y } = g.node(node.id)
+
+      return { ...node, position: { x, y } }
+    }),
+    edges,
+  }
+}
+
+const LayoutFlow = ({ schema }: { schema: GraphQLSchema }) => {
+  const { fitView } = useReactFlow()
+
   const definitions = JSON.parse(schema.definitions)
 
   const nodeTypes = getNodeTypes(definitions)
   const initialNodes = getNodes(definitions)
   const initialEdges = getEdges(schema.relationships)
 
-  const [nodes, setNodes] = useState(initialNodes)
-  const [edges, setEdges] = useState(initialEdges)
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
 
-  const onNodesChange = useCallback(
-    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    [setNodes]
-  )
-  const onEdgesChange = useCallback(
-    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    [setEdges]
+  const onLayout = useCallback(
+    (direction) => {
+      const layouted = getLayoutedElements(nodes, edges, { direction })
+
+      setNodes([...layouted.nodes])
+      setEdges([...layouted.edges])
+
+      window.requestAnimationFrame(() => {
+        fitView()
+      })
+    },
+    [nodes, edges, fitView, setNodes, setEdges]
   )
 
   return (
@@ -133,9 +169,28 @@ export const GraphQLSchemaDiagram = ({ schema }: { schema: GraphQLSchema }) => {
         nodesDraggable={true}
         fitView
       >
+        <Panel position="top-right" onLoad={() => onLayout('TB')}>
+          <Flex
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="evenly"
+            className="space-x-4"
+          >
+            <Button icon={VerticalIcon} onClick={() => onLayout('TB')} />
+            <Button icon={HorizontalIcon} onClick={() => onLayout('LR')} />
+          </Flex>
+        </Panel>
         <Background variant={BackgroundVariant.Dots} />
         <Controls className="bg-white" showInteractive={false} />
       </ReactFlow>
     </div>
+  )
+}
+
+export const GraphQLSchemaDiagram = ({ schema }: { schema: GraphQLSchema }) => {
+  return (
+    <ReactFlowProvider>
+      <LayoutFlow schema={schema} />
+    </ReactFlowProvider>
   )
 }
