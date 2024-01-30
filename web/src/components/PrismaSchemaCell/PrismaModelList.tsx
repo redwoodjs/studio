@@ -3,7 +3,11 @@ import type { PrismaSchema } from 'types/graphql'
 
 import { extractNodesAndEdges } from './prismaHelpers'
 
-const PrismaModelList = ({ prismaSchema }: { prismaSchema: PrismaSchema }) => {
+export const PrismaModelList = ({
+  prismaSchema,
+}: {
+  prismaSchema: PrismaSchema
+}) => {
   const { nodes } = extractNodesAndEdges(prismaSchema.schema)
 
   const data = nodes.map((node) => {
@@ -29,5 +33,3 @@ const PrismaModelList = ({ prismaSchema }: { prismaSchema: PrismaSchema }) => {
     </Card>
   )
 }
-
-export default PrismaModelList

@@ -5,9 +5,9 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import 'reactflow/dist/style.css'
 
-import PrismaEntityRelationshipDiagram from './PrismaEntityRelationshipDiagram'
-import PrismaModelList from './PrismaModelList'
-import PrismaTableViews from './PrismaTableViews'
+import { PrismaEntityRelationshipDiagram } from './PrismaEntityRelationshipDiagram'
+import { PrismaModelList } from './PrismaModelList'
+import { PrismaTableViews } from './PrismaTableViews'
 
 export const QUERY = gql`
   query FindPrismaSchemaQuery {

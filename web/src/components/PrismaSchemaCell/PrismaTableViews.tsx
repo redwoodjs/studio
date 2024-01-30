@@ -52,7 +52,11 @@ const TableCard = ({ data }: { data: any }) => {
   )
 }
 
-const PrismaTableViews = ({ prismaSchema }: { prismaSchema: PrismaSchema }) => {
+export const PrismaTableViews = ({
+  prismaSchema,
+}: {
+  prismaSchema: PrismaSchema
+}) => {
   const tableData = getTableDataForSchema(prismaSchema.schema)
   console.log(tableData)
 
@@ -66,5 +70,3 @@ const PrismaTableViews = ({ prismaSchema }: { prismaSchema: PrismaSchema }) => {
     </Grid>
   )
 }
-
-export default PrismaTableViews
