@@ -21,7 +21,7 @@ export const GraphQLSchemaTables = ({ schema }: { schema: GraphQLSchema }) => {
 
   return (
     <>
-      <Grid numItems={2} className="my-4 gap-4">
+      <Grid numItems={2} className="gap-4">
         {definitions.map((definition, index: number) => {
           const name = definition.name?.value
           const kind = definition.kind

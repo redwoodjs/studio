@@ -1,4 +1,4 @@
-import { Card, Title, Subtitle } from '@tremor/react'
+import { Title, Subtitle } from '@tremor/react'
 
 import { MetaTags } from '@redwoodjs/web'
 
@@ -11,9 +11,7 @@ const GraphQLSchemaPage = () => {
 
       <Title>GraphQL Schema</Title>
       <Subtitle>Your schema.</Subtitle>
-      <Card className="h-full w-full">
-        <GraphQLSchemaCell />
-      </Card>
+      <GraphQLSchemaCell />
     </>
   )
 }

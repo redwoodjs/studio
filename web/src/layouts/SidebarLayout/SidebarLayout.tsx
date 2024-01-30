@@ -354,9 +354,10 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                 flexDirection="col"
                 justifyContent="start"
                 alignItems="start"
+                className="pl-2"
               >
-                <Title className="pl-4">RedwoodJS Studio</Title>
-                <Subtitle className="-mt-1 pl-6 text-sm">
+                <Title>RedwoodJS Studio</Title>
+                <Subtitle className="text-sm">
                   {window.RW_STUDIO_VERSION}
                 </Subtitle>
               </Flex>
