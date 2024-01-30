@@ -8,6 +8,7 @@ import {
   TableHeaderCell,
   TableRow,
   Text,
+  Title,
 } from '@tremor/react'
 import type { Relationship } from 'types/graphql'
 
@@ -17,6 +18,7 @@ export const GraphQLRelationshipsTable = ({
   relationships: Relationship[]
 }) => (
   <Card>
+    <Title>Relationships</Title>
     <Table>
       <TableHead>
         <TableRow>

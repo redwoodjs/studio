@@ -1,4 +1,4 @@
-import { Title, Card, Subtitle } from '@tremor/react'
+import { Title, Subtitle } from '@tremor/react'
 
 import { MetaTags } from '@redwoodjs/web'
 
@@ -15,9 +15,7 @@ const DatabaseSchemaPage = () => {
       <Title>Database Schema</Title>
       <Subtitle>Explore your database schema.</Subtitle>
 
-      <Card className="mt-6 h-full p-6">
-        <PrismaSchemaCell />
-      </Card>
+      <PrismaSchemaCell />
     </>
   )
 }

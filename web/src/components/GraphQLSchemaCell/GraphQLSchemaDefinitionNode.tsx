@@ -132,7 +132,6 @@ const getNodeEmojiForKind = (kind: string, name: string): string => {
 }
 
 const GraphQLSchemaDefinitionNode = ({ data }) => {
-  console.log('GraphQLSchemaDefinitionNode', data)
   const { name, color, emoji, numFields } = getNodeCharacteristics(
     data.definition
   )
@@ -142,25 +141,23 @@ const GraphQLSchemaDefinitionNode = ({ data }) => {
   const bgColor = `bg-${color}-100`
 
   return (
-    <>
+    <div
+      className={`${borderColor} min-w-32 max-w-64 max-h-32 rounded-md border-2 border-r-2 border-stone-400 bg-white px-4 py-2 shadow-md`}
+    >
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} />
-      <div
-        className={`${borderColor} max-w-64 max-h-32 rounded-md border-2 border-r-2 border-stone-400 bg-white px-4 py-2 shadow-md`}
-      >
-        <div className="flex items-center">
-          <div
-            className={`flex h-12 w-12 items-center justify-center rounded-full ${bgColor}`}
-          >
-            {emoji}
-          </div>
-          <div className="ml-2">
-            <div className={`text-lg font-bold ${textColor}`}>{name}</div>
-            <div className={`text-sm ${textColor}`}>{numFields} fields</div>
-          </div>
+      <div className="flex items-center">
+        <div
+          className={`flex h-12 w-12 items-center justify-center rounded-full ${bgColor}`}
+        >
+          {emoji}
+        </div>
+        <div className="ml-2">
+          <div className={`text-lg font-bold ${textColor}`}>{name}</div>
+          <div className={`text-sm ${textColor}`}>{numFields} fields</div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

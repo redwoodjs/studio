@@ -76,6 +76,8 @@ export const extractNodesAndEdges = (jsonSchema?: PrismaSchema['schema']) => {
           fieldCount: Object.keys(definition.properties || {}).length,
         },
         position: { x: 0, y: index * 128 },
+        deletable: false,
+        draggable: true,
       }
       objectNodeKeys.push(definitionName)
       nodes.push(model)

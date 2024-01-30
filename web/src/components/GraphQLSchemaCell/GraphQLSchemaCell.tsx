@@ -1,7 +1,7 @@
 import {
   Title,
-  TabGroup,
   Tab,
+  TabGroup,
   TabList,
   TabPanels,
   TabPanel,
@@ -43,12 +43,12 @@ export const Success = ({
     <TabGroup>
       <TabList className="mt-8">
         <Tab>Diagram</Tab>
+        <Tab>Schema</Tab>
         <Tab>Details</Tab>
-        <Tab>Relationships</Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
-          <div className="h-[640px] w-full py-2">
+          <div className="h-[640px] w-full min-w-[320px] py-2">
             <GraphQLSchemaDiagram schema={schema} />
           </div>
         </TabPanel>

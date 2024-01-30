@@ -1,4 +1,5 @@
-import { Title } from '@tremor/react'
+import { useCallback, useState } from 'react'
+
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -6,6 +7,8 @@ import ReactFlow, {
   Edge,
   Node,
   NodeTypes,
+  applyNodeChanges,
+  applyEdgeChanges,
 } from 'reactflow'
 import type { GraphQLSchema, Relationship } from 'types/graphql'
 
@@ -67,7 +70,6 @@ function getNodes(definitions: Array<Definition>) {
         position: { x: xOffSet, y: yOffSet },
         deletable: false,
         draggable: true,
-        resizable: true,
       }
 
       nodes.push(node)
@@ -77,6 +79,8 @@ function getNodes(definitions: Array<Definition>) {
         xOffSet = 0
         yOffSet += 128
       }
+
+      yOffSet += i % 2 === 0 ? 32 : -32
     }
   }
 
@@ -102,17 +106,32 @@ export const GraphQLSchemaDiagram = ({ schema }: { schema: GraphQLSchema }) => {
   const definitions = JSON.parse(schema.definitions)
 
   const nodeTypes = getNodeTypes(definitions)
-  const nodes = getNodes(definitions)
-  const edges = getEdges(schema.relationships)
+  const initialNodes = getNodes(definitions)
+  const initialEdges = getEdges(schema.relationships)
+
+  const [nodes, setNodes] = useState(initialNodes)
+  const [edges, setEdges] = useState(initialEdges)
+
+  const onNodesChange = useCallback(
+    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    [setNodes]
+  )
+  const onEdgesChange = useCallback(
+    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    [setEdges]
+  )
 
   return (
     <>
       <ReactFlow
+        className="bg-teal-50"
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        nodesDraggable={true}
         fitView
-        className="bg-teal-50"
       >
         <Background variant={BackgroundVariant.Dots} />
         <Controls className="bg-white" showInteractive={false} />
