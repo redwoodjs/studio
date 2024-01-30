@@ -48,19 +48,13 @@ export const Success = ({
       </TabList>
       <TabPanels>
         <TabPanel>
-          <div className="h-[640px] w-full min-w-[320px] py-2">
-            <GraphQLSchemaDiagram schema={schema} />
-          </div>
+          <GraphQLSchemaDiagram schema={schema} />
         </TabPanel>
         <TabPanel>
-          <div className="py-2">
-            <GraphQLSchemaTables schema={schema} />
-          </div>
+          <GraphQLSchemaTables schema={schema} />
         </TabPanel>
         <TabPanel>
-          <div className="py-2">
-            <GraphQLRelationshipsTable relationships={schema.relationships} />
-          </div>
+          <GraphQLRelationshipsTable relationships={schema.relationships} />
         </TabPanel>
       </TabPanels>
     </TabGroup>

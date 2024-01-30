@@ -122,7 +122,7 @@ export const GraphQLSchemaDiagram = ({ schema }: { schema: GraphQLSchema }) => {
   )
 
   return (
-    <>
+    <div className="h-[640px] w-full min-w-[320px]">
       <ReactFlow
         className="bg-teal-50"
         nodes={nodes}
@@ -136,6 +136,6 @@ export const GraphQLSchemaDiagram = ({ schema }: { schema: GraphQLSchema }) => {
         <Background variant={BackgroundVariant.Dots} />
         <Controls className="bg-white" showInteractive={false} />
       </ReactFlow>
-    </>
+    </div>
   )
 }
