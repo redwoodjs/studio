@@ -7,17 +7,17 @@ import { importFresh } from './import'
 
 // --- General wrappers around project config ---
 
-export function getStudioConfig() {
+export const getStudioConfig = () => {
   const configPath = getConfigPath(__dirname)
   return getConfig(configPath)
 }
 
-export function getStudioPaths() {
+export const getStudioPaths = () => {
   const configPath = getConfigPath(__dirname)
   return getPaths(path.dirname(configPath))
 }
 
-function getUserProjectConfigPath() {
+const getUserProjectConfigPath = () => {
   let projectPath = process.env.RW_STUDIO_USER_PROJECT_PATH || ''
 
   const isWinFullPath = /^[A-Z]:\//.test(projectPath)
@@ -34,15 +34,31 @@ function getUserProjectConfigPath() {
   return getConfigPath(projectPath || path.join(getStudioPaths().base, '..'))
 }
 
-export function getUserProjectConfig() {
+export const getUserProjectConfig = () => {
   return getConfig(getUserProjectConfigPath())
 }
 
-export function getUserProjectPaths() {
+export const getUserProjectApiConfig = () => {
+  return getUserProjectConfig().api
+}
+
+export const getUserProjectWebConfig = () => {
+  return getUserProjectConfig().web
+}
+
+export const getUserProjectStudioConfig = () => {
+  return getUserProjectConfig().studio
+}
+
+export const getUserProjectBrowserConfig = () => {
+  return getUserProjectConfig().browser
+}
+
+export const getUserProjectPaths = () => {
   return getPaths(path.dirname(getUserProjectConfigPath()))
 }
 
-export function getStudioStatePath() {
+export const getStudioStatePath = () => {
   const statePath = path.join(getUserProjectPaths().generated.base, 'studio')
   if (!fs.existsSync(statePath)) {
     fs.mkdirSync(statePath)
@@ -52,7 +68,7 @@ export function getStudioStatePath() {
 
 // --- More specific targets ---
 
-export async function getUserProjectMailer(): Promise<unknown | null> {
+export const getUserProjectMailer = async (): Promise<unknown | null> => {
   const distMailerPath = path.join(
     getUserProjectPaths().api.dist,
     'lib',
@@ -64,7 +80,7 @@ export async function getUserProjectMailer(): Promise<unknown | null> {
   return (await importFresh(distMailerPath)).mailer
 }
 
-export function getFilesInDirectory(dir: string) {
+export const getFilesInDirectory = (dir: string) => {
   const files: string[] = []
   const dirFiles = fs.readdirSync(dir)
   for (const file of dirFiles) {
