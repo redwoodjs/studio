@@ -10,7 +10,10 @@ import { NavLink, routes } from '@redwoodjs/router'
 import {
   CloseIcon,
   DashboardIcon,
+  DiscordIcon,
+  DiscourseIcon,
   ErdIcon,
+  GitHubIcon,
   GraphQLIcon,
   HomeIcon,
   InboxIcon,
@@ -40,7 +43,7 @@ type SidebarLayoutProps = {
 type TNavigationItem = {
   name: string
   to: string
-  icon: typeof HomeIcon
+  icon: typeof HomeIcon | typeof GraphQLIcon | typeof DiscordIcon
 }
 
 // v7 ships with SSR section disabled as Bighorn introduces the feature
@@ -57,6 +60,22 @@ const NavigationItem = ({ item }: { item: TNavigationItem }) => {
         <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
         {item.name}
       </NavLink>
+    </div>
+  )
+}
+
+const NavigationHrefItem = ({ item }: { item: TNavigationItem }) => {
+  return (
+    <div className="flex w-full">
+      <a
+        href={item.to}
+        target="_blank"
+        className="group flex grow gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-500 hover:bg-gray-50 hover:text-orange-500 dark:text-gray-600 dark:hover:bg-gray-950"
+        rel="noreferrer"
+      >
+        <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+        {item.name}
+      </a>
     </div>
   )
 }
@@ -161,6 +180,24 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
       name: 'OG Tag Preview',
       to: routes.ogTagPreview(),
       icon: OGTagPreviewIcon,
+    },
+  ]
+
+  const communityNavigation: TNavigationItem[] = [
+    {
+      name: 'Discord',
+      to: 'https://discord.gg/redwoodjs',
+      icon: DiscordIcon,
+    },
+    {
+      name: 'Forums',
+      to: 'https://community.redwoodjs.com/',
+      icon: DiscourseIcon,
+    },
+    {
+      name: 'GitHub',
+      to: 'https://github.com/redwoodjs',
+      icon: GitHubIcon,
     },
   ]
 
@@ -312,6 +349,19 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                             ))}
                           </ul>
                         </li>
+                        <li>
+                          <div className="text-xs font-semibold leading-6 text-gray-400">
+                            Community
+                          </div>
+                          <ul className="-mx-2 mt-2 space-y-1">
+                            {communityNavigation.map((item) => (
+                              <li key={item.name}>
+                                <NavigationHrefItem item={item} />
+                              </li>
+                            ))}
+                          </ul>
+                        </li>
+
                         {includeSSR && (
                           <li>
                             <div className="text-xs font-semibold leading-6 text-gray-400">
@@ -420,6 +470,19 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     ))}
                   </ul>
                 </li>
+                <li>
+                  <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
+                    Community
+                  </div>
+                  <ul className="-mx-2 mt-2 space-y-1">
+                    {communityNavigation.map((item) => (
+                      <li key={item.name}>
+                        <NavigationHrefItem item={item} />
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+
                 {includeSSR && (
                   <li>
                     <div className="text-xs font-semibold leading-6 text-gray-400 dark:text-gray-600">
@@ -461,13 +524,14 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
               aria-hidden="true"
             />
           </button>
-          {/* <div className="flex-1 text-sm font-semibold leading-6 text-gray-900">
-            TODO: Page title?
-          </div> */}
         </div>
 
-        <main className="py-10 lg:pl-72">
-          <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+        <main className="lg:pl-72">
+          <div
+            id="community-search-box"
+            className="container mx-auto px-4"
+          ></div>
+          <div className="px-4 py-10 sm:px-6 lg:px-8">{children}</div>
         </main>
       </div>
     </>

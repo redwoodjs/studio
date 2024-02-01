@@ -3,6 +3,7 @@ export {
   ArrowsRightLeftIcon,
   Bars3Icon as MenuIcon,
   BoltIcon as MonitoringIcon,
+  ChatBubbleLeftEllipsisIcon as DiscourseIcon,
   CircleStackIcon as DatabaseIcon,
   CircleStackIcon as DatabasePerformanceIcon,
   ClockIcon,
@@ -17,6 +18,7 @@ export {
   DeviceTabletIcon,
   DocumentChartBarIcon,
   DocumentDuplicateIcon,
+  DocumentMagnifyingGlassIcon as SearchDocumentsIcon,
   DocumentTextIcon,
   ExclamationTriangleIcon as ErrorIcon,
   EyeIcon,
@@ -30,6 +32,7 @@ export {
   LinkIcon,
   ListBulletIcon as OperationsIcon,
   MagnifyingGlassCircleIcon as InspectorIcon,
+  MagnifyingGlassIcon as SearchIcon,
   MapIcon,
   NewspaperIcon as ErdIcon,
   PaperClipIcon,
@@ -41,6 +44,11 @@ export {
   ViewColumnsIcon as PlaygroundIcon,
   XMarkIcon as CloseIcon,
 } from '@heroicons/react/24/outline'
+
+export {
+  RxDiscordLogo as DiscordIcon,
+  RxGithubLogo as GitHubIcon,
+} from 'react-icons/rx'
 
 export { DocumentDuplicateIcon as DocumentDuplicateSolidIcon } from '@heroicons/react/20/solid'
 

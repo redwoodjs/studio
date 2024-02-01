@@ -10,6 +10,21 @@
       // The port number is replaced during server startup
       window.RW_STUDIO_API_PORT = 4319
     </script>
+
+    <script type="text/javascript">
+      window.CommunitySearch = Object.assign({}, window.CommunitySearch, {
+        baseUrl: "https://search.orbit.love/widget/f6f0c448-cc87-432c-a0c5-a208c24afb18",
+        options: {
+          showCornerIcon: false,
+          searchBoxContainer: "#community-search-box",
+        },
+      });
+      if (window.CommunitySearch.init) {
+        window.CommunitySearch.init();
+      }
+    </script>
+  <script src="https://search.orbit.love/widget.js" async defer></script>side
+
   </head>
 
   <body class="h-full bg-gray-50 dark:bg-gray-950">

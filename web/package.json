@@ -28,6 +28,7 @@
     "prop-types": "15.8.1",
     "react": "0.0.0-experimental-e5205658f-20230913",
     "react-dom": "0.0.0-experimental-e5205658f-20230913",
+    "react-icons": "^5.0.1",
     "reactflow": "11.8.3",
     "use-url-search-params": "2.5.1"
   },
