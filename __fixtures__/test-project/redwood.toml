@@ -28,5 +28,8 @@
   basePort = 4318
 
 [studio.graphiql]
-  authImpersonation.authProvider = "dbAuth"
-  authImpersonation.userId = 1
+  authImpersonation.authProvider = "supabase"
+  authImpersonation.userId = 2
+  authImpersonation.email = "foo@example.com"
+  authImpersonation.jwtSecret = "secret"
+
