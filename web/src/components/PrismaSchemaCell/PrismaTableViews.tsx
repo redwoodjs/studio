@@ -4,11 +4,11 @@ import type { PrismaSchema } from 'types/graphql'
 import { getTableDataForSchema } from './prismaHelpers'
 import { PrismaTableCard } from './PrismaTableCard'
 
-interface PrismaTableViewsProps {
+interface Props {
   prismaSchema: PrismaSchema
 }
 
-export const PrismaTableViews = ({ prismaSchema }: PrismaTableViewsProps) => {
+export const PrismaTableViews = ({ prismaSchema }: Props) => {
   const tableData = getTableDataForSchema(prismaSchema.schema)
 
   return (
