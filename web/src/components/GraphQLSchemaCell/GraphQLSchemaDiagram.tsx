@@ -9,8 +9,6 @@ import ReactFlow, {
   Edge,
   Node,
   NodeTypes,
-  // applyNodeChanges,
-  // applyEdgeChanges,
   ReactFlowProvider,
   useNodesState,
   useEdgesState,
@@ -113,7 +111,11 @@ function getEdges(relationships: Relationship[]) {
 
 const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
 
-const getLayoutedElements = (nodes, edges, options) => {
+const getLaidOutElements = (
+  nodes: Array<Node>,
+  edges: Array<Edge>,
+  options: { direction: 'LR' | 'TB' }
+) => {
   g.setGraph({ rankdir: options.direction })
 
   edges.forEach((edge) => g.setEdge(edge.source, edge.target))
@@ -145,10 +147,10 @@ const LayoutFlow = ({ schema }: { schema: GraphQLSchema }) => {
 
   const onLayout = useCallback(
     (direction) => {
-      const layouted = getLayoutedElements(nodes, edges, { direction })
+      const laidOut = getLaidOutElements(nodes, edges, { direction })
 
-      setNodes([...layouted.nodes])
-      setEdges([...layouted.edges])
+      setNodes([...laidOut.nodes])
+      setEdges([...laidOut.edges])
 
       window.requestAnimationFrame(() => {
         fitView()
@@ -187,7 +189,11 @@ const LayoutFlow = ({ schema }: { schema: GraphQLSchema }) => {
   )
 }
 
-export const GraphQLSchemaDiagram = ({ schema }: { schema: GraphQLSchema }) => {
+interface Props {
+  schema: GraphQLSchema
+}
+
+export const GraphQLSchemaDiagram = ({ schema }: Props) => {
   return (
     <ReactFlowProvider>
       <LayoutFlow schema={schema} />

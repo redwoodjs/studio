@@ -9,12 +9,15 @@
     "editor.formatOnSave": true
   },
   "cSpell.words": [
+    "Dagre",
     "graphiql",
+    "graphlib",
     "headlessui",
     "heroicons",
     "opentelemetry",
     "otel",
     "pannable",
+    "rankdir",
     "reactflow",
     "STARTTLS",
     "zoomable"

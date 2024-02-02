@@ -1,4 +1,3 @@
-import { Tab } from '@headlessui/react'
 import {
   Bold,
   Card,
@@ -16,7 +15,11 @@ import {
 } from '@tremor/react'
 import type { GraphQLSchema } from 'types/graphql'
 
-export const GraphQLSchemaTables = ({ schema }: { schema: GraphQLSchema }) => {
+interface Props {
+  schema: GraphQLSchema
+}
+
+export const GraphQLSchemaTables = ({ schema }: Props) => {
   const definitions = JSON.parse(schema.definitions)
 
   return (
