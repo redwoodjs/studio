@@ -37,19 +37,19 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
-type SettingsItemProps = {
+interface SettingItemProps {
   title: string
   value: string | number
 }
 
-const SettingItem = ({ props }: { props: SettingsItemProps }) => {
+const SettingItem = ({ title, value }: SettingItemProps) => {
   return (
     <div className="mt-4 space-y-4">
       <h4 className="font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-        {props.title}
+        {title}
       </h4>
       <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-        {props.value}
+        {value}
       </p>
     </div>
   )
