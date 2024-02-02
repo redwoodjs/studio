@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 import { Dialog, Transition } from '@headlessui/react'
 
@@ -12,6 +12,42 @@ type SidebarLayoutProps = {
 
 const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.innerHTML = `
+    window.CommunitySearch = Object.assign({}, window.CommunitySearch, {
+      baseUrl: "https://search.orbit.love/widget/f6f0c448-cc87-432c-a0c5-a208c24afb18",
+      options: {
+        showCornerIcon: false,
+        searchBoxContainer: "#community-search-box",
+        searchBoxPlaceholder: "Community search...",
+      },
+    });
+
+    if (window.CommunitySearch.init) {
+      window.CommunitySearch.init();
+    }
+  `
+    document.body.appendChild(script)
+    document.body.appendChild(script)
+
+    return () => {
+      document.body.removeChild(script)
+    }
+  }, [])
+
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://search.orbit.love/widget.js'
+    script.async = true
+    script.defer = true
+    document.body.appendChild(script)
+
+    return () => {
+      document.body.removeChild(script)
+    }
+  }, [])
 
   return (
     <>
