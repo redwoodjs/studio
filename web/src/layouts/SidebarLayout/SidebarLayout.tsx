@@ -12,7 +12,6 @@ import {
   DashboardIcon,
   ErdIcon,
   GraphQLIcon,
-  HomeIcon,
   InboxIcon,
   MenuIcon,
   OGTagPreviewIcon,
@@ -40,7 +39,8 @@ type SidebarLayoutProps = {
 type TNavigationItem = {
   name: string
   to: string
-  icon: typeof HomeIcon
+  // https://www.totaltypescript.com/pass-component-as-prop-react
+  icon: React.ComponentType<{ className: string }>
 }
 
 // v7 ships with SSR section disabled as Bighorn introduces the feature
@@ -354,10 +354,9 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                 flexDirection="col"
                 justifyContent="start"
                 alignItems="start"
-                className="pl-2"
               >
-                <Title>RedwoodJS Studio</Title>
-                <Subtitle className="text-sm">
+                <Title className="pl-4">RedwoodJS Studio</Title>
+                <Subtitle className="-mt-1 pl-6 text-sm">
                   {window.RW_STUDIO_VERSION}
                 </Subtitle>
               </Flex>

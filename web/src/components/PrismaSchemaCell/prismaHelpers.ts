@@ -109,7 +109,7 @@ export const extractNodesAndEdges = (jsonSchema?: PrismaSchema['schema']) => {
   return { nodes, edges }
 }
 
-interface TableRow {
+export interface TableRow {
   name: string
   fields: Array<Field & { name: string }>
 }
