@@ -5,9 +5,11 @@ import { MetaTags } from '@redwoodjs/web'
 import ApiPerformanceCell from 'src/components/ApiPerformanceCell'
 import DatabasePerformanceCell from 'src/components/DatabasePerformanceCell'
 import GraphQLPerformanceCell from 'src/components/GraphQLPerformanceCell'
-import MailerStatsCell from 'src/components/MailerStatsCell/MailerStatsCell'
-import MonitoringStatsCell from 'src/components/MonitoringStatsCell/MonitoringStatsCell'
+import GraphQLStatsCell from 'src/components/GraphQLStatsCell'
+import MailerStatsCell from 'src/components/MailerStatsCell'
+import MonitoringStatsCell from 'src/components/MonitoringStatsCell'
 import NetworkPerformanceCell from 'src/components/NetworkPerformanceCell'
+import SQLStatsCell from 'src/components/SQLStatsCell'
 
 const HomePage = () => {
   return (
@@ -19,18 +21,23 @@ const HomePage = () => {
 
       <Grid numItems={2} className="mt-6 gap-6">
         <Col>
-          <DatabasePerformanceCell filter={{ secondsAgo: 120 }} />
+          <DatabasePerformanceCell filter={{ secondsAgo: 300 }} />
         </Col>
         <Col>
-          <GraphQLPerformanceCell filter={{ secondsAgo: 120 }} />
+          <GraphQLPerformanceCell filter={{ secondsAgo: 300 }} />
         </Col>
         <Col>
-          <ApiPerformanceCell filter={{ secondsAgo: 120 }} />
+          <ApiPerformanceCell filter={{ secondsAgo: 300 }} />
         </Col>
         <Col>
-          <NetworkPerformanceCell filter={{ secondsAgo: 120 }} />
+          <NetworkPerformanceCell filter={{ secondsAgo: 300 }} />
         </Col>
-
+        <Col>
+          <SQLStatsCell />
+        </Col>
+        <Col>
+          <GraphQLStatsCell />
+        </Col>
         <Col>
           <MonitoringStatsCell />
         </Col>

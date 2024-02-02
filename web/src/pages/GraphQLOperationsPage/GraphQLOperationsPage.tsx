@@ -7,7 +7,7 @@ import GraphQLOperationsCell from 'src/components/GraphQLOperationsCell'
 const GraphQLOperationsPage = () => {
   return (
     <>
-      <Metadata title="GraphQl Operations" description="GraphQl Operations" />
+      <Metadata title="GraphQL Operations" description="GraphQL Operations" />
 
       <Title className="pb-4">GraphQL Operations</Title>
       <GraphQLOperationsCell />
