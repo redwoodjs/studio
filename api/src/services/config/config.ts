@@ -1,16 +1,4 @@
-import {
-  getUserProjectApiConfig,
-  getUserProjectWebConfig,
-  getUserProjectStudioConfig,
-} from 'src/util/project'
-
-export const apiConfig = async () => {
-  return getUserProjectApiConfig()
-}
-
-export const webConfig = async () => {
-  return getUserProjectWebConfig()
-}
+import { getUserProjectStudioConfig } from 'src/util/project'
 
 export const studioConfig = async () => {
   return getUserProjectStudioConfig()

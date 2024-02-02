@@ -14,7 +14,6 @@ export const schema = gql`
 
   type StudioConfig {
     basePort: Int
-    inMemory: Boolean
     graphiql: GraphiQLConfig
   }
 

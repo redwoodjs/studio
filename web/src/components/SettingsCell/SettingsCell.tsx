@@ -14,7 +14,6 @@ export const QUERY: TypedDocumentNode<
   query SettingsQuery {
     settings: studioConfig {
       basePort
-      inMemory
       graphiql {
         endpoint
         authImpersonation {
@@ -39,17 +38,17 @@ export const Failure = ({ error }: CellFailureProps) => (
 
 interface SettingItemProps {
   title: string
-  value: string | number
+  setting: string | number
 }
 
-const SettingItem = ({ title, value }: SettingItemProps) => {
+const SettingItem = ({ title, setting }: SettingItemProps) => {
   return (
     <div className="mt-4 space-y-4">
       <h4 className="font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
         {title}
       </h4>
       <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-        {value}
+        {setting}
       </p>
     </div>
   )
@@ -65,58 +64,37 @@ export const Success = ({ settings }: CellSuccessProps<SettingsQuery>) => {
       </TabList>
       <TabPanels>
         <TabPanel>
+          <SettingItem title="Base Port" setting={settings?.basePort} />
+          <SettingItem title="Version" setting={window.RW_STUDIO_VERSION} />
+        </TabPanel>
+        <TabPanel>
           <SettingItem
-            props={{ title: 'Base Port', value: settings?.basePort }}
+            title="Auth Provider"
+            setting={settings?.graphiql?.authImpersonation?.authProvider}
           />
           <SettingItem
-            props={{
-              title: 'In Memory Database',
-              value: settings?.inMemory ? 'Yes' : 'No',
-            }}
+            title="User ID"
+            setting={settings?.graphiql?.authImpersonation?.userId}
           />
           <SettingItem
-            props={{ title: 'Version', value: window.RW_STUDIO_VERSION }}
+            title="Email"
+            setting={settings?.graphiql?.authImpersonation?.email}
+          />
+          <SettingItem
+            title="Roles"
+            setting={
+              settings?.graphiql?.authImpersonation?.roles?.join(' ') || ''
+            }
+          />
+          <SettingItem
+            title="JWT Secret"
+            setting={settings?.graphiql?.authImpersonation?.jwtSecret}
           />
         </TabPanel>
         <TabPanel>
           <SettingItem
-            props={{
-              title: 'Auth Provider',
-              value: settings?.graphiql?.authImpersonation?.authProvider,
-            }}
-          />
-          <SettingItem
-            props={{
-              title: 'User ID',
-              value: settings?.graphiql?.authImpersonation?.userId,
-            }}
-          />
-          <SettingItem
-            props={{
-              title: 'Email',
-              value: settings?.graphiql?.authImpersonation?.email,
-            }}
-          />
-          <SettingItem
-            props={{
-              title: 'Roles',
-              value:
-                settings?.graphiql?.authImpersonation?.roles?.join(', ') || '',
-            }}
-          />
-          <SettingItem
-            props={{
-              title: 'JWT Secret',
-              value: settings?.graphiql?.authImpersonation?.jwtSecret,
-            }}
-          />
-        </TabPanel>
-        <TabPanel>
-          <SettingItem
-            props={{
-              title: 'Endpoint',
-              value: settings?.graphiql?.endpoint,
-            }}
+            title="Endpoint"
+            setting={settings?.graphiql?.endpoint}
           />
         </TabPanel>
       </TabPanels>
