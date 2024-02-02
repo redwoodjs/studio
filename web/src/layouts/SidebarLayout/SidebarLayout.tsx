@@ -133,9 +133,9 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
 
   const graphQLNavigation: TNavigationItem[] = [
     {
-      name: 'Playground',
-      to: routes.graphiql(),
-      icon: PlaygroundIcon,
+      name: 'Schema',
+      to: routes.graphqlSchema(),
+      icon: GraphQLIcon,
     },
     {
       name: 'Operations',
@@ -143,9 +143,9 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
       icon: OperationsIcon,
     },
     {
-      name: 'Schema Diagram',
-      to: routes.graphqlSchema(),
-      icon: GraphQLIcon,
+      name: 'Playground',
+      to: routes.graphiql(),
+      icon: PlaygroundIcon,
     },
   ]
   const mailerNavigation: TNavigationItem[] = [

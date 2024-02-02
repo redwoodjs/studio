@@ -1903,6 +1903,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dagrejs/dagre@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@dagrejs/dagre@npm:1.0.4"
+  dependencies:
+    "@dagrejs/graphlib": "npm:2.1.13"
+  checksum: b43e033f690139cfde4f7e65a0afe37f0d7174f7a165084152a95bab7eae2f17b4da0dd4967c117a1629ff1424392c4efed72c530c3a9384633829724068992b
+  languageName: node
+  linkType: hard
+
+"@dagrejs/graphlib@npm:2.1.13":
+  version: 2.1.13
+  resolution: "@dagrejs/graphlib@npm:2.1.13"
+  checksum: d3d41c7e8c1eff7b98586bbe5a4028323723778276f19032ced93508873770df5ba895af16b0c35454891c72d8ba31433b21f480674980436f2209c42ef1ad8f
+  languageName: node
+  linkType: hard
+
 "@discoveryjs/json-ext@npm:0.5.7, @discoveryjs/json-ext@npm:^0.5.0, @discoveryjs/json-ext@npm:^0.5.3":
   version: 0.5.7
   resolution: "@discoveryjs/json-ext@npm:0.5.7"
@@ -27707,6 +27723,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "web@workspace:web"
   dependencies:
+    "@dagrejs/dagre": "npm:^1.0.4"
     "@graphiql/plugin-explorer": "npm:0.1.22"
     "@graphiql/toolkit": "npm:0.9.1"
     "@headlessui/react": "npm:1.7.18"

@@ -1,13 +1,13 @@
-import { Grid, Col } from '@tremor/react'
+import { Tab, TabGroup, TabList, TabPanels, TabPanel } from '@tremor/react'
 import type { FindPrismaSchemaQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import 'reactflow/dist/style.css'
 
-import PrismaEntityRelationshipDiagram from './PrismaEntityRelationshipDiagram'
-import PrismaModelList from './PrismaModelList'
-import PrismaTableViews from './PrismaTableViews'
+import { PrismaEntityRelationshipDiagram } from './PrismaEntityRelationshipDiagram'
+import { PrismaModelList } from './PrismaModelList'
+import { PrismaTableViews } from './PrismaTableViews'
 
 export const QUERY = gql`
   query FindPrismaSchemaQuery {
@@ -30,17 +30,23 @@ export const Success = ({
   prismaSchema,
 }: CellSuccessProps<FindPrismaSchemaQuery>) => {
   return (
-    <>
-      <Grid numItems={2} numItemsSm={1} numItemsLg={3} className="mb-4 gap-4">
-        <Col numColSpanLg={2}>
+    <TabGroup>
+      <TabList className="mt-8">
+        <Tab>Diagram</Tab>
+        <Tab>Schema</Tab>
+        <Tab>Details</Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>
           <PrismaEntityRelationshipDiagram prismaSchema={prismaSchema} />
-        </Col>
-        <Col numColSpanLg={1}>
+        </TabPanel>
+        <TabPanel>
+          <PrismaTableViews prismaSchema={prismaSchema} />
+        </TabPanel>
+        <TabPanel>
           <PrismaModelList prismaSchema={prismaSchema} />
-        </Col>
-      </Grid>
-
-      <PrismaTableViews prismaSchema={prismaSchema} />
-    </>
+        </TabPanel>
+      </TabPanels>
+    </TabGroup>
   )
 }

@@ -1,6 +1,8 @@
 export {
   ArrowPathIcon as RefreshIcon,
   ArrowsRightLeftIcon,
+  ArrowsRightLeftIcon as HorizontalIcon,
+  ArrowsUpDownIcon as VerticalIcon,
   Bars3Icon as MenuIcon,
   BoltIcon as MonitoringIcon,
   CircleStackIcon as DatabaseIcon,
