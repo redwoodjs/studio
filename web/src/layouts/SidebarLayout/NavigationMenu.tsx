@@ -10,6 +10,7 @@ import {
   OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
+  SettingsIcon,
   SpansIcon,
   SqlStatementsIcon,
   TemplatesIcon,
@@ -45,6 +46,7 @@ const NavigationItem = ({ item }: { item: TNavigationItem }) => {
 export const NavigationMenu = () => {
   const navigation: TNavigationItem[] = [
     { name: 'Dashboard', to: routes.home(), icon: DashboardIcon },
+    { name: 'Settings', to: routes.settings(), icon: SettingsIcon },
   ]
 
   const telemetryNavigation: TNavigationItem[] = [
