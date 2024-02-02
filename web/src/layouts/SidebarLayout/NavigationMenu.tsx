@@ -8,7 +8,6 @@ import {
   DiscourseIcon,
   ErdIcon,
   GitHubIcon,
-  ErdIcon,
   GraphQLIcon,
   InboxIcon,
   OGTagPreviewIcon,
@@ -148,18 +147,21 @@ export const NavigationMenu = () => {
 
   return (
     <>
-      <div className="flex h-16 shrink-0 items-center">
+      <div className="mt-4 flex h-16 shrink-0 items-center">
         <img className="h-8 w-auto" src="/mark.svg" alt="RedwoodJS" />
         <Flex flexDirection="col" justifyContent="start" alignItems="start">
           <Title className="pl-4">RedwoodJS Studio</Title>
           {/* The version number is moved up and to the right on purpose */}
-          <Subtitle className="-mt-1 pl-6 text-sm">
+          <Subtitle className="pl-4 text-sm">
             {window.RW_STUDIO_VERSION}
           </Subtitle>
         </Flex>
       </div>
       <nav className="flex flex-1 flex-col">
-        <ul className="flex flex-1 flex-col gap-y-7">
+        <ul className="flex flex-1 flex-col gap-y-6">
+          <li>
+            <div id="community-search-box" className="container mx-auto"></div>
+          </li>
           <li>
             <ul className="-mx-2 space-y-1">
               {navigation.map((item) => (

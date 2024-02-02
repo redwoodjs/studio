@@ -54,7 +54,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                   >
-                    <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
+                    <div className="absolute left-full top-0 flex w-16 justify-center">
                       <button
                         type="button"
                         className="-m-2.5 p-2.5"
@@ -99,11 +99,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
         </div>
 
         <main className="lg:pl-72">
-          <div
-            id="community-search-box"
-            className="container mx-auto px-4"
-          ></div>
-          <div className="px-4 py-10 sm:px-6 lg:px-8">{children}</div>
+          <div className="px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
       </div>
     </>
