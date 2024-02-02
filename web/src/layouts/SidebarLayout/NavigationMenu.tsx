@@ -8,6 +8,7 @@ import {
   DiscourseIcon,
   ErdIcon,
   GitHubIcon,
+  ErdIcon,
   GraphQLIcon,
   InboxIcon,
   OGTagPreviewIcon,

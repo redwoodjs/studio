@@ -1,4 +1,7 @@
-import { Title } from '@tremor/react'
+import { useCallback } from 'react'
+
+import Dagre from '@dagrejs/dagre'
+import { Button, Flex } from '@tremor/react'
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -6,8 +9,15 @@ import ReactFlow, {
   Edge,
   Node,
   NodeTypes,
+  ReactFlowProvider,
+  useNodesState,
+  useEdgesState,
+  useReactFlow,
+  Panel,
 } from 'reactflow'
 import type { GraphQLSchema, Relationship } from 'types/graphql'
+
+import { HorizontalIcon, VerticalIcon } from 'src/icons/Icons'
 
 import GraphQLSchemaDefinitionNode from './GraphQLSchemaDefinitionNode'
 
@@ -67,7 +77,6 @@ function getNodes(definitions: Array<Definition>) {
         position: { x: xOffSet, y: yOffSet },
         deletable: false,
         draggable: true,
-        resizable: true,
       }
 
       nodes.push(node)
@@ -77,6 +86,8 @@ function getNodes(definitions: Array<Definition>) {
         xOffSet = 0
         yOffSet += 128
       }
+
+      yOffSet += i % 2 === 0 ? 32 : -32
     }
   }
 
@@ -98,26 +109,94 @@ function getEdges(relationships: Relationship[]) {
   return edges
 }
 
-export const GraphQLSchemaDiagram = ({ schema }: { schema: GraphQLSchema }) => {
+const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
+
+const getLaidOutElements = (
+  nodes: Array<Node>,
+  edges: Array<Edge>,
+  options: { direction: 'LR' | 'TB' }
+) => {
+  g.setGraph({ rankdir: options.direction })
+
+  edges.forEach((edge) => g.setEdge(edge.source, edge.target))
+  nodes.forEach((node) => g.setNode(node.id, node))
+
+  Dagre.layout(g)
+
+  return {
+    nodes: nodes.map((node) => {
+      const { x, y } = g.node(node.id)
+
+      return { ...node, position: { x, y } }
+    }),
+    edges,
+  }
+}
+
+const LayoutFlow = ({ schema }: { schema: GraphQLSchema }) => {
+  const { fitView } = useReactFlow()
+
   const definitions = JSON.parse(schema.definitions)
 
   const nodeTypes = getNodeTypes(definitions)
-  const nodes = getNodes(definitions)
-  const edges = getEdges(schema.relationships)
+  const initialNodes = getNodes(definitions)
+  const initialEdges = getEdges(schema.relationships)
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+
+  const onLayout = useCallback(
+    (direction) => {
+      const laidOut = getLaidOutElements(nodes, edges, { direction })
+
+      setNodes([...laidOut.nodes])
+      setEdges([...laidOut.edges])
+
+      window.requestAnimationFrame(() => {
+        fitView()
+      })
+    },
+    [nodes, edges, fitView, setNodes, setEdges]
+  )
 
   return (
-    <>
-      <Title className="mb-4">Diagram</Title>
+    <div className="h-[640px] w-full min-w-[320px]">
       <ReactFlow
+        className="bg-teal-50"
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        nodesDraggable={true}
         fitView
-        className="bg-teal-50"
       >
+        <Panel position="top-right" onLoad={() => onLayout('TB')}>
+          <Flex
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="evenly"
+            className="space-x-4"
+          >
+            <Button icon={VerticalIcon} onClick={() => onLayout('TB')} />
+            <Button icon={HorizontalIcon} onClick={() => onLayout('LR')} />
+          </Flex>
+        </Panel>
         <Background variant={BackgroundVariant.Dots} />
         <Controls className="bg-white" showInteractive={false} />
       </ReactFlow>
-    </>
+    </div>
+  )
+}
+
+interface Props {
+  schema: GraphQLSchema
+}
+
+export const GraphQLSchemaDiagram = ({ schema }: Props) => {
+  return (
+    <ReactFlowProvider>
+      <LayoutFlow schema={schema} />
+    </ReactFlowProvider>
   )
 }

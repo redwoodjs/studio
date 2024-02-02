@@ -11,6 +11,7 @@
     ]
   },
   "dependencies": {
+    "@dagrejs/dagre": "^1.0.4",
     "@graphiql/plugin-explorer": "0.1.22",
     "@graphiql/toolkit": "0.9.1",
     "@headlessui/react": "1.7.18",
@@ -22,7 +23,7 @@
     "@redwoodjs/web": "7.0.0-canary.889",
     "@tremor/react": "3.13.2",
     "buffer": "6.0.3",
-    "date-fns": "^3.2.0",
+    "date-fns": "^3.3.1",
     "graphiql": "3.0.10",
     "json-bigint-patch": "0.0.8",
     "prop-types": "15.8.1",

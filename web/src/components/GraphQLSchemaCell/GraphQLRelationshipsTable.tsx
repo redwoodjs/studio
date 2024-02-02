@@ -18,8 +18,8 @@ export const GraphQLRelationshipsTable = ({
   relationships: Relationship[]
 }) => (
   <Card>
-    <Title>GraphQL Relationships</Title>
-    <Table className="mt-5">
+    <Title>Relationships</Title>
+    <Table>
       <TableHead>
         <TableRow>
           <TableHeaderCell>Relationship</TableHeaderCell>
