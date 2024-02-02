@@ -7,15 +7,22 @@ import {
 
 import { db } from 'src/lib/db'
 
-const spansByAttributeKeyAndType = async (
-  typeId: string,
-  attributeKey?: string | null,
-  attributeValue?: string | null
-) =>
+const spansByAttributeKeyAndType = async ({
+  typeId,
+  attributeKey,
+  attributeValue,
+  secondsAgo,
+}: {
+  typeId: string
+  attributeKey: string
+  attributeValue?: string
+  secondsAgo?: number
+}) =>
   await db.$queryRaw<SpansByAttributeKeyAndType[]>`
 SELECT
   -- id must be unique per row or Apollo client will reuse data in cache
   s.id || '-' || a.hash as id,
+  s.spanId,
   s.createdAt,
   s.updatedAt,
   s.statusCode,
@@ -26,7 +33,7 @@ SELECT
   t.id AS spanType,
   a.key AS attributeKey,
 	CASE WHEN a.type = 'string' THEN
-		substr(a.value, 2, length(a.value) - 2)
+    substr((substr(a.value, 1, instr(a.value, ' /* traceparent=') - 1) || substr(a.value, instr(a.value, '*/') + 1)), 2, length((substr(a.value, 1, instr(a.value, ' /* traceparent=') - 1) || substr(a.value, instr(a.value, '*/') + 1))) - 2)
 	ELSE
 		cast(a.value as text)
 	END AS attributeValue
@@ -40,17 +47,47 @@ WHERE
   t.id = ${typeId}
   AND (${attributeKey} IS NULL OR a.key = ${attributeKey})
   AND (${attributeValue} IS NULL OR a.value = ${attributeValue})
+  AND (${secondsAgo} IS NULL OR s.startTimeNano / 1000000000.000 >= strftime('%s', 'now') - ${secondsAgo})
+
 ORDER BY
   s.createdAt DESC
 LIMIT 200`
-// ^^ until we paginate
+// ^^ just recent ones
+
+const recentSpans = async ({
+  typeId,
+  attributeKey,
+  attributeValue,
+}: {
+  typeId: string
+  attributeKey: string
+  attributeValue?: string
+  secondsAgo?: number
+}) => {
+  let results = []
+  results = await spansByAttributeKeyAndType({
+    typeId,
+    attributeKey,
+    attributeValue,
+    secondsAgo: 10 * 60,
+  })
+
+  if (results.length === 0) {
+    results = await spansByAttributeKeyAndType({
+      typeId,
+      attributeKey,
+      attributeValue,
+    })
+  }
+  return results
+}
 
 export const sqlStatementSpans: QueryResolvers['sqlStatementSpans'] =
   async () => {
     const typeId = 'SQL'
     const attributeKey = 'db.statement'
 
-    return await spansByAttributeKeyAndType(typeId, attributeKey)
+    return await recentSpans({ typeId, attributeKey })
   }
 
 export const prismaModelSpans: QueryResolvers['sqlStatementSpans'] =
@@ -58,7 +95,7 @@ export const prismaModelSpans: QueryResolvers['sqlStatementSpans'] =
     const typeId = 'PRISMA'
     const attributeKey = 'model'
 
-    return await spansByAttributeKeyAndType(typeId, attributeKey)
+    return await recentSpans({ typeId, attributeKey })
   }
 
 export const graphQLOperationSpans: QueryResolvers['graphQLOperationSpans'] =
@@ -66,7 +103,7 @@ export const graphQLOperationSpans: QueryResolvers['graphQLOperationSpans'] =
     const typeId = 'GRAPHQL'
     const attributeKey = 'graphql.execute.operationName'
 
-    return await spansByAttributeKeyAndType(typeId, attributeKey)
+    return await recentSpans({ typeId, attributeKey })
   }
 
 export const anonymousGraphQLOperationSpans: QueryResolvers['anonymousGraphQLOperationSpans'] =
@@ -75,11 +112,7 @@ export const anonymousGraphQLOperationSpans: QueryResolvers['anonymousGraphQLOpe
     const attributeKey = 'graphql.execute.operationName'
     const attributeValue = '"Anonymous Operation"' // has quotes in data
 
-    return await spansByAttributeKeyAndType(
-      typeId,
-      attributeKey,
-      attributeValue
-    )
+    return await recentSpans({ typeId, attributeKey, attributeValue })
   }
 
 // TODO: I wanted to generalize this function, but SQLite and Prisma isn't happy with interpolating variables with the IN clause
@@ -89,6 +122,7 @@ export const databasePerformance: QueryResolvers['databasePerformance'] =
 
     return await db.$queryRaw<PerformanceDataPoint[]>`SELECT
     s.id,
+    s.spanId,
     t.id AS spanType,
     t. "name" AS spanTypeName,
     strftime ('%Y-%m-%dT%H:%M:%fZ',

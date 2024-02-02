@@ -1,5 +1,4 @@
 import crypto from 'node:crypto'
-import path from 'node:path'
 
 import { getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers'
 import { CodeFileLoader } from '@graphql-tools/code-file-loader'
@@ -7,17 +6,13 @@ import { loadSchema, LoadSchemaOptions } from '@graphql-tools/load'
 import { print, visit } from 'graphql'
 
 import { rootSchema } from '@redwoodjs/graphql-server'
-import { getConfigPath, getPaths } from '@redwoodjs/project-config'
 
 import type { Relationship } from '../../types/graphql'
 
-export const getSchema = async () => {
-  const studioRootDir = path.dirname(getConfigPath())
-  const userProjectRootDir = path.dirname(
-    getConfigPath(path.join(studioRootDir, '..'))
-  )
+import { getUserProjectPaths } from './project'
 
-  const userProjectPaths = getPaths(userProjectRootDir)
+export const getSchema = async () => {
+  const userProjectPaths = getUserProjectPaths()
 
   const schemaPointerMap = {
     [print(rootSchema.schema)]: {},

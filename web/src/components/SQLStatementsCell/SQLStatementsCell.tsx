@@ -1,16 +1,23 @@
 import {
-  Card,
-  Table,
-  TableHead,
-  TableHeaderCell,
-  TableBody,
-  TableRow,
-  TableCell,
   Bold,
+  Card,
+  Col,
+  Grid,
+  Subtitle,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
 } from '@tremor/react'
 import type { SQLStatementsQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
+
+import SpansDetailsTable from '../SpansDetailsTable/SpansDetailsTable'
+import StatisticsDetailTable from '../Statistics/StatisticsDetailTable'
+import StatisticsIntervalChart from '../Statistics/StatisticsIntervalChart'
+import StatisticsIntervalTable from '../Statistics/StatisticsIntervalTable'
 
 export const beforeQuery = (props) => {
   return {
@@ -22,65 +29,95 @@ export const beforeQuery = (props) => {
 
 export const QUERY = gql`
   query SQLStatementsQuery {
-    sqlStatements: sqlStatementSpans {
+    details: sqlStatementSpans {
       id
+      spanId
       startedAt
-      endedAt
       durationMs
       durationSec
       attributeKey
       attributeValue
     }
+    statistics: sqlStatementStatistics {
+      intervalStartedAt
+      statisticCount
+      minDuration
+      minDurationMs
+      minDurationSec
+      maxDuration
+      maxDurationMs
+      maxDurationSec
+      avgDuration
+      avgDurationMs
+      avgDurationSec
+    }
+    statementStats: sqlStatementAttributeStatistics {
+      attributeValue
+      statisticCount
+      minDuration
+      minDurationMs
+      minDurationSec
+      maxDuration
+      maxDurationMs
+      maxDurationSec
+      avgDuration
+      avgDurationMs
+      avgDurationSec
+    }
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => <Subtitle>Loading...</Subtitle>
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => (
+  <Card>
+    <Subtitle>Recent GraphQL Operations</Subtitle>
+    <Bold>No recent records.</Bold>
+  </Card>
+)
 
 export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
 export const Success = ({
-  sqlStatements,
+  details,
+  statistics,
+  statementStats,
 }: CellSuccessProps<SQLStatementsQuery>) => {
   return (
-    <Card>
-      <Table className="mt-5">
-        <TableHead>
-          <TableRow>
-            <TableHeaderCell>SQL Statement</TableHeaderCell>
-            <TableHeaderCell>Started At</TableHeaderCell>
-            <TableHeaderCell>Ended At</TableHeaderCell>
-            <TableHeaderCell className="text-right">
-              Duration (msec)
-            </TableHeaderCell>
-            <TableHeaderCell className="text-right">
-              Duration (s)
-            </TableHeaderCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {sqlStatements.map((item) => {
-            return (
-              <TableRow key={item.id}>
-                <TableCell>
-                  <div className="text-wrap max-w-32">
-                    <Bold className="text-wrap max-w-32">
-                      {item.attributeValue}
-                    </Bold>
-                  </div>
-                </TableCell>
-                <TableCell>{item.startedAt}</TableCell>
-                <TableCell>{item.endedAt}</TableCell>
-                <TableCell className="text-right">{item.durationMs}</TableCell>
-                <TableCell className="text-right">{item.durationSec}</TableCell>
-              </TableRow>
-            )
-          })}
-        </TableBody>
-      </Table>
-    </Card>
+    <TabGroup>
+      <TabList className="mt-8">
+        <Tab>Overview</Tab>
+        <Tab>Recent Details</Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>
+          <Grid numItemsSm={2} numItemsLg={3} className="gap-6">
+            <Col numColSpanSm={2} numColSpanLg={3}>
+              <StatisticsIntervalChart
+                statistics={statistics}
+                interval={'5 Min'}
+              />
+            </Col>
+            <Col numColSpanSm={2} numColSpanLg={3}>
+              <StatisticsDetailTable statistics={statementStats} />
+            </Col>
+            <Col numColSpanSm={2} numColSpanLg={3}>
+              <StatisticsIntervalTable
+                statistics={statistics}
+                interval={'5 Min'}
+              />
+            </Col>
+          </Grid>
+        </TabPanel>
+        <TabPanel>
+          <Card>
+            <Subtitle>Recent SQL Statements</Subtitle>
+            <SpansDetailsTable details={details} caption="SQL" />
+          </Card>
+        </TabPanel>
+      </TabPanels>
+    </TabGroup>
   )
 }

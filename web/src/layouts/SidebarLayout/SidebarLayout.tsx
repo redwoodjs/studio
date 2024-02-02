@@ -40,7 +40,7 @@ type TNavigationItem = {
   name: string
   to: string
   // https://www.totaltypescript.com/pass-component-as-prop-react
-  icon: React.ComponentType<{ className: string }>
+  icon: React.ElementType<{ className: string }>
 }
 
 // v7 ships with SSR section disabled as Bighorn introduces the feature
