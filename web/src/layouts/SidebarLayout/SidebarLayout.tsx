@@ -12,7 +12,6 @@ import {
   DashboardIcon,
   ErdIcon,
   GraphQLIcon,
-  HomeIcon,
   InboxIcon,
   MenuIcon,
   OGTagPreviewIcon,
@@ -40,7 +39,8 @@ type SidebarLayoutProps = {
 type TNavigationItem = {
   name: string
   to: string
-  icon: typeof HomeIcon
+  // https://www.totaltypescript.com/pass-component-as-prop-react
+  icon: React.ElementType<{ className: string }>
 }
 
 // v7 ships with SSR section disabled as Bighorn introduces the feature
