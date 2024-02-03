@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import { Flex, Title } from '@tremor/react'
 
 import { NavLink, routes } from '@redwoodjs/router'
@@ -144,6 +146,22 @@ export const NavigationMenu = () => {
       icon: GitHubIcon,
     },
   ]
+
+  useEffect(() => {
+    // @ts-expect-error - CommunitySearch is added by a script in index.html
+    const communitySearch = window.CommunitySearch
+
+    // Try initializing the search widget every 300 ms. Once it's initialized
+    // we clear the interval.
+    const interval = setInterval(() => {
+      if (communitySearch.init) {
+        communitySearch.init()
+        clearInterval(interval)
+      }
+    }, 300)
+
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <>
