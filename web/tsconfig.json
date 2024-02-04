@@ -30,6 +30,7 @@
     "jsx": "preserve"
   },
   "include": [
+    "ambient.d.ts",
     "src",
     "../.redwood/types/includes/all-*",
     "../.redwood/types/includes/web-*",

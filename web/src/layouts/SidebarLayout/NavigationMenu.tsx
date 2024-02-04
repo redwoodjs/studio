@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 import { Flex, Title } from '@tremor/react'
 
 import { NavLink, routes } from '@redwoodjs/router'
@@ -22,6 +20,7 @@ import {
 } from 'src/icons/Icons'
 
 import { ConnectionStatusIndicator } from './ConnectionStatusIndicator'
+import { OrbitSearch } from './OrbitSearch'
 
 type TNavigationItem = {
   name: string
@@ -147,22 +146,6 @@ export const NavigationMenu = () => {
     },
   ]
 
-  useEffect(() => {
-    // @ts-expect-error - CommunitySearch is added by a script in index.html
-    const communitySearch = window.CommunitySearch
-
-    // Try initializing the search widget every 300 ms. Once it's initialized
-    // we clear the interval.
-    const interval = setInterval(() => {
-      if (communitySearch.init) {
-        communitySearch.init()
-        clearInterval(interval)
-      }
-    }, 300)
-
-    return () => clearInterval(interval)
-  }, [])
-
   return (
     <>
       <div className="mt-4 flex h-16 shrink-0 items-center">
@@ -174,7 +157,7 @@ export const NavigationMenu = () => {
       <nav className="flex flex-1 flex-col">
         <ul className="flex flex-1 flex-col gap-y-6">
           <li>
-            <div id="community-search-box" className="container mx-auto"></div>
+            <OrbitSearch />
           </li>
           <li>
             <ul className="-mx-2 space-y-1">
