@@ -16,32 +16,15 @@ export const OrbitSearch = () => {
 
   return (
     <div className="container mx-auto">
-      <div
-        style={{
-          width: 'auto',
-          height: 'auto',
-          fontSize: '14px',
-          lineHeight: 1,
-        }}
-      >
+      <div className="h-auto w-auto text-sm leading-none">
         <button
           aria-label="Open Community Search"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            width: '100%',
-            height: '100%',
-            padding: '8px',
-            borderRadius: '6px',
-            border: '1px solid rgb(65, 72, 87)',
-            backgroundColor: 'rgb(23, 25, 27)',
-          }}
+          className="flex h-full w-full items-center gap-2.5 rounded-md border border-gray-700 bg-zinc-900 p-2"
           onClick={() => {
             window.CommunitySearch.toggleWidget()
           }}
         >
-          <div style={{ flexGrow: 0, flexShrink: 0, height: '17px' }}>
+          <div className="h-[17px] flex-shrink-0 flex-grow-0">
             <svg
               width="16"
               height="17"
@@ -58,36 +41,12 @@ export const OrbitSearch = () => {
               ></path>
             </svg>
           </div>
-          <div style={{ color: 'rgb(154, 164, 178)', flexGrow: 1 }}>
-            Community search...
-          </div>
-          <div style={{ display: 'flex', flexGrow: 0 }}>
-            <div
-              style={{
-                width: '24px',
-                height: '24px',
-                padding: '4px',
-                marginRight: '3px',
-                borderRadius: '4px',
-                border: '1px solid rgb(65, 72, 87)',
-                color: 'rgb(199, 206, 217)',
-                backgroundColor: 'rgb(38, 42, 45)',
-              }}
-            >
+          <div className="grow text-gray-400">Community search...</div>
+          <div className="flex grow-0">
+            <div className="mr-[3px] h-6 w-6 rounded border border-gray-700 bg-zinc-800 p-1 text-slate-300">
               ⌘
             </div>
-            <div
-              style={{
-                width: '24px',
-                height: '24px',
-                padding: '4px',
-                marginRight: '0px',
-                borderRadius: '4px',
-                border: '1px solid rgb(65, 72, 87)',
-                color: 'rgb(199, 206, 217)',
-                backgroundColor: 'rgb(38, 42, 45)',
-              }}
-            >
+            <div className="mr-0 h-6 w-6 rounded border border-gray-700 bg-zinc-800 p-1 text-slate-300">
               K
             </div>
           </div>
