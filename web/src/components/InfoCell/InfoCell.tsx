@@ -1,5 +1,5 @@
 import { Tab, TabGroup, TabList, TabPanels, TabPanel } from '@tremor/react'
-import type { SettingsQuery, SettingsQueryVariables } from 'types/graphql'
+import type { InfoQuery, InfoQueryVariables } from 'types/graphql'
 
 import type {
   CellSuccessProps,
@@ -7,12 +7,9 @@ import type {
   TypedDocumentNode,
 } from '@redwoodjs/web'
 
-export const QUERY: TypedDocumentNode<
-  SettingsQuery,
-  SettingsQueryVariables
-> = gql`
-  query SettingsQuery {
-    settings: studioConfig {
+export const QUERY: TypedDocumentNode<InfoQuery, InfoQueryVariables> = gql`
+  query InfoQuery {
+    infos: studioConfig {
       basePort
       graphiql {
         endpoint
@@ -20,7 +17,7 @@ export const QUERY: TypedDocumentNode<
           authProvider
           userId
           email
-          roles
+          # roles # Roles are not yet supported in any generated auth headers
           jwtSecret
         }
       }
@@ -36,25 +33,29 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
-interface SettingItemProps {
+interface InfoItemProps {
   title: string
-  setting: string | number
+  info: string | number
 }
 
-const SettingItem = ({ title, setting }: SettingItemProps) => {
+const InfoItem = ({ title, info }: InfoItemProps) => {
   return (
     <div className="mt-4 space-y-4">
       <h4 className="font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
         {title}
       </h4>
-      <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-        {setting}
+      <p
+        className={`text-tremor-default text-tremor-content dark:text-dark-tremor-content ${
+          info ?? 'italic'
+        }`}
+      >
+        {info ?? 'Not set'}
       </p>
     </div>
   )
 }
 
-export const Success = ({ settings }: CellSuccessProps<SettingsQuery>) => {
+export const Success = ({ infos }: CellSuccessProps<InfoQuery>) => {
   return (
     <TabGroup className="mt-6">
       <TabList className="mb-6">
@@ -64,38 +65,33 @@ export const Success = ({ settings }: CellSuccessProps<SettingsQuery>) => {
       </TabList>
       <TabPanels>
         <TabPanel>
-          <SettingItem title="Base Port" setting={settings?.basePort} />
-          <SettingItem title="Version" setting={window.RW_STUDIO_VERSION} />
+          <InfoItem title="Base Port" info={infos?.basePort} />
+          <InfoItem title="Version" info={window.RW_STUDIO_VERSION} />
         </TabPanel>
         <TabPanel>
-          <SettingItem
+          <InfoItem
             title="Auth Provider"
-            setting={settings?.graphiql?.authImpersonation?.authProvider}
+            info={infos?.graphiql?.authImpersonation?.authProvider}
           />
-          <SettingItem
+          <InfoItem
             title="User ID"
-            setting={settings?.graphiql?.authImpersonation?.userId}
+            info={infos?.graphiql?.authImpersonation?.userId}
           />
-          <SettingItem
+          <InfoItem
             title="Email"
-            setting={settings?.graphiql?.authImpersonation?.email}
+            info={infos?.graphiql?.authImpersonation?.email}
           />
-          <SettingItem
+          {/* <InfoItem
             title="Roles"
-            setting={
-              settings?.graphiql?.authImpersonation?.roles?.join(' ') || ''
-            }
-          />
-          <SettingItem
+            info={infos?.graphiql?.authImpersonation?.roles?.join(' ')}
+          /> */}
+          <InfoItem
             title="JWT Secret"
-            setting={settings?.graphiql?.authImpersonation?.jwtSecret}
+            info={infos?.graphiql?.authImpersonation?.jwtSecret}
           />
         </TabPanel>
         <TabPanel>
-          <SettingItem
-            title="Endpoint"
-            setting={settings?.graphiql?.endpoint}
-          />
+          <InfoItem title="Endpoint" info={infos?.graphiql?.endpoint} />
         </TabPanel>
       </TabPanels>
     </TabGroup>
