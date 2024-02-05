@@ -17,7 +17,8 @@ export const QUERY: TypedDocumentNode<InfoQuery, InfoQueryVariables> = gql`
           authProvider
           userId
           email
-          # roles # Roles are not yet supported in any generated auth headers
+          # TODO: Add support for roles in generated auth headers
+          # roles
           jwtSecret
         }
       }
@@ -81,6 +82,7 @@ export const Success = ({ infos }: CellSuccessProps<InfoQuery>) => {
             title="Email"
             info={infos?.graphiql?.authImpersonation?.email}
           />
+          {/* TODO: Add support for roles in generated auth headers */}
           {/* <InfoItem
             title="Roles"
             info={infos?.graphiql?.authImpersonation?.roles?.join(' ')}

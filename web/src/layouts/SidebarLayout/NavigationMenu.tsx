@@ -11,7 +11,6 @@ import {
   OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
-  SettingsIcon,
   SpansIcon,
   SqlStatementsIcon,
   TemplatesIcon,
