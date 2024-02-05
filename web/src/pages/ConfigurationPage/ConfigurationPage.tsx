@@ -1,20 +1,20 @@
 import { Metadata } from '@redwoodjs/web'
 
-import SettingsCell from 'src/components/SettingsCell'
+import ConfigurationCell from 'src/components/ConfigurationCell'
 
-const SettingsPage = () => {
+const ConfigurationPage = () => {
   return (
     <>
-      <Metadata title="Settings" description="Settings page" />
+      <Metadata title="Configuration" description="Configuration page" />
       <h3 className="text-tremor-title font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-        Settings
+        Configuration
       </h3>
       <p className="mt-2 text-tremor-default leading-6 text-tremor-content dark:text-dark-tremor-content">
         Studio configuration settings.
       </p>
-      <SettingsCell />
+      <ConfigurationCell />
     </>
   )
 }
 
-export default SettingsPage
+export default ConfigurationPage
