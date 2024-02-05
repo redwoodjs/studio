@@ -30,3 +30,7 @@
 [studio.graphiql]
   authImpersonation.authProvider = "dbAuth"
   authImpersonation.userId = 1
+  # Email is used by Netlify and Supabase
+  # authImpersonation.email = "foo@example.com"
+  # Secret is used by Netlify
+  # authImpersonation.jwtSecret = "secret"

@@ -10,7 +10,7 @@ function getGraphiqlConfig() {
 }
 
 export const generateAuthHeaders: QueryResolvers['generateAuthHeaders'] =
-  async (_parent: unknown, { userId }: { userId?: string }) => {
+  async ({ userId }: { userId?: string }) => {
     const provider = getGraphiqlConfig()?.authImpersonation?.authProvider
     const impersonateUserId = getGraphiqlConfig()?.authImpersonation?.userId
     const email = getGraphiqlConfig()?.authImpersonation?.email

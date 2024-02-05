@@ -1,4 +1,5 @@
 import type { Decoded } from '@redwoodjs/api'
+import { parseJWT } from '@redwoodjs/api'
 import { AuthenticationError, ForbiddenError } from '@redwoodjs/graphql-server'
 
 import { db } from './db'
@@ -29,15 +30,33 @@ export const cookieName = 'session_%port%'
  * fields to the `select` object below once you've decided they are safe to be
  * seen if someone were to open the Web Inspector in their browser.
  */
-export const getCurrentUser = async (session: Decoded) => {
-  if (!session || typeof session.id !== 'number') {
-    throw new Error('Invalid session')
+export const getCurrentUser = async (session: Decoded, { type }) => {
+  if (type === 'supabase' || type === 'netlify') {
+    if (!session) {
+      return null
+    }
+
+    const { roles } = parseJWT({ decoded: session })
+
+    if (roles) {
+      return { ...session, roles }
+    }
+
+    return { ...session }
   }
 
-  return await db.user.findUnique({
-    where: { id: session.id },
-    select: { id: true, roles: true, email: true },
-  })
+  if (type === 'dbAuth') {
+    if (!session || typeof session.id !== 'number') {
+      throw new Error('Invalid session')
+    }
+
+    return await db.user.findUnique({
+      where: { id: session.id },
+      select: { id: true, roles: true, email: true },
+    })
+  }
+
+  throw new AuthenticationError('Unknown auth type')
 }
 
 /**
