@@ -7,6 +7,7 @@ import {
   ErdIcon,
   GraphQLIcon,
   InboxIcon,
+  InfoIcon,
   OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
@@ -111,7 +112,7 @@ export const NavigationMenu = () => {
   ]
 
   const studioNavigation: TNavigationItem[] = [
-    { name: 'Configuration', to: routes.configuration(), icon: SettingsIcon },
+    { name: 'Info', to: routes.info(), icon: InfoIcon },
   ]
 
   return (

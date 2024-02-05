@@ -24,7 +24,7 @@ const Routes = () => {
         <Route path="/mailer/template-preview" page={MailerTemplatePreviewPage} name="mailerTemplatePreview" />
 
         <Route path="/ssr/og-tag-preview" page={OGTagPreviewPage} name="ogTagPreview" />
-        <Route path="/configuration" page={ConfigurationPage} name="configuration" />
+        <Route path="/info" page={InfoPage} name="info" />
       </Set>
       <Route notfound page={NotFoundPage} />
     </Router>
