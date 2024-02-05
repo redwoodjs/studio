@@ -21,7 +21,7 @@ export const OrbitSearch = () => {
       <div className="h-auto w-auto text-sm leading-none">
         <button
           aria-label="Open Community Search"
-          className="flex h-full w-full items-center gap-2.5 rounded-md border border-slate-100 bg-zinc-50 p-2 dark:border-gray-700 dark:bg-zinc-900"
+          className="flex h-full w-full items-center gap-2 rounded-md border border-slate-100 bg-zinc-50 p-2 dark:border-gray-700 dark:bg-zinc-900"
           onClick={() => {
             window.CommunitySearch.toggleWidget()
           }}
