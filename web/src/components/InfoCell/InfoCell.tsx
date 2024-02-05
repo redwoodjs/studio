@@ -36,10 +36,10 @@ export const Failure = ({ error }: CellFailureProps) => (
 
 interface InfoItemProps {
   title: string
-  info: string | number
+  value: string | number
 }
 
-const InfoItem = ({ title, info }: InfoItemProps) => {
+const InfoItem = ({ title, value }: InfoItemProps) => {
   return (
     <div className="mt-4 space-y-4">
       <h4 className="font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
@@ -47,10 +47,10 @@ const InfoItem = ({ title, info }: InfoItemProps) => {
       </h4>
       <p
         className={`text-tremor-default text-tremor-content dark:text-dark-tremor-content ${
-          info ?? 'italic'
+          value === undefined || value === null ? 'italic' : ''
         }`}
       >
-        {info ?? 'Not set'}
+        {value ?? 'Not set'}
       </p>
     </div>
   )
@@ -66,21 +66,21 @@ export const Success = ({ infos }: CellSuccessProps<InfoQuery>) => {
       </TabList>
       <TabPanels>
         <TabPanel>
-          <InfoItem title="Base Port" info={infos?.basePort} />
-          <InfoItem title="Version" info={window.RW_STUDIO_VERSION} />
+          <InfoItem title="Base Port" value={infos?.basePort} />
+          <InfoItem title="Version" value={window.RW_STUDIO_VERSION} />
         </TabPanel>
         <TabPanel>
           <InfoItem
             title="Auth Provider"
-            info={infos?.graphiql?.authImpersonation?.authProvider}
+            value={infos?.graphiql?.authImpersonation?.authProvider}
           />
           <InfoItem
             title="User ID"
-            info={infos?.graphiql?.authImpersonation?.userId}
+            value={infos?.graphiql?.authImpersonation?.userId}
           />
           <InfoItem
             title="Email"
-            info={infos?.graphiql?.authImpersonation?.email}
+            value={infos?.graphiql?.authImpersonation?.email}
           />
           {/* TODO: Add support for roles in generated auth headers */}
           {/* <InfoItem
@@ -89,11 +89,11 @@ export const Success = ({ infos }: CellSuccessProps<InfoQuery>) => {
           /> */}
           <InfoItem
             title="JWT Secret"
-            info={infos?.graphiql?.authImpersonation?.jwtSecret}
+            value={infos?.graphiql?.authImpersonation?.jwtSecret}
           />
         </TabPanel>
         <TabPanel>
-          <InfoItem title="Endpoint" info={infos?.graphiql?.endpoint} />
+          <InfoItem title="Endpoint" value={infos?.graphiql?.endpoint} />
         </TabPanel>
       </TabPanels>
     </TabGroup>

@@ -8,7 +8,8 @@ export const schema = gql`
     authProvider: String
     userId: String
     email: String
-    roles: [String]
+    # TODO: Add support for roles
+    # roles: [String]
     jwtSecret: String
   }
 
