@@ -18,6 +18,7 @@ import {
 } from 'src/icons/Icons'
 
 import { ConnectionStatusIndicator } from './ConnectionStatusIndicator'
+import { OrbitSearch } from './OrbitSearch'
 
 type TNavigationItem = {
   name: string
@@ -124,6 +125,9 @@ export const NavigationMenu = () => {
       </div>
       <nav className="flex flex-1 flex-col">
         <ul className="flex flex-1 flex-col gap-y-7">
+          <li>
+            <OrbitSearch />
+          </li>
           <li>
             <ul className="-mx-2 space-y-1">
               {navigation.map((item) => (

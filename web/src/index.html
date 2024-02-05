@@ -6,10 +6,20 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <script>
       // The string here is replaced during packaging of Studio
-      window.RW_STUDIO_VERSION = "__RW_STUDIO_VERSION__"
+      window.RW_STUDIO_VERSION = '__RW_STUDIO_VERSION__'
       // The port number is replaced during server startup
       window.RW_STUDIO_API_PORT = 4319
     </script>
+    <script type="text/javascript">
+      window.CommunitySearch = Object.assign({}, window.CommunitySearch, {
+        baseUrl:
+          'https://search.orbit.love/widget/f6f0c448-cc87-432c-a0c5-a208c24afb18',
+        options: {
+          showCornerIcon: false,
+        },
+      })
+    </script>
+    <script src="https://search.orbit.love/widget.js" async defer></script>
   </head>
 
   <body class="h-full bg-gray-50 dark:bg-gray-950">
