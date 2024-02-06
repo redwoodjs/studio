@@ -12,7 +12,6 @@ export const QUERY: TypedDocumentNode<InfoQuery, InfoQueryVariables> = gql`
     infos: studioConfig {
       basePort
       graphiql {
-        endpoint
         authImpersonation {
           authProvider
           userId
@@ -62,7 +61,6 @@ export const Success = ({ infos }: CellSuccessProps<InfoQuery>) => {
       <TabList className="mb-6">
         <Tab>General</Tab>
         <Tab>User Impersonation</Tab>
-        <Tab>GraphQL Playground</Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
@@ -91,9 +89,6 @@ export const Success = ({ infos }: CellSuccessProps<InfoQuery>) => {
             title="JWT Secret"
             value={infos?.graphiql?.authImpersonation?.jwtSecret}
           />
-        </TabPanel>
-        <TabPanel>
-          <InfoItem title="Endpoint" value={infos?.graphiql?.endpoint} />
         </TabPanel>
       </TabPanels>
     </TabGroup>
