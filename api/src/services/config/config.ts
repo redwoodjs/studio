@@ -1,5 +1,5 @@
-import { getUserProjectStudioConfig } from 'src/util/project'
+import { getUserProjectConfig } from 'src/util/project'
 
 export const studioConfig = async () => {
-  return getUserProjectStudioConfig()
+  return getUserProjectConfig().studio
 }
