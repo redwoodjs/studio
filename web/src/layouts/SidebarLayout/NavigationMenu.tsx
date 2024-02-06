@@ -7,6 +7,7 @@ import {
   ErdIcon,
   GraphQLIcon,
   InboxIcon,
+  InfoIcon,
   OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
@@ -109,6 +110,10 @@ export const NavigationMenu = () => {
     },
   ]
 
+  const studioNavigation: TNavigationItem[] = [
+    { name: 'Info', to: routes.info(), icon: InfoIcon },
+  ]
+
   return (
     <>
       <div className="flex h-16 shrink-0 items-center">
@@ -197,6 +202,18 @@ export const NavigationMenu = () => {
               </ul>
             </li>
           )}
+          <li>
+            <div className="text-xs font-semibold leading-6 text-gray-400">
+              Studio
+            </div>
+            <ul className="-mx-2 mt-2 space-y-1">
+              {studioNavigation.map((item) => (
+                <li key={item.name}>
+                  <NavigationItem item={item} />
+                </li>
+              ))}
+            </ul>
+          </li>
           <li className="mb-6 mt-auto">
             <div className="text-xs font-semibold leading-6 text-gray-400">
               Development Server
