@@ -44,8 +44,8 @@ If you do not see any traces or spans, check that your `redwood.toml` points to 
 
 ```
 [experimental.opentelemetry]
-	enabled = true
-	apiSdk = "/Users/dthyresson/Dropbox/Code/redwoodjs/studio/__fixtures__/test-project/api/dist/opentelemetry.js"
+  enabled = true
+  apiSdk = "/Users/dthyresson/Dropbox/Code/redwoodjs/studio/__fixtures__/test-project/api/dist/opentelemetry.js"
 ```
 
 ### Adding New Prisma Models and Views
@@ -77,8 +77,10 @@ Then ...
 
 ## Releasing
 
-`npm version [major|minor|patch]`
-`git push upstream --follow-tags`
-`yarn studio:package --release`
-`cd packaged`
-`npm publish`
+```
+npm version [major|minor|patch]
+git push upstream --follow-tags
+yarn studio:package --release
+cd packaged
+npm publish
+```
