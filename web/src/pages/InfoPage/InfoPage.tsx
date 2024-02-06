@@ -10,7 +10,7 @@ const InfoPage = () => {
         Info
       </h3>
       <p className="mt-2 text-tremor-default leading-6 text-tremor-content dark:text-dark-tremor-content">
-        Various Studio configuration information and settings.
+        Information about Studio
       </p>
       <InfoCell />
     </>
