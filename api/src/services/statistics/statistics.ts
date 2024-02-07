@@ -10,7 +10,7 @@ export const spanStatistics: QueryResolvers['spanStatistics'] = async ({
   typeId,
   attributeKey,
   attributeValue,
-  intervalMins = 5,
+  intervalMins = 1,
 }: {
   typeId: string
   attributeKey: string
