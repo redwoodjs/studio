@@ -15,7 +15,7 @@ import { GraphQLPerformanceIcon } from 'src/icons/Icons'
 export const beforeQuery = (props) => {
   return {
     variables: props,
-    pollInterval: 5000,
+    pollInterval: 2_000,
   }
 }
 

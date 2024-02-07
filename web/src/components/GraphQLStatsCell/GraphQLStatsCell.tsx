@@ -9,6 +9,13 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 import ChartHeading from 'src/components/Charts/ChartHeading'
 import { GraphQLIcon } from 'src/icons/Icons'
 
+export const beforeQuery = (props) => {
+  return {
+    variables: props,
+    pollInterval: 2_000,
+  }
+}
+
 export const QUERY = gql`
   query GraphQLDashboardStatsQuery {
     stats: graphQLOperationAttributeStatistics {

@@ -9,6 +9,13 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 import ChartHeading from 'src/components/Charts/ChartHeading'
 import { MonitoringIcon } from 'src/icons/Icons'
 
+export const beforeQuery = (props) => {
+  return {
+    variables: props,
+    pollInterval: 2_000,
+  }
+}
+
 export const QUERY = gql`
   query MonitoringStatsQuery @live {
     otelTraceCount
@@ -39,7 +46,7 @@ export const Success = ({
       name: 'Spans',
       value: otelSpanCount,
     },
-  ]
+  ].sort((a, b) => b.value - a.value)
 
   let avg = 0
 

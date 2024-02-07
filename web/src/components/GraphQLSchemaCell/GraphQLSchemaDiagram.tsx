@@ -162,7 +162,7 @@ const LayoutFlow = ({ schema }: { schema: GraphQLSchema }) => {
   return (
     <div className="h-[640px] w-full min-w-[320px]">
       <ReactFlow
-        className="bg-teal-50"
+        className="bg-zinc-50"
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}

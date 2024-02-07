@@ -9,6 +9,13 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 import ChartHeading from 'src/components/Charts/ChartHeading'
 import { EnvelopeIcon } from 'src/icons/Icons'
 
+export const beforeQuery = (props) => {
+  return {
+    variables: props,
+    pollInterval: 2_000,
+  }
+}
+
 export const QUERY = gql`
   query FindMailCountQuery @live {
     mailAPICount
@@ -41,7 +48,7 @@ export const Success = ({
       name: 'SMTP/Nodemailer',
       value: mailSMTPCount,
     },
-  ]
+  ].sort((a, b) => b.value - a.value)
 
   return (
     <>
