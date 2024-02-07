@@ -106,13 +106,19 @@ export const SpanMetadata = ({
       <ListItem>
         <span>Started At</span>
         <span>
-          {formatISO(toDate(parseInt(startTimeNano) / 1_000_000_000.0))}
+          {formatISO(toDate(parseInt(startTimeNano) / 1_000_000.0), {
+            format: 'extended',
+            representation: 'complete',
+          })}
         </span>
       </ListItem>
       <ListItem>
         <span>Ended At</span>
         <span>
-          {formatISO(toDate(parseInt(endTimeNano) / 1_000_000_000.0))}
+          {formatISO(toDate(parseInt(endTimeNano) / 1_000_000.0), {
+            format: 'extended',
+            representation: 'complete',
+          })}
         </span>
       </ListItem>
       <ListItem>
