@@ -3,11 +3,12 @@ import { Flex, Title } from '@tremor/react'
 import { NavLink, routes } from '@redwoodjs/router'
 
 import {
+  AboutIcon,
   DashboardIcon,
   ErdIcon,
   GraphQLIcon,
   InboxIcon,
-  InfoIcon,
+  SettingsIcon,
   OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
@@ -111,7 +112,8 @@ export const NavigationMenu = () => {
   ]
 
   const studioNavigation: TNavigationItem[] = [
-    { name: 'Info', to: routes.info(), icon: InfoIcon },
+    { name: 'Settings', to: routes.settings(), icon: SettingsIcon },
+    { name: 'About', to: routes.about(), icon: AboutIcon },
   ]
 
   return (
