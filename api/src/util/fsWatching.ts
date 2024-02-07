@@ -20,7 +20,7 @@ export async function startWatchers() {
     interval: 500,
   })
 
-  // TODO: We should batch up the changed files so we can make optimisations
+  // TODO: We should batch up the changed files so we can make optimizations
 
   const listenOnEventsForDist = ['ready', 'add', 'change']
   for (let i = 0; i < listenOnEventsForDist.length; i++) {
