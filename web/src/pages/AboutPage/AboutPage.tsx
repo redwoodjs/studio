@@ -19,42 +19,42 @@ const features = [
   {
     name: 'Dashboard',
     description:
-      'Your app at a glance. Measure Database, GraphQL, API and Network performance in real-time. Quickly see the most executed SQL and GraphQL Operations.',
+      'A quick overview of your app. Monitor Database, GraphQL, API, and Network performance in real-time. Instantly view the most executed SQL and GraphQL Operations.',
     to: routes.home(),
     icon: DashboardIcon,
   },
   {
     name: 'Monitoring',
     description:
-      'Studio is powered by OpenTelemetry sent by your Redwood app. See what traces and spans reveal about the health of your app. Find a problem? Rework and compare the difference to see the improvement.',
+      "Studio leverages OpenTelemetry data sent from your Redwood app. Observe what traces and spans indicate about your app's health. Found a problem? Make adjustments and then compare the difference to assess the improvement.",
     to: routes.opentelemetryTraces(),
     icon: MonitoringIcon,
   },
   {
     name: 'GraphQL',
     description:
-      'Visualize your GraphQL Schema. Measure GraphQL Operations and performance. Easily test out your GraphQL API in a fully-integrated GraphiQL Playground complete with authenticated User Impersonation.',
+      'Explore your GraphQL API with ease. Visualize your GraphQL Schema. Evaluate GraphQL Operations and performance. Test your GraphQL API effortlessly in a fully-integrated GraphiQL Playground. Supports authenticated User Impersonation.',
     to: routes.graphqlSchema(),
     icon: GraphQLIcon,
   },
   {
     name: 'Database',
     description:
-      'Visualize your Prisma database diagram. Explore your data model and relations, Measure SQL Statement performance in detail.',
+      'Enhance your understanding and usage of your Database and SQL. Visualize your Prisma database diagram. Explore your data model and its relations. Evaluate the performance of SQL statements in detail.',
     to: routes.databaseSchema(),
     icon: DatabasePerformanceIcon,
   },
   {
     name: 'Mailer',
     description:
-      'Intercept emails in development. See what emails are being sent and received. Test out your email templates.',
+      'Redwood Studio is closely integrated with Redwood Mailer. Intercept emails during development. Monitor the emails being sent and received. Test and preview your email templates.',
     to: routes.mailerInbox(),
     icon: MailerIcon,
   },
   {
     name: 'Search',
     description:
-      'Quickly search the RedwoodJS Community, Documentation, and more. Get help to build your app faster. Just Command-K and go!',
+      "We're always here to help. Quickly search the RedwoodJS Community, Documentation, and more. Get help to build your app faster. Just Command-K and go!",
     to: null,
     icon: SearchIcon,
   },
@@ -68,14 +68,14 @@ const features = [
   {
     name: 'Made with Redwood',
     description:
-      'Studio is built with RedwoodJS. It uses Realtime GraphQL to update data, cells for data fetching, routing for navigation, and more.',
+      'Studio is built with RedwoodJS. It uses Realtime GraphQL to update data, cells for data fetching, authentication, routing for navigation, and more.',
     to: null,
     icon: MadeWithRedwoodIcon,
   },
   {
     name: 'And more ...',
     description:
-      'We have lots of plans for the future. We are always adding new features and improvements. Check out our GitHub to see what we are working on.',
+      "We're super excited about the future versions of Studio. Based on your valuable feedback and needs, we're planning to refine and expand Studio's features even further.  Check out our GitHub to see what we are working on.",
     to: null,
     icon: MoreIcon,
   },
