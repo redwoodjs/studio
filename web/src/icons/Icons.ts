@@ -28,7 +28,7 @@ export {
   InboxIcon,
   EnvelopeIcon,
   EnvelopeIcon as MailerIcon,
-  InformationCircleIcon as InfoIcon,
+  InformationCircleIcon as AboutIcon,
   LinkIcon,
   ListBulletIcon as OperationsIcon,
   MagnifyingGlassCircleIcon as InspectorIcon,
@@ -42,6 +42,9 @@ export {
   VariableIcon,
   ViewColumnsIcon as PlaygroundIcon,
   XMarkIcon as CloseIcon,
+  MagnifyingGlassCircleIcon as SearchIcon,
+  HeartIcon as MadeWithRedwoodIcon,
+  RocketLaunchIcon as MoreIcon,
 } from '@heroicons/react/24/outline'
 
 export { DocumentDuplicateIcon as DocumentDuplicateSolidIcon } from '@heroicons/react/20/solid'

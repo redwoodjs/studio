@@ -229,7 +229,7 @@ const MailerInboxPage = () => {
                 </TabPanel>
                 <TabPanel>
                   <Text className="pt-4 text-center">
-                    Visualisation of API mail is not yet supported
+                    Visualization of API mail is not yet supported
                   </Text>
                 </TabPanel>
               </TabPanels>

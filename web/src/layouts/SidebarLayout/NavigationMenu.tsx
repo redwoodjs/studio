@@ -1,13 +1,14 @@
-import { Flex, Subtitle, Title } from '@tremor/react'
+import { Flex, Title } from '@tremor/react'
 
 import { NavLink, routes } from '@redwoodjs/router'
 
 import {
+  AboutIcon,
   DashboardIcon,
   ErdIcon,
   GraphQLIcon,
   InboxIcon,
-  InfoIcon,
+  SettingsIcon,
   OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
@@ -111,7 +112,8 @@ export const NavigationMenu = () => {
   ]
 
   const studioNavigation: TNavigationItem[] = [
-    { name: 'Info', to: routes.info(), icon: InfoIcon },
+    { name: 'Settings', to: routes.settings(), icon: SettingsIcon },
+    { name: 'About', to: routes.about(), icon: AboutIcon },
   ]
 
   return (
@@ -120,10 +122,6 @@ export const NavigationMenu = () => {
         <img className="h-8 w-auto" src="/mark.svg" alt="RedwoodJS" />
         <Flex flexDirection="col" justifyContent="start" alignItems="start">
           <Title className="pl-4">RedwoodJS Studio</Title>
-          {/* The version number is moved up and to the right on purpose */}
-          <Subtitle className="-mt-1 pl-6 text-sm">
-            {window.RW_STUDIO_VERSION}
-          </Subtitle>
         </Flex>
       </div>
       <nav className="flex flex-1 flex-col">

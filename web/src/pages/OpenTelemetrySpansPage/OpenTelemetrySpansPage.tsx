@@ -7,6 +7,8 @@ import {
   Flex,
   Button,
   Divider,
+  Select,
+  SelectItem,
   TextInput,
 } from '@tremor/react'
 import {
@@ -176,13 +178,16 @@ const OpenTelemetrySpansPage = () => {
                 setNameFilter(e.currentTarget.value)
               }}
             />
-            <TextInput
-              placeholder="Type"
-              value={typeFilter}
-              onChange={(e) => {
-                setTypeFilter(e.currentTarget.value)
-              }}
-            />
+
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectItem value="">ALL</SelectItem>
+              <SelectItem value="GRAPHQL">GRAPHQL</SelectItem>
+              <SelectItem value="SQL">SQL</SelectItem>
+              <SelectItem value="PRISMA">PRISMA</SelectItem>
+              <SelectItem value="REDWOOD FUNCTION">FUNCTION</SelectItem>
+              <SelectItem value="REDWOOD SERVICE">SERVICE</SelectItem>
+              <SelectItem value="GENERIC">GENERIC</SelectItem>
+            </Select>
           </Flex>
         </Card>
         {spans.length === 0 && (

@@ -10,7 +10,7 @@ export const spanStatistics: QueryResolvers['spanStatistics'] = async ({
   typeId,
   attributeKey,
   attributeValue,
-  intervalMins = 5,
+  intervalMins = 1,
 }: {
   typeId: string
   attributeKey: string
@@ -63,7 +63,7 @@ export const spanStatistics: QueryResolvers['spanStatistics'] = async ({
     ROUND(CAST((avgDuration / 1000000000.000) AS REAL), 3) AS avgDurationSec
   FROM
     t2
-  ORDER BY intervalStartedAt DESC`
+  ORDER BY statisticCount DESC, intervalStartedAt DESC`
 }
 
 export const sqlStatementStatistics: QueryResolvers['sqlStatementStatistics'] =
@@ -164,7 +164,7 @@ SELECT
 	ROUND(CAST((avgDuration / 1000000000.000) AS REAL), 3) AS avgDurationSec
 FROM
 	t2
-	order by 2, 1;`
+ORDER BY 1 DESC, 2 DESC;`
   }
 
 export const sqlStatementAttributeStatistics: QueryResolvers['sqlStatementAttributeStatistics'] =

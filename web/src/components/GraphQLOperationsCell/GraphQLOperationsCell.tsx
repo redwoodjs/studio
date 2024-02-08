@@ -22,7 +22,7 @@ import StatisticsIntervalTable from '../Statistics/StatisticsIntervalTable'
 export const beforeQuery = (props) => {
   return {
     variables: props,
-    pollInterval: 5000,
+    pollInterval: 2_000,
     fetchPolicy: 'cache-and-network',
   }
 }
@@ -38,7 +38,7 @@ export const QUERY = gql`
       attributeKey
       attributeValue
     }
-    statistics: graphQLOperationStatistics {
+    statistics: graphQLOperationStatistics(intervalMins: 1) {
       intervalStartedAt
       statisticCount
       minDuration
@@ -99,7 +99,7 @@ export const Success = ({
             <Col numColSpanSm={2} numColSpanLg={3}>
               <StatisticsIntervalChart
                 statistics={statistics}
-                interval={'5 Min'}
+                interval={'1 Min'}
               />
             </Col>
             <Col numColSpanSm={2} numColSpanLg={3}>
@@ -108,7 +108,7 @@ export const Success = ({
             <Col numColSpanSm={2} numColSpanLg={3}>
               <StatisticsIntervalTable
                 statistics={statistics}
-                interval={'5 Min'}
+                interval={'1 Min'}
               />
             </Col>
           </Grid>
