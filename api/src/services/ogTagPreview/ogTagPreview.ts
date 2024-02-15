@@ -16,9 +16,11 @@ export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
       },
     })
   ).text()
+
   const customResult = await ogs({
     html,
   })
+
   return {
     id: url,
     userAgent: customUserAgent,
