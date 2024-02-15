@@ -19,7 +19,7 @@ import {
   TruncateSpansMutationVariables,
 } from 'types/graphql'
 
-import { MetaTags, useMutation, useQuery } from '@redwoodjs/web'
+import { Metadata, useMutation, useQuery } from '@redwoodjs/web'
 
 import SpanListItem from 'src/components/SpanListItem/SpanListItem'
 import { SettingsIcon } from 'src/icons/Icons'
@@ -86,7 +86,7 @@ const OpenTelemetrySpansPage = () => {
 
   return (
     <>
-      <MetaTags
+      <Metadata
         title="OpenTelemetrySpans"
         description="OpenTelemetrySpans page"
       />

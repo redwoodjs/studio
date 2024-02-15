@@ -18,7 +18,7 @@ import {
   Callout,
 } from '@tremor/react'
 
-import { MetaTags } from '@redwoodjs/web'
+import { Metadata } from '@redwoodjs/web'
 
 import {
   CodeBracketIcon,
@@ -68,7 +68,7 @@ const OgTagPreviewPage = () => {
 
   return (
     <>
-      <MetaTags title="OgTagPreview" description="OgTagPreview page" />
+      <Metadata title="OgTagPreview" description="OgTagPreview page" />
 
       <Title>OG Tag Preview</Title>
       <Text>
