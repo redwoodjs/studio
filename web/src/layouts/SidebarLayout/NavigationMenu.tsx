@@ -1,6 +1,6 @@
 import { Flex, Title } from '@tremor/react'
 
-import { NavLink, routes } from '@redwoodjs/router'
+import { routes } from '@redwoodjs/router'
 
 import {
   AboutIcon,
@@ -9,7 +9,6 @@ import {
   GraphQLIcon,
   InboxIcon,
   SettingsIcon,
-  OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
   SpansIcon,
@@ -19,31 +18,10 @@ import {
 } from 'src/icons/Icons'
 
 import { ConnectionStatusIndicator } from './ConnectionStatusIndicator'
+import type { TNavigationItem } from './NavigationItem'
+import { NavigationItem } from './NavigationItem'
 import { OrbitSearch } from './OrbitSearch'
-
-type TNavigationItem = {
-  name: string
-  to: string
-  // https://www.totaltypescript.com/pass-component-as-prop-react
-  icon: React.ElementType<{ className: string }>
-}
-// v7 ships with SSR section disabled as Bighorn introduces the feature
-const includeSSR = false
-
-const NavigationItem = ({ item }: { item: TNavigationItem }) => {
-  return (
-    <div className="flex w-full">
-      <NavLink
-        to={item.to}
-        className="group flex grow gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-500 hover:bg-gray-50 hover:text-orange-500 dark:text-gray-600 dark:hover:bg-gray-950"
-        activeClassName="grow text-orange-500 dark:text-orange-500 bg-gray-50 dark:bg-gray-950 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-      >
-        <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
-        {item.name}
-      </NavLink>
-    </div>
-  )
-}
+import { SsrNavigationSubMenu } from './SsrNavigationSubMenu'
 
 export const NavigationMenu = () => {
   const navigation: TNavigationItem[] = [
@@ -100,14 +78,6 @@ export const NavigationMenu = () => {
       name: 'Templates',
       to: routes.mailerTemplatePreview(),
       icon: TemplatesIcon,
-    },
-  ]
-
-  const ssrNavigation: TNavigationItem[] = [
-    {
-      name: 'OG Tag Preview',
-      to: routes.ogTagPreview(),
-      icon: OGTagPreviewIcon,
     },
   ]
 
@@ -186,20 +156,7 @@ export const NavigationMenu = () => {
               ))}
             </ul>
           </li>
-          {includeSSR && (
-            <li>
-              <div className="text-xs font-semibold leading-6 text-gray-400">
-                SSR
-              </div>
-              <ul className="-mx-2 mt-2 space-y-1">
-                {ssrNavigation.map((item) => (
-                  <li key={item.name}>
-                    <NavigationItem item={item} />
-                  </li>
-                ))}
-              </ul>
-            </li>
-          )}
+          <SsrNavigationSubMenu />
           <li>
             <div className="text-xs font-semibold leading-6 text-gray-400">
               Studio

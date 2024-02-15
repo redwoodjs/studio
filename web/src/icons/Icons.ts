@@ -22,6 +22,7 @@ export {
   DocumentTextIcon,
   ExclamationTriangleIcon as ErrorIcon,
   EyeIcon,
+  EyeSlashIcon as HideIcon,
   GlobeAltIcon as NetworkPerformanceIcon,
   HomeIcon,
   InboxArrowDownIcon as TemplatesIcon,
