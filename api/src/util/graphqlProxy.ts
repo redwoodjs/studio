@@ -1,7 +1,11 @@
 import httpProxy from '@fastify/http-proxy'
 import type { FastifyInstance, HookHandlerDoneFunction } from 'fastify'
 
-import { getUserProjectConfig } from './project'
+import {
+  getUserProjectWebHost,
+  getUserProjectWebPort,
+  getUserProjectGraphQlEndpoint,
+} from './project'
 
 /**
  * Graphql Proxy - Takes studio "/proxies/graphql" and forwards to the projects
@@ -12,16 +16,22 @@ export async function graphqlProxy(
   _options: never,
   done: HookHandlerDoneFunction
 ) {
-  const webConfig = getUserProjectConfig().web
-  const graphqlEndpoint =
-    webConfig.apiGraphQLUrl ??
-    `http://${webConfig.host}:${webConfig.port}${webConfig.apiUrl}/graphql`
+  const webPort = getUserProjectWebPort()
+  const webHost = getUserProjectWebHost()
+  const graphqlEndpoint = getUserProjectGraphQlEndpoint()
+
+  const upstream = `http://${webHost}:${webPort}`
+  const rewritePrefix = '/' + graphqlEndpoint.split('/').slice(3).join('/')
+
+  console.log('upstream', upstream)
+  console.log('rewritePrefix', rewritePrefix)
+  console.log('graphqlEndpoint', graphqlEndpoint)
 
   fastify.register(httpProxy, {
-    upstream: `http://${webConfig.host}:${webConfig.port}`,
+    upstream,
     prefix: '/proxies/graphql',
     // Strip the initial scheme://host:port from the graphqlEndpoint
-    rewritePrefix: '/' + graphqlEndpoint.split('/').slice(3).join('/'),
+    rewritePrefix,
     disableCache: true,
   })
 

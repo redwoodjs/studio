@@ -5,19 +5,25 @@ import { getConfig, getConfigPath, getPaths } from '@redwoodjs/project-config'
 
 import { importFresh } from './import'
 
-// --- General wrappers around project config ---
-
-export function getStudioConfig() {
-  const configPath = getConfigPath(__dirname)
-  return getConfig(configPath)
+export const getFilesInDirectory = (dir: string) => {
+  const files: string[] = []
+  const dirFiles = fs.readdirSync(dir)
+  for (const file of dirFiles) {
+    if (fs.statSync(path.join(dir, file)).isDirectory()) {
+      files.push(...getFilesInDirectory(path.join(dir, file)))
+    } else {
+      files.push(path.join(dir, file))
+    }
+  }
+  return files
 }
 
-export function getStudioPaths() {
-  const configPath = getConfigPath(__dirname)
-  return getPaths(path.dirname(configPath))
-}
+// There are two types of projects: the Redwood project itself, and Studio
+// Sometimes we need the Studio configuration and other times we need the user's project configuration
 
-function getUserProjectConfigPath() {
+// User Project Config
+
+const getUserProjectConfigPath = () => {
   let projectPath = process.env.RW_STUDIO_USER_PROJECT_PATH || ''
 
   const isWinFullPath = /^[A-Z]:\//.test(projectPath)
@@ -34,25 +40,15 @@ function getUserProjectConfigPath() {
   return getConfigPath(projectPath || path.join(getStudioPaths().base, '..'))
 }
 
-export function getUserProjectConfig() {
+export const getUserProjectConfig = () => {
   return getConfig(getUserProjectConfigPath())
 }
 
-export function getUserProjectPaths() {
+export const getUserProjectPaths = () => {
   return getPaths(path.dirname(getUserProjectConfigPath()))
 }
 
-export function getStudioStatePath() {
-  const statePath = path.join(getUserProjectPaths().generated.base, 'studio')
-  if (!fs.existsSync(statePath)) {
-    fs.mkdirSync(statePath)
-  }
-  return statePath
-}
-
-// --- More specific targets ---
-
-export async function getUserProjectMailer(): Promise<unknown | null> {
+export const getUserProjectMailer = async (): Promise<unknown | null> => {
   const distMailerPath = path.join(
     getUserProjectPaths().api.dist,
     'lib',
@@ -64,15 +60,54 @@ export async function getUserProjectMailer(): Promise<unknown | null> {
   return (await importFresh(distMailerPath)).mailer
 }
 
-export function getFilesInDirectory(dir: string) {
-  const files: string[] = []
-  const dirFiles = fs.readdirSync(dir)
-  for (const file of dirFiles) {
-    if (fs.statSync(path.join(dir, file)).isDirectory()) {
-      files.push(...getFilesInDirectory(path.join(dir, file)))
-    } else {
-      files.push(path.join(dir, file))
-    }
+export const getUserProjectAPIHost = () => {
+  let host = process.env.REDWOOD_API_HOST
+  host ??= getUserProjectConfig().api.host
+  host ??= process.env.NODE_ENV === 'production' ? '0.0.0.0' : '[::]'
+  return host
+}
+
+export const getUserProjectApiPort = () => {
+  return getUserProjectConfig().api.port
+}
+
+export const getUserProjectWebHost = () => {
+  let host = getUserProjectConfig().web.host
+  host ??= process.env.NODE_ENV === 'production' ? '0.0.0.0' : '[::]'
+  return host
+}
+
+export const getUserProjectWebPort = () => {
+  return getUserProjectConfig().web.port
+}
+
+export const getUserProjectGraphQlEndpoint = () => {
+  const webConfig = getUserProjectConfig().web
+
+  return (
+    webConfig.apiGraphQLUrl ??
+    `http://${getUserProjectWebHost()}:${getUserProjectWebPort()}${
+      webConfig.apiUrl
+    }/graphql`
+  )
+}
+
+// Studio Config
+
+export const getStudioConfig = () => {
+  const configPath = getConfigPath(__dirname)
+  return getConfig(configPath)
+}
+
+export const getStudioPaths = () => {
+  const configPath = getConfigPath(__dirname)
+  return getPaths(path.dirname(configPath))
+}
+
+export const getStudioStatePath = () => {
+  const statePath = path.join(getUserProjectPaths().generated.base, 'studio')
+  if (!fs.existsSync(statePath)) {
+    fs.mkdirSync(statePath)
   }
-  return files
+  return statePath
 }
