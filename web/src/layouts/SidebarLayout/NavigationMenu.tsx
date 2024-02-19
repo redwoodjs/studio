@@ -12,7 +12,7 @@ import {
   OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
-  RedwoodLogoIcon,
+  StudioIcon,
   SpansIcon,
   SqlStatementsIcon,
   TemplatesIcon,
@@ -124,7 +124,7 @@ export const NavigationMenu = () => {
           variant="simple"
           tooltip="RedwoodJS Studio"
           size="md"
-          icon={RedwoodLogoIcon}
+          icon={StudioIcon}
           className="h-8 w-auto"
           aria-hidden="true"
         />
