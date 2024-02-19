@@ -51,3 +51,5 @@ export { DocumentDuplicateIcon as DocumentDuplicateSolidIcon } from '@heroicons/
 
 export { GraphQLIcon } from './GraphQLIcon'
 export { GraphQLIcon as GraphQLPerformanceIcon } from './GraphQLIcon'
+
+export { RedwoodLogoIcon } from './RedwoodLogoIcon'

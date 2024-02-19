@@ -1,4 +1,4 @@
-import { Flex, Title } from '@tremor/react'
+import { Flex, Icon, Title } from '@tremor/react'
 
 import { NavLink, routes } from '@redwoodjs/router'
 
@@ -12,6 +12,7 @@ import {
   OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
+  RedwoodLogoIcon,
   SpansIcon,
   SqlStatementsIcon,
   TemplatesIcon,
@@ -35,8 +36,8 @@ const NavigationItem = ({ item }: { item: TNavigationItem }) => {
     <div className="flex w-full">
       <NavLink
         to={item.to}
-        className="group flex grow gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-500 hover:bg-gray-50 hover:text-orange-500 dark:text-gray-600 dark:hover:bg-gray-950"
-        activeClassName="grow text-orange-500 dark:text-orange-500 bg-gray-50 dark:bg-gray-950 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+        className="dark:text-dark-tremor group flex grow gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-tremor-content hover:bg-gray-50 hover:text-tremor-brand dark:hover:bg-gray-950"
+        activeClassName="grow text-tremor-brand dark:text-dark-tremor-brand bg-gray-50 dark:bg-gray-950 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
       >
         <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
         {item.name}
@@ -119,9 +120,16 @@ export const NavigationMenu = () => {
   return (
     <>
       <div className="flex h-16 shrink-0 items-center">
-        <img className="h-8 w-auto" src="/mark.svg" alt="RedwoodJS" />
+        <Icon
+          variant="simple"
+          tooltip="RedwoodJS Studio"
+          size="md"
+          icon={RedwoodLogoIcon}
+          className="h-8 w-auto"
+          aria-hidden="true"
+        />
         <Flex flexDirection="col" justifyContent="start" alignItems="start">
-          <Title className="pl-4">RedwoodJS Studio</Title>
+          <Title className="pl-0">RedwoodJS Studio</Title>
         </Flex>
       </div>
       <nav className="flex flex-1 flex-col">
