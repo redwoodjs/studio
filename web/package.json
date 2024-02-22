@@ -18,9 +18,9 @@
     "@heroicons/react": "2.1.1",
     "@nivo/core": "^0.84.0",
     "@nivo/treemap": "^0.84.0",
-    "@redwoodjs/forms": "7.0.0-canary.989",
-    "@redwoodjs/router": "7.0.0-canary.989",
-    "@redwoodjs/web": "7.0.0-canary.989",
+    "@redwoodjs/forms": "8.0.0-canary.150",
+    "@redwoodjs/router": "8.0.0-canary.150",
+    "@redwoodjs/web": "8.0.0-canary.150",
     "@tremor/react": "3.13.2",
     "buffer": "6.0.3",
     "date-fns": "^3.3.1",
@@ -33,7 +33,7 @@
     "use-url-search-params": "2.5.1"
   },
   "devDependencies": {
-    "@redwoodjs/vite": "7.0.0-canary.989",
+    "@redwoodjs/vite": "8.0.0-canary.150",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "autoprefixer": "10.4.15",

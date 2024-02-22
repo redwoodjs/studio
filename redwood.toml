@@ -20,7 +20,7 @@
 [browser]
   open = true
 [notifications]
-  versionUpdates = ["canary"]
+  versionUpdates = ["latest"]
 [generate]
   tests = false
   stories = false

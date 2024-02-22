@@ -10,6 +10,7 @@ const BlogPostPage = ({ id }: BlogPostPageProps) => {
   return (
     <>
       <Metadata title={`Post ${id}`} description={`Description ${id}`} />
+
       <BlogPostCell id={id} />
     </>
   )
