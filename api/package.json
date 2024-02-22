@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/parser": "7.22.16",
-    "@babel/traverse": "7.22.17",
+    "@babel/traverse": "7.23.9",
     "@babel/types": "7.22.17",
     "@graphql-inspector/core": "5.0.1",
     "@prisma/internals": "5.2.0",
