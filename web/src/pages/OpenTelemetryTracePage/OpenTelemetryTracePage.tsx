@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { MetaTags } from '@redwoodjs/web'
+import { Metadata } from '@redwoodjs/web'
 
 import TraceCell from 'src/components/TraceCell'
 import {
@@ -16,7 +16,7 @@ const OpenTelemetryTracePage = ({ id }: { id: string }) => {
 
   return (
     <>
-      <MetaTags
+      <Metadata
         title="OpenTelemetryTrace"
         description="OpenTelemetryTrace page"
       />
