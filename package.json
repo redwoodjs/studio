@@ -8,8 +8,8 @@
     ]
   },
   "devDependencies": {
-    "@redwoodjs/cli-storybook": "7.0.2",
-    "@redwoodjs/core": "7.0.2",
+    "@redwoodjs/cli-storybook": "8.0.0-canary.150",
+    "@redwoodjs/core": "8.0.0-canary.150",
     "chalk": "4.1.2",
     "execa": "5.1.1",
     "fs-extra": "11.1.1",
