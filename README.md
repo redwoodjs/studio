@@ -2,7 +2,7 @@
 
 ## Contributing
 
-### Local dev
+### Local dev (Experimental)
 1. (Should only have to do this once)
   `cd __fixtures__/test-project && touch yarn.lock && yarn`
 2. Make your changes to the source code.
@@ -16,7 +16,7 @@
 ### Test packaged version
 1. Make your changes to the source code.
 2. Run `yarn studio:package` - this will rebuild the project and package it locally.
-3. (Re-)start Studio by running `yarn studio:start` from within the
+3. (Re-)start Studio by running `yarn rw studio` from within the
   `__fixtures__/test-project` directory.
 4. Run the Test Project that send in to Studio using `yarn rw dev` inside
   `__fixtures__/test-project`
@@ -31,7 +31,7 @@ If you have to generate migrations because you have altered the database schema 
 If you want to try out any Studio GraphQL queries, you may access the Studio GraphQL Playground at:
 
 `http://localhost:4318/.redwood/functions/graphql`
-
+p
 If you want to make ad hoc queries against the SQLite database, you can find it in `.redwood/studio/prisma.sqlite` in the project that sends data to Studio
 
 ### Troubleshooting
