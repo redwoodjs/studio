@@ -22,16 +22,13 @@ export const studioConfig = async (): Promise<Query['studioConfig']> => {
   }
 }
 
-export const userProjectConfig = async (): Promise<
-  Query['userProjectConfig']
-> => {
-  const config = await getUserProjectConfig()
+export const userProjectConfig = (): Promise<Query['userProjectConfig']> => {
+  const config = getUserProjectConfig()
   const status = config.experimental?.streamingSsr?.enabled
   const message = status ? 'SSR is enabled' : 'SSR is not enabled'
 
-  // TODO:  initially ssr will be behind a feature flag
-  // that’s on by default in our new (yet to be created)
-  // Bighorn template
+  // TODO: initially SSR will be behind a feature flag that’s on by default in
+  // our new (yet to be created) Bighorn template
   return {
     id: 'up',
     ssr: { id: 'ssr', enabled: { status, message } },

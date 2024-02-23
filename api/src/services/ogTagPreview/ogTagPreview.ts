@@ -1,4 +1,4 @@
-import ogs from 'open-graph-scraper'
+import openGraphScraper from 'open-graph-scraper'
 import type { QueryResolvers } from 'types/graphql'
 
 import { getUserProjectConfig } from 'src/util/project'
@@ -25,17 +25,15 @@ export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
     }
   }
 
-  const html = await (
-    await fetch(url, {
-      headers: {
-        'User-Agent': customUserAgent,
-      },
-    })
-  ).text()
-
-  const customResult = await ogs({
-    html,
+  const res = await fetch(url, {
+    headers: {
+      'User-Agent': customUserAgent,
+    },
   })
+
+  const html = await res.text()
+
+  const customResult = await openGraphScraper({ html })
 
   return {
     id: url,

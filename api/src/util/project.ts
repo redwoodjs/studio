@@ -5,7 +5,7 @@ import { getConfig, getConfigPath, getPaths } from '@redwoodjs/project-config'
 
 import { importFresh } from './import'
 
-export const getFilesInDirectory = (dir: string) => {
+export function getFilesInDirectory(dir: string) {
   const files: string[] = []
   const dirFiles = fs.readdirSync(dir)
   for (const file of dirFiles) {
@@ -19,11 +19,10 @@ export const getFilesInDirectory = (dir: string) => {
 }
 
 // There are two types of projects: the Redwood project itself, and Studio
-// Sometimes we need the Studio configuration and other times we need the user's project configuration
+// Sometimes we need the Studio configuration and other times we need the
+// user's project configuration
 
-// User Project Config
-
-const getUserProjectConfigPath = () => {
+function getUserProjectConfigPath() {
   let projectPath = process.env.RW_STUDIO_USER_PROJECT_PATH || ''
 
   const isWinFullPath = /^[A-Z]:\//.test(projectPath)
@@ -40,15 +39,15 @@ const getUserProjectConfigPath = () => {
   return getConfigPath(projectPath || path.join(getStudioPaths().base, '..'))
 }
 
-export const getUserProjectConfig = () => {
+export function getUserProjectConfig() {
   return getConfig(getUserProjectConfigPath())
 }
 
-export const getUserProjectPaths = () => {
+export function getUserProjectPaths() {
   return getPaths(path.dirname(getUserProjectConfigPath()))
 }
 
-export const getUserProjectMailer = async (): Promise<unknown | null> => {
+export async function getUserProjectMailer(): Promise<unknown | null> {
   const distMailerPath = path.join(
     getUserProjectPaths().api.dist,
     'lib',
@@ -60,28 +59,28 @@ export const getUserProjectMailer = async (): Promise<unknown | null> => {
   return (await importFresh(distMailerPath)).mailer
 }
 
-export const getUserProjectAPIHost = () => {
+export function getUserProjectAPIHost() {
   let host = process.env.REDWOOD_API_HOST
   host ??= getUserProjectConfig().api.host
   host ??= process.env.NODE_ENV === 'production' ? '0.0.0.0' : '[::]'
   return host
 }
 
-export const getUserProjectApiPort = () => {
+export function getUserProjectApiPort() {
   return getUserProjectConfig().api.port
 }
 
-export const getUserProjectWebHost = () => {
+export function getUserProjectWebHost() {
   let host = getUserProjectConfig().web.host
   host ??= process.env.NODE_ENV === 'production' ? '0.0.0.0' : '[::]'
   return host
 }
 
-export const getUserProjectWebPort = () => {
+export function getUserProjectWebPort() {
   return getUserProjectConfig().web.port
 }
 
-export const getUserProjectGraphQlEndpoint = () => {
+export function getUserProjectGraphQlEndpoint() {
   const webConfig = getUserProjectConfig().web
 
   return (
@@ -92,22 +91,22 @@ export const getUserProjectGraphQlEndpoint = () => {
   )
 }
 
-// Studio Config
-
-export const getStudioConfig = () => {
+export function getStudioConfig() {
   const configPath = getConfigPath(__dirname)
   return getConfig(configPath)
 }
 
-export const getStudioPaths = () => {
+export function getStudioPaths() {
   const configPath = getConfigPath(__dirname)
   return getPaths(path.dirname(configPath))
 }
 
-export const getStudioStatePath = () => {
+export function getStudioStatePath() {
   const statePath = path.join(getUserProjectPaths().generated.base, 'studio')
+
   if (!fs.existsSync(statePath)) {
     fs.mkdirSync(statePath)
   }
+
   return statePath
 }

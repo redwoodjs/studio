@@ -23,10 +23,6 @@ export async function graphqlProxy(
   const upstream = `http://${webHost}:${webPort}`
   const rewritePrefix = '/' + graphqlEndpoint.split('/').slice(3).join('/')
 
-  console.log('upstream', upstream)
-  console.log('rewritePrefix', rewritePrefix)
-  console.log('graphqlEndpoint', graphqlEndpoint)
-
   fastify.register(httpProxy, {
     upstream,
     prefix: '/proxies/graphql',
