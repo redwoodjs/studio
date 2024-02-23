@@ -20,6 +20,12 @@ import {
 
 import { Metadata } from '@redwoodjs/web'
 
+import { DiscordPreviewer } from 'src/components/OGTagPreviewers/DiscordPreviewer'
+import { FacebookPreviewer } from 'src/components/OGTagPreviewers/FacebookPreviewer'
+import { LinkedInPreviewer } from 'src/components/OGTagPreviewers/LinkedInPreviewer'
+import { OGPreviewer } from 'src/components/OGTagPreviewers/OGPreviewer'
+import { SlackPreviewer } from 'src/components/OGTagPreviewers/SlackPreviewer'
+import { TwitterCardPreviewer } from 'src/components/OGTagPreviewers/TwitterCardPreviewer'
 import {
   CodeBracketIcon,
   ErrorIcon,
@@ -65,6 +71,15 @@ const OgTagPreviewPage = () => {
       variables: { url, customUserAgent },
     })
   }
+
+  const previewers = [
+    { component: OGPreviewer, title: 'Generic' },
+    { component: TwitterCardPreviewer, title: 'Twitter Card' },
+    { component: FacebookPreviewer, title: 'Facebook' },
+    { component: LinkedInPreviewer, title: 'LinkedIn' },
+    { component: DiscordPreviewer, title: 'Discord' },
+    { component: SlackPreviewer, title: 'Slack' },
+  ]
 
   return (
     <>
@@ -162,11 +177,27 @@ const OgTagPreviewPage = () => {
                     </div>
                   </TabPanel>
                   <TabPanel>
-                    <Flex flexDirection="col">
-                      <div className="pt-4">
-                        <Text>Not yet implemented...</Text>
-                      </div>
-                    </Flex>
+                    <Grid
+                      numItems={2}
+                      numItemsLg={3}
+                      numItemsMd={2}
+                      className="gap-4 p-4"
+                    >
+                      {previewers.map((previewer) => {
+                        return (
+                          <div key={previewer.title}>
+                            <h2 className="border-b-1 mb-4 border-tremor-brand font-normal text-tremor-content">
+                              {previewer.title}
+                            </h2>
+                            <previewer.component
+                              ogPreviewData={
+                                ogTagPreviewQuery.data?.ogTagPreview.result
+                              }
+                            />
+                          </div>
+                        )
+                      })}
+                    </Grid>
                   </TabPanel>
                 </TabPanels>
               </TabGroup>
