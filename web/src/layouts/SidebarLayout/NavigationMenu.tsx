@@ -9,6 +9,7 @@ import {
   GraphQLIcon,
   InboxIcon,
   SettingsIcon,
+  OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
   SpansIcon,
@@ -21,7 +22,6 @@ import { ConnectionStatusIndicator } from './ConnectionStatusIndicator'
 import type { TNavigationItem } from './NavigationItem'
 import { NavigationItem } from './NavigationItem'
 import { OrbitSearch } from './OrbitSearch'
-import { SsrNavigationSubMenu } from './SsrNavigationSubMenu'
 
 export const NavigationMenu = () => {
   const navigation: TNavigationItem[] = [
@@ -78,6 +78,14 @@ export const NavigationMenu = () => {
       name: 'Templates',
       to: routes.mailerTemplatePreview(),
       icon: TemplatesIcon,
+    },
+  ]
+
+  const ssrNavigation: TNavigationItem[] = [
+    {
+      name: 'OG Tag Preview',
+      to: routes.ogTagPreview(),
+      icon: OGTagPreviewIcon,
     },
   ]
 
@@ -156,7 +164,18 @@ export const NavigationMenu = () => {
               ))}
             </ul>
           </li>
-          <SsrNavigationSubMenu />
+          <li>
+            <div className="text-xs font-semibold leading-6 text-gray-400">
+              SSR
+            </div>
+            <ul className="-mx-2 mt-2 space-y-1">
+              {ssrNavigation.map((item) => (
+                <li key={item.name}>
+                  <NavigationItem item={item} />
+                </li>
+              ))}
+            </ul>
+          </li>
           <li>
             <div className="text-xs font-semibold leading-6 text-gray-400">
               Studio
