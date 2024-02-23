@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useLazyQuery } from '@apollo/client'
 import {
   Title,
+  Subtitle,
   Grid,
   Col,
   Card,
@@ -177,6 +178,11 @@ const OgTagPreviewPage = () => {
                     </div>
                   </TabPanel>
                   <TabPanel>
+                    <Subtitle>
+                      See how your website will look on social media platforms.
+                      This live preview ensures your metadata aligns with your
+                      content and branding.
+                    </Subtitle>
                     <Grid
                       numItems={2}
                       numItemsLg={3}
