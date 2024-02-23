@@ -4,7 +4,7 @@ import path from 'node:path'
 import chalk from 'chalk'
 import { config } from 'dotenv-defaults'
 import execa from 'execa'
-import { FastifyInstance } from 'fastify'
+import type { FastifyInstance } from 'fastify'
 import open from 'open'
 import { SMTPServer } from 'smtp-server'
 
