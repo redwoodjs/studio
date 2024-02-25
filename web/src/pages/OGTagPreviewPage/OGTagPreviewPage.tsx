@@ -43,6 +43,10 @@ const OG_TAG_PREVIEW_QUERY = gql`
       userAgent
       error
       result
+      audit {
+        severity
+        messages
+      }
     }
   }
 `
@@ -199,6 +203,7 @@ const OgTagPreviewPage = () => {
                               ogPreviewData={
                                 ogTagPreviewQuery.data?.ogTagPreview.result
                               }
+                              audit={ogTagPreviewQuery.data?.ogTagPreview.audit}
                             />
                           </div>
                         )

@@ -1,12 +1,9 @@
 import React from 'react'
 
-import { OGTagPreview } from '../../../types/graphql'
+import { Previewer } from './Previewer'
+import type { PreviewerProps } from './Previewer'
 
-type Props = {
-  ogPreviewData: OGTagPreview['result']
-}
-
-export const TwitterCardPreviewer = (props: Props) => {
+export const TwitterCardPreviewer = (props: PreviewerProps) => {
   const data = {
     ogTitle: 'RedwoodJS: The App Framework for Startups',
     twitterTitle: 'RedwoodJS: The App Framework for Startups',
@@ -42,15 +39,17 @@ export const TwitterCardPreviewer = (props: Props) => {
 
   const { twitterTitle, twitterImage, ogUrl } = props.ogPreviewData
   return (
-    <div className="cursor:pointer border-1 relative isolate h-44 w-96 overflow-hidden rounded-lg border-gray-100 bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
-      <img
-        src={twitterImage[0].url}
-        alt={twitterTitle}
-        className="absolute inset-0 -z-10 h-full w-full object-cover"
-      />
-      <div className="border-1 absolute bottom-1 left-1 rounded-md border-black bg-black p-1 text-xs text-white">
-        {ogUrl}
+    <Previewer audit={props.audit}>
+      <div className="cursor:pointer border-1 relative isolate h-44 w-96 overflow-hidden rounded-lg border-gray-100 bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
+        <img
+          src={twitterImage[0].url}
+          alt={twitterTitle}
+          className="absolute inset-0 -z-10 h-full w-full object-cover"
+        />
+        <div className="border-1 absolute bottom-1 left-1 rounded-md border-black bg-black p-1 text-xs text-white">
+          {ogUrl}
+        </div>
       </div>
-    </div>
+    </Previewer>
   )
 }

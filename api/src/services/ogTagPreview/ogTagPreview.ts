@@ -24,5 +24,6 @@ export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
     userAgent: customUserAgent,
     error: customResult.error,
     result: customResult.result,
+    audit: { severity: 'WARNING', messages: ['Missing site'] },
   }
 }
