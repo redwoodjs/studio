@@ -4,7 +4,6 @@ import path from 'node:path'
 import chalk from 'chalk'
 import { config } from 'dotenv-defaults'
 import execa from 'execa'
-import type { FastifyInstance } from 'fastify'
 import open from 'open'
 import { SMTPServer } from 'smtp-server'
 
@@ -87,9 +86,9 @@ export async function serve(
   // arguments it doesn't recognize. We're calling it programmatically, so
   // don't want to forward any cli args to it
   process.argv = []
-  const server = (await createServer({
+  const server = await createServer({
     apiRootPath,
-  })) as unknown as FastifyInstance
+  })
 
   if (enableWeb) {
     await server.register(redwoodFastifyWeb)
