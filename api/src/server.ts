@@ -12,10 +12,7 @@ import { coerceRootPath, redwoodFastifyWeb } from '@redwoodjs/fastify-web'
 
 import { logger } from 'src/lib/logger'
 
-import { startConnectionWatching } from './util/connectionWatching'
-import { startWatchers } from './util/fsWatching'
 import { graphqlProxy } from './util/graphqlProxy'
-import { handleMail } from './util/mail'
 import {
   getStudioConfig,
   getStudioStatePath,
@@ -47,12 +44,17 @@ export async function serve(
     path.join(studioStateDirectory, 'prisma.sqlite')
   )}?connection_limit=1`
 
-  // Execute prisma migrate
-  // 'rw build' should have generated the prisma client already
   const prismaSchemaPath = path
     .join(__dirname, '../db/schema.prisma')
     .replaceAll(' ', '\\ ')
 
+  // Generate the Prisma client, this is done at runtime as it is platform/architecture specific
+  logger.info('Generating Prisma client')
+  await execa.command(`npx prisma generate --schema ${prismaSchemaPath}`, {
+    stdio: 'inherit',
+  })
+
+  // Execute prisma migrate
   logger.info('Migrating local Prisma database')
   await execa.command(
     `npx prisma migrate deploy --schema ${prismaSchemaPath}`,
@@ -101,12 +103,17 @@ export async function serve(
   await server.register(graphqlProxy)
 
   // Start filesystem watchers
+  const { startWatchers } = await import('./util/fsWatching.js')
   await startWatchers()
 
   // Start connection watchers
+  const { startConnectionWatching } = await import(
+    './util/connectionWatching.js'
+  )
   startConnectionWatching()
 
   // Start the mail server
+  const { handleMail } = await import('./util/mail.js')
   const smtpServer = new SMTPServer({
     banner: 'RedwoodJS Studio SMTP Server',
     authOptional: true,
