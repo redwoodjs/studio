@@ -49,20 +49,24 @@ export async function serve(
 
   // Execute prisma migrate
   // 'rw build' should have generated the prisma client already
+  const prismaSchemaPath = path
+    .join(__dirname, '../db/schema.prisma')
+    .replaceAll(' ', '\\ ')
+
   logger.info('Migrating local Prisma database')
   await execa.command(
-    `npx prisma migrate deploy --schema ${path.join(
-      __dirname,
-      '../db/schema.prisma'
-    )}`,
+    `npx prisma migrate deploy --schema ${prismaSchemaPath}`,
     {
       stdio: 'inherit',
     }
   )
 
   // Execute the prisma seed
+  const prismaSeedPath = path
+    .join(__dirname, 'lib', 'seed.js')
+    .replaceAll(' ', '\\ ')
   logger.info('Running any seeding of the Prisma database')
-  await execa.command(`node ${path.join(__dirname, 'lib', 'seed.js')}`, {
+  await execa.command(`node ${prismaSeedPath}`, {
     stdio: 'inherit',
   })
 
