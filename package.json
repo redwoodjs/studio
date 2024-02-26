@@ -27,7 +27,7 @@
   "prisma": {
     "seed": "yarn rw exec seed"
   },
-  "packageManager": "yarn@4.0.2",
+  "packageManager": "yarn@4.1.0",
   "scripts": {
     "studio:migrate": "node ./tasks/migrate.mjs",
     "studio:package": "node ./tasks/package.mjs",
