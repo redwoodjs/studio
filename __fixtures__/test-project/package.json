@@ -24,9 +24,6 @@
   "resolutions": {
     "@redwoodjs/studio": "./../../packaged.tgz"
   },
-  "scripts": {
-    "studio:start": "yarn rw-studio | yarn rw-log-formatter"
-  },
   "dependencies": {
     "@redwoodjs/realtime": "8.0.0-canary.160"
   }
