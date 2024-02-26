@@ -12,16 +12,16 @@
   },
   "dependencies": {
     "@apollo/experimental-nextjs-app-support": "0.0.0-commit-b8a73fe",
-    "@redwoodjs/auth-dbauth-web": "8.0.0-canary.150",
-    "@redwoodjs/forms": "8.0.0-canary.150",
-    "@redwoodjs/router": "8.0.0-canary.150",
-    "@redwoodjs/web": "8.0.0-canary.150",
+    "@redwoodjs/auth-dbauth-web": "8.0.0-canary.160",
+    "@redwoodjs/forms": "8.0.0-canary.160",
+    "@redwoodjs/router": "8.0.0-canary.160",
+    "@redwoodjs/web": "8.0.0-canary.160",
     "humanize-string": "2.1.0",
     "react": "0.0.0-experimental-e5205658f-20230913",
     "react-dom": "0.0.0-experimental-e5205658f-20230913"
   },
   "devDependencies": {
-    "@redwoodjs/vite": "8.0.0-canary.150",
+    "@redwoodjs/vite": "8.0.0-canary.160",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "autoprefixer": "^10.4.16",

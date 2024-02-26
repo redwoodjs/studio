@@ -13,17 +13,17 @@
     "@opentelemetry/semantic-conventions": "^1.17.1",
     "@prisma/instrumentation": "^5.4.2",
     "@react-email/components": "^0.0.12",
-    "@redwoodjs/api": "8.0.0-canary.150",
-    "@redwoodjs/auth-dbauth-api": "8.0.0-canary.150",
-    "@redwoodjs/auth-netlify-api": "8.0.0-canary.150",
-    "@redwoodjs/auth-supabase-api": "8.0.0-canary.150",
-    "@redwoodjs/graphql-server": "8.0.0-canary.150",
-    "@redwoodjs/mailer-core": "8.0.0-canary.150",
-    "@redwoodjs/mailer-handler-nodemailer": "8.0.0-canary.150",
-    "@redwoodjs/mailer-renderer-react-email": "8.0.0-canary.150"
+    "@redwoodjs/api": "8.0.0-canary.160",
+    "@redwoodjs/auth-dbauth-api": "8.0.0-canary.160",
+    "@redwoodjs/auth-netlify-api": "8.0.0-canary.160",
+    "@redwoodjs/auth-supabase-api": "8.0.0-canary.160",
+    "@redwoodjs/graphql-server": "8.0.0-canary.160",
+    "@redwoodjs/mailer-core": "8.0.0-canary.160",
+    "@redwoodjs/mailer-handler-nodemailer": "8.0.0-canary.160",
+    "@redwoodjs/mailer-renderer-react-email": "8.0.0-canary.160"
   },
   "devDependencies": {
-    "@redwoodjs/mailer-handler-in-memory": "8.0.0-canary.150",
-    "@redwoodjs/mailer-handler-studio": "8.0.0-canary.150"
+    "@redwoodjs/mailer-handler-in-memory": "8.0.0-canary.160",
+    "@redwoodjs/mailer-handler-studio": "8.0.0-canary.160"
   }
 }

@@ -7,7 +7,7 @@
     ]
   },
   "devDependencies": {
-    "@redwoodjs/core": "8.0.0-canary.150",
+    "@redwoodjs/core": "8.0.0-canary.160",
     "@redwoodjs/studio": "11"
   },
   "eslintConfig": {
@@ -20,11 +20,11 @@
   "prisma": {
     "seed": "yarn rw exec seed"
   },
-  "packageManager": "yarn@4.0.2",
+  "packageManager": "yarn@4.1.0",
   "resolutions": {
     "@redwoodjs/studio": "./../../packaged.tgz"
   },
   "dependencies": {
-    "@redwoodjs/realtime": "8.0.0-canary.150"
+    "@redwoodjs/realtime": "8.0.0-canary.160"
   }
 }
