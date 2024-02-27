@@ -21,12 +21,7 @@ import {
 
 import { Metadata } from '@redwoodjs/web'
 
-import { DiscordPreviewer } from 'src/components/OGTagPreviewers/DiscordPreviewer'
-import { FacebookPreviewer } from 'src/components/OGTagPreviewers/FacebookPreviewer'
-import { LinkedInPreviewer } from 'src/components/OGTagPreviewers/LinkedInPreviewer'
-import { OGPreviewer } from 'src/components/OGTagPreviewers/OGPreviewer'
-import { SlackPreviewer } from 'src/components/OGTagPreviewers/SlackPreviewer'
-import { TwitterCardPreviewer } from 'src/components/OGTagPreviewers/TwitterCardPreviewer'
+import { Previewer } from 'src/components/OGTagPreviewers/Previewer'
 import {
   CodeBracketIcon,
   ErrorIcon,
@@ -43,9 +38,12 @@ const OG_TAG_PREVIEW_QUERY = gql`
       userAgent
       error
       result
-      audit {
-        severity
-        messages
+      audits {
+        provider
+        audit {
+          severity
+          messages
+        }
       }
     }
   }
@@ -76,15 +74,6 @@ const OgTagPreviewPage = () => {
       variables: { url, customUserAgent },
     })
   }
-
-  const previewers = [
-    { component: OGPreviewer, title: 'Generic' },
-    { component: TwitterCardPreviewer, title: 'Twitter Card' },
-    { component: FacebookPreviewer, title: 'Facebook' },
-    { component: LinkedInPreviewer, title: 'LinkedIn' },
-    { component: DiscordPreviewer, title: 'Discord' },
-    { component: SlackPreviewer, title: 'Slack' },
-  ]
 
   return (
     <>
@@ -146,7 +135,7 @@ const OgTagPreviewPage = () => {
         {/* OG tag results */}
         {ogTagPreviewQuery.loading ? (
           <Col numColSpanLg={3}>
-            <Card className="h-full p-6">Loading...</Card>
+            <Card className="h-full p-6 text-tremor-brand">Loading...</Card>
           </Col>
         ) : ogTagPreviewQuery.error ? (
           <Col numColSpanLg={3}>
@@ -193,21 +182,23 @@ const OgTagPreviewPage = () => {
                       numItemsMd={2}
                       className="gap-4 p-4"
                     >
-                      {previewers.map((previewer) => {
-                        return (
-                          <div key={previewer.title}>
-                            <h2 className="border-b-1 mb-4 border-tremor-brand font-normal text-tremor-content">
-                              {previewer.title}
-                            </h2>
-                            <previewer.component
-                              ogPreviewData={
-                                ogTagPreviewQuery.data?.ogTagPreview.result
-                              }
-                              audit={ogTagPreviewQuery.data?.ogTagPreview.audit}
-                            />
-                          </div>
-                        )
-                      })}
+                      {ogTagPreviewQuery.data?.ogTagPreview.audits.map(
+                        (providerAudit) => {
+                          return (
+                            <div key="1">
+                              <h2 className="border-b-1 mb-4 border-tremor-brand font-normal text-tremor-content">
+                                {providerAudit.provider} Preview
+                              </h2>
+                              <Previewer
+                                result={
+                                  ogTagPreviewQuery.data?.ogTagPreview.result
+                                }
+                                providerAudit={providerAudit}
+                              />
+                            </div>
+                          )
+                        }
+                      )}
                     </Grid>
                   </TabPanel>
                 </TabPanels>

@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { Previewer } from './Previewer'
 import type { PreviewerProps } from './Previewer'
 
 export const LinkedInPreviewer = (props: PreviewerProps) => {
@@ -35,21 +34,19 @@ export const LinkedInPreviewer = (props: PreviewerProps) => {
     //   'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36',
   }
 
-  props.ogPreviewData = data
+  props.result = data
 
-  const { twitterTitle, twitterImage, ogUrl } = props.ogPreviewData
+  const { twitterTitle, twitterImage, ogUrl } = props.result
   return (
-    <Previewer audit={props.audit}>
-      <div className="cursor:pointer border-1 relative isolate h-44 w-96 overflow-hidden rounded-lg border-gray-100 bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
-        <img
-          src={twitterImage[0].url}
-          alt={twitterTitle}
-          className="absolute inset-0 -z-10 h-full w-full object-cover"
-        />
-        <div className="border-1 absolute bottom-1 left-1 rounded-md border-black bg-black p-1 text-xs text-white">
-          {ogUrl}
-        </div>
+    <div className="cursor:pointer border-1 relative isolate h-44 w-96 overflow-hidden rounded-lg border-gray-100 bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
+      <img
+        src={twitterImage[0].url}
+        alt={twitterTitle}
+        className="absolute inset-0 -z-10 h-full w-full object-cover"
+      />
+      <div className="border-1 absolute bottom-1 left-1 rounded-md border-black bg-black p-1 text-xs text-white">
+        {ogUrl}
       </div>
-    </Previewer>
+    </div>
   )
 }

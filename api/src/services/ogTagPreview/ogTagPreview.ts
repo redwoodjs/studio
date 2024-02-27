@@ -1,6 +1,8 @@
 import ogs from 'open-graph-scraper'
 import type { QueryResolvers } from 'types/graphql'
 
+import { auditor } from 'src/lib/og'
+
 export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
   url,
   customUserAgent,
@@ -16,14 +18,20 @@ export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
       },
     })
   ).text()
+
   const customResult = await ogs({
     html,
   })
+
+  const { result, error } = customResult
+
+  const audits = auditor(result, error)
+
   return {
     id: url,
     userAgent: customUserAgent,
-    error: customResult.error,
-    result: customResult.result,
-    audit: { severity: 'WARNING', messages: ['Missing site'] },
+    error,
+    result,
+    audits,
   }
 }

@@ -5,6 +5,20 @@ export const schema = gql`
     OK
   }
 
+  enum OGPreviewProvider {
+    GENERIC
+    FACEBOOK
+    TWITTER
+    LINKEDIN
+    DISCORD
+    SLACK
+  }
+
+  type OGTagPreviewProviderAudit {
+    provider: OGPreviewProvider!
+    audit: OGTagPreviewAudit!
+  }
+
   type OGTagPreviewAudit {
     messages: [String]!
     severity: OGPreviewSeverity!
@@ -15,7 +29,7 @@ export const schema = gql`
     userAgent: String!
     error: Boolean!
     result: JSON
-    audit: OGTagPreviewAudit!
+    audits: [OGTagPreviewProviderAudit!]
   }
 
   type Query {
