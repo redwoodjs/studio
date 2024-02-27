@@ -24,7 +24,7 @@ export const schema = gql`
     severity: OGPreviewSeverity!
   }
 
-  type OGTagPreviewData {
+  type OGTagPreviewResponse {
     id: ID!
     userAgent: String!
     error: Boolean!
@@ -33,7 +33,7 @@ export const schema = gql`
   }
 
   type Query {
-    ogTagPreview(url: String!, customUserAgent: String): OGTagPreviewData!
+    ogTagPreview(url: String!, customUserAgent: String): OGTagPreviewResponse!
       @skipAuth
   }
 `

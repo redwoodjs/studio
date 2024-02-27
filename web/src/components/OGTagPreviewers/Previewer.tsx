@@ -4,28 +4,27 @@ import { Callout } from '@tremor/react'
 
 import { DiscordPreviewer } from 'src/components/OGTagPreviewers/DiscordPreviewer'
 import { FacebookPreviewer } from 'src/components/OGTagPreviewers/FacebookPreviewer'
+import { GenericPreviewer } from 'src/components/OGTagPreviewers/GenericPreviewer'
 import { LinkedInPreviewer } from 'src/components/OGTagPreviewers/LinkedInPreviewer'
-import { OGPreviewer } from 'src/components/OGTagPreviewers/OGPreviewer'
 import { SlackPreviewer } from 'src/components/OGTagPreviewers/SlackPreviewer'
 import { TwitterCardPreviewer } from 'src/components/OGTagPreviewers/TwitterCardPreviewer'
 import { OGTagWarningIcon, OGTagErrorIcon, OGTagOKIcon } from 'src/icons/Icons'
 
 import type {
-  OGTagPreviewData,
+  OGTagPreviewResponse,
   OGTagPreviewProviderAudit,
-  // OGTagPreviewAudit,
   OGPreviewProvider,
   OGPreviewSeverity,
 } from '../../../types/graphql'
 
-export type PreviewerProps = {
-  result: OGTagPreviewData['result']
+export type ProviderPreviewerProps = {
+  result: OGTagPreviewResponse['result']
 }
 
 const getPreviewComponentForProvider = (
   provider: OGPreviewProvider
 ):
-  | typeof OGPreviewer
+  | typeof GenericPreviewer
   | typeof TwitterCardPreviewer
   | typeof FacebookPreviewer
   | typeof LinkedInPreviewer
@@ -43,7 +42,7 @@ const getPreviewComponentForProvider = (
     case 'SLACK':
       return SlackPreviewer
     default:
-      return OGPreviewer
+      return GenericPreviewer
   }
 }
 
@@ -74,7 +73,7 @@ const getCalloutIcon = (severity: OGPreviewSeverity) => {
 }
 
 type Props = {
-  result: OGTagPreviewData['result']
+  result: OGTagPreviewResponse['result']
   providerAudit: OGTagPreviewProviderAudit
 }
 

@@ -1,8 +1,8 @@
 import React from 'react'
 
-import type { PreviewerProps } from './Previewer'
+import type { ProviderPreviewerProps } from './Previewer'
 
-export const OGPreviewer = (props: PreviewerProps) => {
+export const GenericPreviewer = (props: ProviderPreviewerProps) => {
   const data = {
     ogTitle: 'RedwoodJS: The App Framework for Startups',
     twitterTitle: 'RedwoodJS: The App Framework for Startups',
