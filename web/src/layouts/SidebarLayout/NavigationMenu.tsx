@@ -129,7 +129,7 @@ export const NavigationMenu = () => {
           aria-hidden="true"
         />
         <Flex flexDirection="col" justifyContent="start" alignItems="start">
-          <Title className="pl-0">RedwoodJS Studio</Title>
+          <Title className="pl-4">RedwoodJS Studio</Title>
         </Flex>
       </div>
       <nav className="flex flex-1 flex-col">
