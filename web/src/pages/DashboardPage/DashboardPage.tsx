@@ -1,6 +1,6 @@
 import { Title, Grid, Col, Text } from '@tremor/react'
 
-import { MetaTags } from '@redwoodjs/web'
+import { Metadata } from '@redwoodjs/web'
 
 import ApiPerformanceCell from 'src/components/ApiPerformanceCell'
 import DatabasePerformanceCell from 'src/components/DatabasePerformanceCell'
@@ -14,7 +14,7 @@ import SQLStatsCell from 'src/components/SQLStatsCell'
 const HomePage = () => {
   return (
     <>
-      <MetaTags title="Dashboard" description="Your app at a glance." />
+      <Metadata title="Dashboard" description="Your app at a glance." />
 
       <Title>Dashboard</Title>
       <Text>Your app at a glance.</Text>

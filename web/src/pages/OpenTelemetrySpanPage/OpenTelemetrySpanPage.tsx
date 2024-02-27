@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { MetaTags } from '@redwoodjs/web'
+import { Metadata } from '@redwoodjs/web'
 
 import SpanCell from 'src/components/SpanCell'
 import {
@@ -16,7 +16,7 @@ const OpenTelemetrySpanPage = ({ id }: { id: string }) => {
 
   return (
     <>
-      <MetaTags
+      <Metadata
         title="OpenTelemetrySpan"
         description="OpenTelemetrySpan page"
       />

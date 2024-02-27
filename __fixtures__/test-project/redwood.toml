@@ -34,3 +34,6 @@
   # authImpersonation.email = "foo@example.com"
   # Secret is used by Netlify
   # authImpersonation.jwtSecret = "secret"
+
+[experimental.streamingSsr]
+  enabled = true

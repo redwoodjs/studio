@@ -18,7 +18,7 @@ import {
   GetMailTemplates,
 } from 'types/graphql'
 
-import { MetaTags } from '@redwoodjs/web'
+import { Metadata } from '@redwoodjs/web'
 
 import MailRenderer from 'src/components/MailRenderer/MailRenderer'
 import { VariableIcon } from 'src/icons/Icons'
@@ -177,7 +177,7 @@ const MailerTemplatePreviewPage = () => {
 
   return (
     <>
-      <MetaTags
+      <Metadata
         title="MailerTemplatePreview"
         description="MailerTemplatePreview page"
       />

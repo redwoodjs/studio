@@ -1,13 +1,13 @@
 import { Title, Subtitle } from '@tremor/react'
 
-import { MetaTags } from '@redwoodjs/web'
+import { Metadata } from '@redwoodjs/web'
 
 import PrismaSchemaCell from 'src/components/PrismaSchemaCell'
 
 const DatabaseSchemaPage = () => {
   return (
     <>
-      <MetaTags
+      <Metadata
         title="Database Schema"
         description="Explore your database schema."
       />

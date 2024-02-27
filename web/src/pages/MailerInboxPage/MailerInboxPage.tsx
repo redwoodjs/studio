@@ -26,7 +26,7 @@ import {
 import { GetMailInbox } from 'types/graphql'
 
 import { useQuery } from '@redwoodjs/web'
-import { MetaTags } from '@redwoodjs/web'
+import { Metadata } from '@redwoodjs/web'
 
 import MailRenderer from 'src/components/MailRenderer/MailRenderer'
 import {
@@ -193,7 +193,7 @@ const MailerInboxPage = () => {
 
   return (
     <>
-      <MetaTags title="MailerInbox" description="MailerInbox page" />
+      <Metadata title="MailerInbox" description="MailerInbox page" />
 
       <Title>Mail Inbox</Title>
       <Text>

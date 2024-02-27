@@ -1,7 +1,7 @@
 import { Title, Text, Flex, Card } from '@tremor/react'
 import { GetTraces } from 'types/graphql'
 
-import { MetaTags, useQuery } from '@redwoodjs/web'
+import { Metadata, useQuery } from '@redwoodjs/web'
 
 import TraceListItem from 'src/components/TraceListItem/TraceListItem'
 
@@ -31,7 +31,7 @@ const OpenTelemetryTracesPage = () => {
 
   return (
     <>
-      <MetaTags
+      <Metadata
         title="OpenTelemetryTraces"
         description="OpenTelemetryTraces page"
       />
