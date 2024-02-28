@@ -1,4 +1,4 @@
-import { Flex, Icon, Title } from '@tremor/react'
+import { Flex, Title } from '@tremor/react'
 
 import { NavLink, routes } from '@redwoodjs/router'
 
@@ -119,19 +119,15 @@ export const NavigationMenu = () => {
 
   return (
     <>
-      <div className="flex h-16 shrink-0 items-center">
-        <Icon
-          variant="simple"
-          tooltip="RedwoodJS Studio"
-          size="md"
-          icon={StudioIcon}
-          className="h-8 w-auto"
-          aria-hidden="true"
-        />
-        <Flex flexDirection="col" justifyContent="start" alignItems="start">
-          <Title className="pl-4">RedwoodJS Studio</Title>
-        </Flex>
-      </div>
+      <Flex
+        flexDirection="row"
+        justifyContent="start"
+        alignItems="center"
+        className="pt-4"
+      >
+        <StudioIcon className="h-8 w-auto shrink-0 text-tremor-brand-emphasis" />
+        <Title className="pl-2">RedwoodJS Studio</Title>
+      </Flex>
       <nav className="flex flex-1 flex-col">
         <ul className="flex flex-1 flex-col gap-y-7">
           <li>

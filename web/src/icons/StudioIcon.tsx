@@ -2,7 +2,7 @@ type Props = {
   className: string
 }
 
-export const StudioIcon = ({ props }: { props: Props }) => {
+export const StudioIcon = (props: Props) => {
   return (
     <svg
       id="be750629-ee7c-4e78-83b3-48f433289685"
