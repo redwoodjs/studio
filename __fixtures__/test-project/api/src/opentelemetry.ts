@@ -30,7 +30,7 @@ const exporter = new OTLPTraceExporter({
   // telemetry at `http://127.0.0.1:<PORT>/.redwood/functions/otel-trace`
   // (default PORT is 4318)
   url: `http://127.0.0.1:${studioPort}/.redwood/functions/otel-trace`,
-  concurrencyLimit: 256,
+  concurrencyLimit: 1024,
   timeoutMillis: 30000,
 })
 
