@@ -18,7 +18,8 @@ import {
   TracesIcon,
 } from 'src/icons/Icons'
 
-import { ConnectionStatusIndicator } from './ConnectionStatusIndicator'
+// Temporarily removing the ConnectionStatusIndicator as was causing issues with lazy queries
+// import { ConnectionStatusIndicator } from './ConnectionStatusIndicator'
 import { OrbitSearch } from './OrbitSearch'
 
 type TNavigationItem = {
@@ -216,9 +217,7 @@ export const NavigationMenu = () => {
             <div className="text-xs font-semibold leading-6 text-gray-400">
               Development Server
             </div>
-            <ul className="-mx-2 mt-2 space-y-1">
-              <ConnectionStatusIndicator />
-            </ul>
+            <ul className="-mx-2 mt-2 space-y-1"></ul>
           </li>
         </ul>
       </nav>

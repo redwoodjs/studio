@@ -31,6 +31,11 @@ import {
   RefreshIcon,
 } from 'src/icons/Icons'
 
+import type {
+  OGTagPreviewProviderAudit,
+  OGTagPreviewResponse,
+} from '../../../types/graphql'
+
 const OG_TAG_PREVIEW_QUERY = gql`
   query OGTagPreview($url: String!, $customUserAgent: String) {
     ogTagPreview(url: $url, customUserAgent: $customUserAgent) {
@@ -49,161 +54,240 @@ const OG_TAG_PREVIEW_QUERY = gql`
   }
 `
 
-function isValidHttpUrl(possibleURL: string) {
-  let url
-  try {
-    url = new URL(possibleURL)
-  } catch (_error) {
-    return false
-  }
-  return url.protocol === 'http:' || url.protocol === 'https:'
-}
-
-const OgTagPreviewPage = () => {
-  const [url, setUrl] = useState('http://localhost:8910/')
-  const [customUserAgent, setCustomUserAgent] = useState<string | null>(null)
-
-  const [getOGTagPreview, ogTagPreviewQuery] =
-    useLazyQuery(OG_TAG_PREVIEW_QUERY)
-
-  const executeFetch = async (url: string, customUserAgent: string | null) => {
-    if (!isValidHttpUrl(url)) {
-      return
+const PreviewButton = ({
+  url,
+  customUserAgent,
+  setAudits,
+  setResult,
+  setError,
+}: {
+  url: string
+  customUserAgent: string
+  setAudits: (audits: OGTagPreviewProviderAudit[] | null) => void
+  setResult: (result: OGTagPreviewResponse['result'] | null) => void
+  setError: (error: Error | null) => void
+}) => {
+  const [getOGTagPreview, { loading, data }] = useLazyQuery(
+    OG_TAG_PREVIEW_QUERY,
+    {
+      fetchPolicy: 'no-cache',
+      onCompleted: () => {
+        setAudits(data?.ogTagPreview.audits)
+        setResult(data?.ogTagPreview.result)
+      },
+      onError: (error) => {
+        console.log(error)
+        setError(error)
+        setAudits(null)
+        setResult(null)
+      },
     }
-    await getOGTagPreview({
-      variables: { url, customUserAgent },
-    })
+  )
+
+  if (loading) {
+    setError(null)
+    setAudits(null)
+    setResult(null)
+
+    return (
+      <div>
+        <Button disabled={true} icon={RefreshIcon} loading={true}>
+          Loading...
+        </Button>
+      </div>
+    )
   }
 
   return (
-    <>
-      <Metadata title="OG Tag Preview" description="Preview OpenGraph tags" />
+    <div className="space-y-2">
+      <Button
+        icon={RefreshIcon}
+        onClick={() => getOGTagPreview({ variables: { url, customUserAgent } })}
+      >
+        Preview
+      </Button>
+    </div>
+  )
+}
 
+const PreviewFetcher = ({
+  url,
+  setUrl,
+  customUserAgent,
+  setCustomUserAgent,
+  setAudits,
+  setResult,
+  error,
+  setError,
+}: {
+  url: string
+  customUserAgent: string
+  setUrl: (url: string | null) => void
+  setCustomUserAgent: (customUserAgent: string | null) => void
+  setAudits: (audits: OGTagPreviewProviderAudit[] | null) => void
+  setResult: (result: OGTagPreviewResponse['result'] | null) => void
+  error: Error
+  setError: (error: Error | null) => void
+}) => {
+  return (
+    <Card className="h-full w-full">
+      <Flex flexDirection="row" className="space-x-4">
+        <Flex flexDirection="col" className="grow space-y-6">
+          <div className="w-full">
+            <TextInput
+              icon={LinkIcon}
+              placeholder="Test URL"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+            />
+          </div>
+          <div className="w-full">
+            <TextInput
+              icon={EyeIcon}
+              placeholder="Custom user-agent (optional)"
+              value={customUserAgent || ''}
+              onChange={(e) => setCustomUserAgent(e.target.value)}
+            />
+          </div>
+        </Flex>
+        <div className="h-full">
+          <PreviewButton
+            url={url}
+            customUserAgent={customUserAgent}
+            setAudits={setAudits}
+            setResult={setResult}
+            setError={setError}
+          />
+        </div>
+      </Flex>
+      {error && <ErrorSection error={error} />}
+    </Card>
+  )
+}
+
+const ErrorSection = ({ error }: { error: Error }) => {
+  return (
+    error && (
+      <Callout title="Error" icon={ErrorIcon} color="rose" className="mt-4">
+        {error.message}
+      </Callout>
+    )
+  )
+}
+
+const ResultPanel = ({
+  result,
+}: {
+  result: OGTagPreviewResponse['result']
+}) => {
+  return (
+    result && (
+      <TabPanel>
+        <div className="h-full w-full overflow-x-auto">
+          <pre className="text-gray-500 dark:text-gray-600">
+            {JSON.stringify(result ?? 'No data', undefined, 2)}
+          </pre>
+        </div>
+      </TabPanel>
+    )
+  )
+}
+
+const PrettyResultPanel = ({
+  result,
+  audits,
+}: {
+  result: OGTagPreviewResponse['result']
+  audits: OGTagPreviewProviderAudit[]
+}) => {
+  if (!result || !audits) {
+    return (
+      <TabPanel>
+        <Card className="h-full p-6">
+          <Callout title="Sorry" icon={ErrorIcon} color="amber">
+            Unable to preview
+          </Callout>
+        </Card>
+      </TabPanel>
+    )
+  }
+
+  return (
+    <TabPanel>
+      <Subtitle>
+        See how your website will look on social media platforms. This live
+        preview ensures your metadata aligns with your content and branding.
+      </Subtitle>
+      <Grid numItems={2} numItemsLg={3} numItemsMd={2} className="gap-4 py-4">
+        {audits.map((providerAudit) => {
+          return (
+            <Col key={`{providerAudit.provider}-preview-col`}>
+              <h2 className="border-b-1 mb-2 border-tremor-brand  font-semibold capitalize text-tremor-content">
+                {providerAudit.provider} Preview
+              </h2>
+              <Previewer result={result} providerAudit={providerAudit} />
+            </Col>
+          )
+        })}
+      </Grid>
+    </TabPanel>
+  )
+}
+
+const PreviewTabs = ({
+  result,
+  audits,
+}: {
+  result: OGTagPreviewResponse['result']
+  audits: OGTagPreviewProviderAudit[]
+}) => {
+  return (
+    result &&
+    audits && (
+      <Card className="h-full w-full p-6">
+        <TabGroup>
+          <TabList>
+            <Tab icon={CodeBracketIcon}>Raw</Tab>
+            <Tab icon={RectangleStackIcon}>Pretty</Tab>
+          </TabList>
+          <TabPanels>
+            <ResultPanel result={result} />
+            <PrettyResultPanel result={result} audits={audits} />
+          </TabPanels>
+        </TabGroup>
+      </Card>
+    )
+  )
+}
+const OgTagPreviewPage = () => {
+  const [url, setUrl] = useState('http://localhost:8910/blog-post/2')
+  const [customUserAgent, setCustomUserAgent] = useState<string | null>(null)
+  const [error, setError] = useState<Error | null>(null)
+  const [result, setResult] = useState<OGTagPreviewResponse['result'] | null>(
+    null
+  )
+  const [audits, setAudits] = useState<OGTagPreviewProviderAudit[] | null>(null)
+
+  return (
+    <div className="space-y-4">
+      <Metadata title="OG Tag Preview" description="Preview OpenGraph tags" />
       <Title>OG Tag Preview</Title>
       <Text>
         Examine the OG tags present on your pages without the need to deploy
         your app.
       </Text>
-
-      <Grid numItemsLg={3} className="mt-6 gap-6">
-        {/* Input/Config */}
-        <Col numColSpanLg={3}>
-          <Card className="h-full">
-            <Flex flexDirection="row" className="space-x-6">
-              <Flex flexDirection="col" className="grow space-y-6">
-                <div className="w-full">
-                  <TextInput
-                    icon={LinkIcon}
-                    placeholder="Test URL"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    onKeyUp={async (e) => {
-                      if (e.key === 'Enter') {
-                        await executeFetch(url, customUserAgent)
-                      }
-                    }}
-                  />
-                </div>
-                <div className="w-full">
-                  <TextInput
-                    icon={EyeIcon}
-                    placeholder="Custom user-agent (optional)"
-                    value={customUserAgent || ''}
-                    onChange={(e) => setCustomUserAgent(e.target.value)}
-                    onKeyUp={async (e) => {
-                      if (e.key === 'Enter') {
-                        await executeFetch(url, customUserAgent)
-                      }
-                    }}
-                  />
-                </div>
-              </Flex>
-              <div className="h-full">
-                <Button
-                  className="h-full"
-                  icon={RefreshIcon}
-                  onClick={async () => executeFetch(url, customUserAgent)}
-                  disabled={!isValidHttpUrl(url)}
-                >
-                  Fetch
-                </Button>
-              </div>
-            </Flex>
-          </Card>
-        </Col>
-
-        {/* OG tag results */}
-        {ogTagPreviewQuery.loading ? (
-          <Col numColSpanLg={3}>
-            <Card className="h-full p-6 text-tremor-brand">Loading...</Card>
-          </Col>
-        ) : ogTagPreviewQuery.error ? (
-          <Col numColSpanLg={3}>
-            <Card className="h-full p-6">
-              <Callout title="Error" icon={ErrorIcon} color="rose">
-                {ogTagPreviewQuery.error.message}
-              </Callout>
-            </Card>
-          </Col>
-        ) : (
-          <Col numColSpanLg={3}>
-            <Card className="h-full p-6">
-              <TabGroup>
-                <TabList>
-                  <Tab icon={CodeBracketIcon}>Raw</Tab>
-                  <Tab icon={RectangleStackIcon}>Pretty</Tab>
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
-                    <div className="h-full w-full overflow-x-auto">
-                      <pre className="text-gray-500 dark:text-gray-600">
-                        {JSON.stringify(
-                          ogTagPreviewQuery.data?.ogTagPreview.result ??
-                            'No data',
-                          undefined,
-                          2
-                        )}
-                      </pre>
-                    </div>
-                  </TabPanel>
-                  <TabPanel>
-                    <Subtitle>
-                      See how your website will look on social media platforms.
-                      This live preview ensures your metadata aligns with your
-                      content and branding.
-                    </Subtitle>
-                    <Grid
-                      numItems={2}
-                      numItemsLg={3}
-                      numItemsMd={2}
-                      className="gap-4 p-4"
-                    >
-                      {ogTagPreviewQuery.data?.ogTagPreview.audits.map(
-                        (providerAudit) => {
-                          return (
-                            <div key="1">
-                              <h2 className="border-b-1 mb-4 border-tremor-brand font-normal text-tremor-content">
-                                {providerAudit.provider} Preview
-                              </h2>
-                              <Previewer
-                                result={
-                                  ogTagPreviewQuery.data?.ogTagPreview.result
-                                }
-                                providerAudit={providerAudit}
-                              />
-                            </div>
-                          )
-                        }
-                      )}
-                    </Grid>
-                  </TabPanel>
-                </TabPanels>
-              </TabGroup>
-            </Card>
-          </Col>
-        )}
-      </Grid>
-    </>
+      <PreviewFetcher
+        url={url}
+        setUrl={setUrl}
+        customUserAgent={customUserAgent}
+        setCustomUserAgent={setCustomUserAgent}
+        setAudits={setAudits}
+        setResult={setResult}
+        error={error}
+        setError={setError}
+      />
+      <PreviewTabs result={result} audits={audits} />
+    </div>
   )
 }
 

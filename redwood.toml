@@ -18,7 +18,7 @@
   # projects using their own server file
   port = 4319
 [browser]
-  open = true
+  open = false
 [notifications]
   versionUpdates = ["latest"]
 [generate]

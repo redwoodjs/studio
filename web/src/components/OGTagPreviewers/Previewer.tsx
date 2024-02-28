@@ -1,13 +1,7 @@
 import React from 'react'
 
-import { Callout } from '@tremor/react'
+import { Callout, Card } from '@tremor/react'
 
-import { DiscordPreviewer } from 'src/components/OGTagPreviewers/DiscordPreviewer'
-import { FacebookPreviewer } from 'src/components/OGTagPreviewers/FacebookPreviewer'
-import { GenericPreviewer } from 'src/components/OGTagPreviewers/GenericPreviewer'
-import { LinkedInPreviewer } from 'src/components/OGTagPreviewers/LinkedInPreviewer'
-import { SlackPreviewer } from 'src/components/OGTagPreviewers/SlackPreviewer'
-import { TwitterCardPreviewer } from 'src/components/OGTagPreviewers/TwitterCardPreviewer'
 import { OGTagWarningIcon, OGTagErrorIcon, OGTagOKIcon } from 'src/icons/Icons'
 
 import type {
@@ -16,6 +10,14 @@ import type {
   OGPreviewProvider,
   OGPreviewSeverity,
 } from '../../../types/graphql'
+
+import { DiscordPreviewer } from './DiscordPreviewer'
+import { EmptyPreviewer } from './EmptyPreviewer'
+import { FacebookPreviewer } from './FacebookPreviewer'
+import { GenericPreviewer } from './GenericPreviewer'
+import { LinkedInPreviewer } from './LinkedInPreviewer'
+import { SlackPreviewer } from './SlackPreviewer'
+import { TwitterCardPreviewer } from './TwitterCardPreviewer'
 
 export type ProviderPreviewerProps = {
   result: OGTagPreviewResponse['result']
@@ -78,31 +80,27 @@ type Props = {
 }
 
 export const Previewer = (props: Props) => {
-  console.log('props', props)
   const { providerAudit, result } = props
-  console.log('providerAudit', providerAudit, result)
-
   const { audit, provider } = providerAudit
-
-  console.log('audit', audit, provider)
-
+  const { severity, messages } = audit
   const PreviewComponent = getPreviewComponentForProvider(provider)
 
   return (
-    <div className="space-y-6">
-      {audit && audit.severity === 'OK' && <PreviewComponent result={result} />}
-      {audit && (
+    <Card className="space-y-4 pt-4">
+      {severity !== 'OK' && <PreviewComponent result={result} />}
+      {severity !== 'OK' && <EmptyPreviewer />}
+      {severity && messages && (
         <Callout
           className="mt-4"
-          title="Audit"
-          icon={getCalloutIcon(audit.severity)}
-          color={getCalloutColor(audit.severity)}
+          title={`${provider} Tag Audit`}
+          icon={getCalloutIcon(severity)}
+          color={getCalloutColor(severity)}
         >
-          {audit.messages?.map((message, index) => (
+          {messages.map((message, index) => (
             <div key={index}>{message}</div>
           ))}
         </Callout>
       )}
-    </div>
+    </Card>
   )
 }
