@@ -1,10 +1,16 @@
-import { z } from 'zod'
-
 import type {
   OGTagPreviewResponse,
   OGTagPreviewProviderAudit,
   OGPreviewProvider,
-} from '../../types/graphql'
+  OGTagPreviewAudit,
+} from '../../../types/graphql'
+
+import { DiscordValidation } from './validators/discord'
+import { FacebookValidation } from './validators/facebook'
+import { GenericValidation } from './validators/generic'
+import { LinkedInValidation } from './validators/linkedin'
+import { SlackValidation } from './validators/slack'
+import { TwitterValidation } from './validators/twitter'
 
 const PROVIDERS = [
   'GENERIC',
@@ -15,24 +21,8 @@ const PROVIDERS = [
   'TWITTER',
 ] as OGPreviewProvider[]
 
-const GenericValidation = z.object({
-  ogTitle: z.string(),
-  ogSite: z.string(),
-})
-
-const DiscordValidation = GenericValidation.extend({})
-const FacebookValidation = GenericValidation.extend({})
-const LinkedInValidation = GenericValidation.extend({})
-const SlackValidation = GenericValidation.extend({})
-const TwitterValidation = GenericValidation.extend({
-  twitterTitle: z.string(),
-  twitterDescription: z.string(),
-  twitterCard: z.string(),
-})
-
-const formatMessages = (validationResult): string[] => {
+const formatMessages = (validationResult): OGTagPreviewAudit['messages'] => {
   const messages = []
-
   const formatted = validationResult['error'].format()
 
   Object.entries(formatted).forEach(([key, value]) => {
@@ -45,34 +35,34 @@ const formatMessages = (validationResult): string[] => {
   return messages
 }
 
+const validationForProvider = (provider: OGPreviewProvider) => {
+  switch (provider) {
+    case 'DISCORD':
+      return DiscordValidation
+      break
+    case 'FACEBOOK':
+      return FacebookValidation
+      break
+    case 'LINKEDIN':
+      return LinkedInValidation
+      break
+    case 'SLACK':
+      return SlackValidation
+      break
+      break
+    case 'TWITTER':
+      return TwitterValidation
+      break
+    default:
+      return GenericValidation
+  }
+}
+
 const auditForProvider = (
   result,
   provider: OGPreviewProvider
 ): OGTagPreviewProviderAudit => {
-  let validator = z.object({})
-
-  switch (provider) {
-    case 'DISCORD':
-      validator = DiscordValidation
-      break
-    case 'FACEBOOK':
-      validator = FacebookValidation
-      break
-    case 'LINKEDIN':
-      validator = LinkedInValidation
-      break
-    case 'SLACK':
-      validator = SlackValidation
-      break
-      break
-    case 'TWITTER':
-      validator = TwitterValidation
-      break
-    default:
-      validator = GenericValidation
-  }
-
-  const validationResult = validator.safeParse(result)
+  const validationResult = validationForProvider(provider).safeParse(result)
 
   if (!validationResult.success) {
     return {
@@ -97,7 +87,7 @@ export const auditor = (
   if (error) {
     return PROVIDERS.map((provider) => ({
       provider,
-      audit: { severity: 'ERROR', messages: ['Error fetching URL'] },
+      audit: { severity: 'ERROR', messages: ['Unable to preview'] },
     }))
   }
 

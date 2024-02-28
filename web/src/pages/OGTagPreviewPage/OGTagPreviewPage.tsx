@@ -77,7 +77,7 @@ const OgTagPreviewPage = () => {
 
   return (
     <>
-      <Metadata title="OgTagPreview" description="OgTagPreview page" />
+      <Metadata title="OG Tag Preview" description="Preview OpenGraph tags" />
 
       <Title>OG Tag Preview</Title>
       <Text>
@@ -141,11 +141,7 @@ const OgTagPreviewPage = () => {
           <Col numColSpanLg={3}>
             <Card className="h-full p-6">
               <Callout title="Error" icon={ErrorIcon} color="rose">
-                <div className="h-full w-full overflow-x-auto">
-                  <pre className="text-gray-500 dark:text-gray-600">
-                    {JSON.stringify(ogTagPreviewQuery.error, undefined, 2)}
-                  </pre>
-                </div>
+                {ogTagPreviewQuery.error.message}
               </Callout>
             </Card>
           </Col>

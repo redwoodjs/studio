@@ -90,7 +90,7 @@ export const Previewer = (props: Props) => {
 
   return (
     <div className="space-y-6">
-      <PreviewComponent result={result} />
+      {audit && audit.severity === 'OK' && <PreviewComponent result={result} />}
       {audit && (
         <Callout
           className="mt-4"
