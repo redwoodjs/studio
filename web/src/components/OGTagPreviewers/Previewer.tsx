@@ -23,28 +23,26 @@ export type ProviderPreviewerProps = {
   result: OGTagPreviewResponse['result']
 }
 
-const getPreviewComponentForProvider = (
+const PreviewComponentForProvider = ({
+  provider,
+  result,
+}: {
   provider: OGPreviewProvider
-):
-  | typeof GenericPreviewer
-  | typeof TwitterCardPreviewer
-  | typeof FacebookPreviewer
-  | typeof LinkedInPreviewer
-  | typeof DiscordPreviewer
-  | typeof SlackPreviewer => {
+  result: OGTagPreviewResponse['result']
+}) => {
   switch (provider) {
     case 'TWITTER':
-      return TwitterCardPreviewer
+      return <TwitterCardPreviewer result={result} />
     case 'FACEBOOK':
-      return FacebookPreviewer
+      return <FacebookPreviewer result={result} />
     case 'LINKEDIN':
-      return LinkedInPreviewer
+      return <LinkedInPreviewer result={result} />
     case 'DISCORD':
-      return DiscordPreviewer
+      return <DiscordPreviewer result={result} />
     case 'SLACK':
-      return SlackPreviewer
+      return <SlackPreviewer result={result} />
     default:
-      return GenericPreviewer
+      return <GenericPreviewer result={result} />
   }
 }
 
@@ -83,11 +81,12 @@ export const Previewer = (props: Props) => {
   const { providerAudit, result } = props
   const { audit, provider } = providerAudit
   const { severity, messages } = audit
-  const PreviewComponent = getPreviewComponentForProvider(provider)
 
   return (
     <Card className="space-y-4 pt-4">
-      {severity !== 'OK' && <PreviewComponent result={result} />}
+      {severity !== 'OK' && (
+        <PreviewComponentForProvider provider={provider} result={result} />
+      )}
       {severity !== 'OK' && <EmptyPreviewer />}
       {severity && messages && (
         <Callout
