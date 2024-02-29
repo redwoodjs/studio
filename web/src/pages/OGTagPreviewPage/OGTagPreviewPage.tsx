@@ -19,7 +19,7 @@ import {
   Callout,
 } from '@tremor/react'
 
-import { Metadata } from '@redwoodjs/web'
+import { Metadata, useQuery } from '@redwoodjs/web'
 
 import { Previewer } from 'src/components/OGTagPreviewers/Previewer'
 import {
@@ -35,6 +35,21 @@ import type {
   OGTagPreviewProviderAudit,
   OGTagPreviewResponse,
 } from '../../../types/graphql'
+
+const SSR_STATUS_QUERY = gql`
+  query SsrStatusQuery {
+    status: userProjectConfig {
+      id
+      ssr {
+        id
+        enabled {
+          status
+          message
+        }
+      }
+    }
+  }
+`
 
 const OG_TAG_PREVIEW_QUERY = gql`
   query OGTagPreview($url: String!, $customUserAgent: String) {
@@ -269,6 +284,33 @@ const OgTagPreviewPage = () => {
     null
   )
   const [audits, setAudits] = useState<OGTagPreviewProviderAudit[] | null>(null)
+  const [showDisabledSection, setShowDisabledSection] = useState(false)
+  const [showPreviewFetcherSection, setShowPreviewFetcherSection] =
+    useState(false)
+
+  const { loading, data, error: ssrError } = useQuery(SSR_STATUS_QUERY)
+
+  if (ssrError) {
+    console.error('Failed to load SSR configuration', ssrError)
+    // setError(ssrError)
+    setShowDisabledSection(true)
+  }
+
+  if (loading) {
+    console.debug('Loading SSR configuration')
+  }
+
+  if (!loading && data.status.ssr.enabled.status === false) {
+    console.debug('SSR is disabled')
+    setShowDisabledSection(true)
+    setShowPreviewFetcherSection(false)
+  }
+
+  if (!loading && data.status.ssr.enabled.status === true) {
+    console.debug('SSR is enabled')
+    setShowDisabledSection(false)
+    setShowPreviewFetcherSection(true)
+  }
 
   return (
     <div className="space-y-4">
@@ -278,17 +320,37 @@ const OgTagPreviewPage = () => {
         Examine the OG tags present on your pages without the need to deploy
         your app.
       </Text>
-      <PreviewFetcher
-        url={url}
-        setUrl={setUrl}
-        customUserAgent={customUserAgent}
-        setCustomUserAgent={setCustomUserAgent}
-        setAudits={setAudits}
-        setResult={setResult}
-        error={error}
-        setError={setError}
-      />
-      <PreviewTabs result={result} audits={audits} />
+
+      {showDisabledSection && <div>disabled</div>}
+      {showPreviewFetcherSection && (
+        <Callout title="SSR is not enabled" color="rose" icon={ErrorIcon}>
+          Please{' '}
+          <a
+            href="https://community.redwoodjs.com/t/react-streaming-and-server-side-rendering-ssr/5052"
+            target="_blank"
+            rel="noreferrer"
+          >
+            enable SSR
+          </a>{' '}
+          in your project to preview OpenGraph tags.
+        </Callout>
+      )}
+
+      {showPreviewFetcherSection && (
+        <>
+          <PreviewFetcher
+            url={url}
+            setUrl={setUrl}
+            customUserAgent={customUserAgent}
+            setCustomUserAgent={setCustomUserAgent}
+            setAudits={setAudits}
+            setResult={setResult}
+            error={error}
+            setError={setError}
+          />
+          <PreviewTabs result={result} audits={audits} />
+        </>
+      )}
     </div>
   )
 }
