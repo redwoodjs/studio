@@ -126,7 +126,7 @@ export const NavigationMenu = () => {
         className="pt-4"
       >
         <StudioIcon className="h-8 w-auto shrink-0 text-tremor-brand-emphasis" />
-        <Title className="pl-2">RedwoodJS Studio</Title>
+        <Title className="pl-3">RedwoodJS Studio</Title>
       </Flex>
       <nav className="flex flex-1 flex-col">
         <ul className="flex flex-1 flex-col gap-y-7">
