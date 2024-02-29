@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
-import { GenericValidation } from './generic'
+import { GenericAuditor } from './generic'
 
-export const TwitterValidation = GenericValidation.extend({
+export const TwitterAuditor = GenericAuditor.extend({
   twitterTitle: z.string(),
   twitterDescription: z.string(),
   twitterCard: z.string(),

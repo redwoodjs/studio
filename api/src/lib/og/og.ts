@@ -5,12 +5,12 @@ import type {
   OGTagPreviewAudit,
 } from '../../../types/graphql'
 
-import { DiscordValidation } from './validators/discord'
-import { FacebookValidation } from './validators/facebook'
-import { GenericValidation } from './validators/generic'
-import { LinkedInValidation } from './validators/linkedin'
-import { SlackValidation } from './validators/slack'
-import { TwitterValidation } from './validators/twitter'
+import { DiscordAuditor } from './auditors/discord'
+import { FacebookAuditor } from './auditors/facebook'
+import { GenericAuditor } from './auditors/generic'
+import { LinkedInAuditor } from './auditors/linkedin'
+import { SlackAuditor } from './auditors/slack'
+import { TwitterAuditor } from './auditors/twitter'
 
 const PROVIDERS = [
   'GENERIC',
@@ -35,26 +35,26 @@ const formatMessages = (validationResult): OGTagPreviewAudit['messages'] => {
   return messages
 }
 
-const validationForProvider = (provider: OGPreviewProvider) => {
+const getProviderAuditor = (provider: OGPreviewProvider) => {
   switch (provider) {
     case 'DISCORD':
-      return DiscordValidation
+      return DiscordAuditor
       break
     case 'FACEBOOK':
-      return FacebookValidation
+      return FacebookAuditor
       break
     case 'LINKEDIN':
-      return LinkedInValidation
+      return LinkedInAuditor
       break
     case 'SLACK':
-      return SlackValidation
+      return SlackAuditor
       break
       break
     case 'TWITTER':
-      return TwitterValidation
+      return TwitterAuditor
       break
     default:
-      return GenericValidation
+      return GenericAuditor
   }
 }
 
@@ -62,14 +62,14 @@ const auditForProvider = (
   result,
   provider: OGPreviewProvider
 ): OGTagPreviewProviderAudit => {
-  const validationResult = validationForProvider(provider).safeParse(result)
+  const auditResult = getProviderAuditor(provider).safeParse(result)
 
-  if (!validationResult.success) {
+  if (!auditResult.success) {
     return {
       provider,
       audit: {
         severity: 'WARNING',
-        messages: formatMessages(validationResult),
+        messages: formatMessages(auditResult),
       },
     }
   }

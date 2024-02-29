@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const GenericValidation = z.object({
+export const GenericAuditor = z.object({
   ogTitle: z.string(),
   ogSite: z.string(),
 })
