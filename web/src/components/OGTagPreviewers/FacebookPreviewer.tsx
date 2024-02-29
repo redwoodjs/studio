@@ -36,16 +36,20 @@ export const FacebookPreviewer = (props: ProviderPreviewerProps) => {
 
   props.result = data
 
-  const { ogTitle, ogImage, ogUrl } = props.result
+  const { ogTitle, ogImage, ogUrl, ogDescription } = props.result
   return (
-    <div className="cursor:pointer border-1 relative isolate h-44 w-96 overflow-hidden rounded-lg border-gray-100 bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
-      <img
-        src={ogImage[0].url}
-        alt={ogTitle}
-        className="absolute inset-0 -z-10 h-full w-full object-cover"
-      />
-      <div className="border-1 bg-indigo absolute bottom-1 left-1 rounded-md border-black p-1 text-xs text-white">
-        {ogUrl} FB
+    <div className="cursor:pointer relative isolate w-[524px] overflow-hidden bg-slate-50">
+      <div className="h-60 w-full">
+        <img
+          src={ogImage[0].url}
+          alt={ogTitle}
+          className="absolute inset-0 -z-10 h-60 w-full bg-center object-cover"
+        />
+      </div>
+      <div className="h-20 w-full border-b border-l border-r border-slate-300 bg-slate-50 px-4 py-2">
+        <div className="text-sm uppercase text-gray-600">{ogUrl}</div>
+        <div className="text-md truncate font-bold text-black">{ogTitle}</div>
+        <div className="truncate text-sm text-gray-600">{ogDescription}</div>
       </div>
     </div>
   )

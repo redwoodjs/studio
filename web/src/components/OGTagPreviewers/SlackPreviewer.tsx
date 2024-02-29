@@ -36,16 +36,14 @@ export const SlackPreviewer = (props: ProviderPreviewerProps) => {
 
   props.result = data
 
-  const { twitterTitle, twitterImage, ogUrl } = props.result
+  const { ogTitle, ogDescription, ogUrl } = props.result
   return (
-    <div className="cursor:pointer border-1 relative isolate h-44 w-96 overflow-hidden rounded-lg border-gray-100 bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
-      <img
-        src={twitterImage[0].url}
-        alt={twitterTitle}
-        className="absolute inset-0 -z-10 h-full w-full object-cover"
-      />
-      <div className="border-1 absolute bottom-1 left-1 rounded-md border-black bg-black p-1 text-xs text-white">
-        {ogUrl}
+    <div className="border-l-4 border-gray-400 bg-white pl-4">
+      <div className="py-2">
+        <p className="text-md font-bold text-gray-800">{ogUrl}</p>
+        <p className="text-md font-bold text-sky-500">{ogTitle}</p>
+        <p className="text-md text-gray-800">{ogDescription}</p>
+        <p className="text-xs text-gray-800">some date</p>
       </div>
     </div>
   )

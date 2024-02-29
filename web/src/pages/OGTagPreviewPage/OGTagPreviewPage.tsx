@@ -222,10 +222,12 @@ const PrettyResultPanel = ({
         {audits.map((providerAudit) => {
           return (
             <Col key={`{providerAudit.provider}-preview-col`}>
-              <h2 className="border-b-1 mb-2 border-tremor-brand  font-semibold capitalize text-tremor-content">
-                {providerAudit.provider} Preview
-              </h2>
-              <Previewer result={result} providerAudit={providerAudit} />
+              <Card className="h-full w-full">
+                <Title className="border-b-1 mb-2 border-tremor-brand font-semibold capitalize text-tremor-content">
+                  {providerAudit.provider.toLowerCase()} Preview
+                </Title>
+                <Previewer result={result} providerAudit={providerAudit} />
+              </Card>
             </Col>
           )
         })}
@@ -247,12 +249,12 @@ const PreviewTabs = ({
       <Card className="h-full w-full p-6">
         <TabGroup>
           <TabList>
-            <Tab icon={CodeBracketIcon}>Raw</Tab>
-            <Tab icon={RectangleStackIcon}>Pretty</Tab>
+            <Tab icon={RectangleStackIcon}>Previews</Tab>
+            <Tab icon={CodeBracketIcon}>Data</Tab>
           </TabList>
           <TabPanels>
-            <ResultPanel result={result} />
             <PrettyResultPanel result={result} audits={audits} />
+            <ResultPanel result={result} />
           </TabPanels>
         </TabGroup>
       </Card>

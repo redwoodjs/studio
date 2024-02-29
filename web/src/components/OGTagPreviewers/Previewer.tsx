@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Callout, Card } from '@tremor/react'
+import { Callout, Flex } from '@tremor/react'
 
 import { OGTagWarningIcon, OGTagErrorIcon, OGTagOKIcon } from 'src/icons/Icons'
 
@@ -83,15 +83,17 @@ export const Previewer = (props: Props) => {
   const { severity, messages } = audit
 
   return (
-    <Card className="space-y-4 pt-4">
+    <div className="space-y-4 pt-4">
       {severity !== 'OK' && (
-        <PreviewComponentForProvider provider={provider} result={result} />
+        <Flex justifyContent="center" alignItems="center">
+          <PreviewComponentForProvider provider={provider} result={result} />
+        </Flex>
       )}
       {severity !== 'OK' && <EmptyPreviewer />}
       {severity && messages && (
         <Callout
           className="mt-4"
-          title={`${provider} Tag Audit`}
+          title="Tag Audit"
           icon={getCalloutIcon(severity)}
           color={getCalloutColor(severity)}
         >
@@ -100,6 +102,6 @@ export const Previewer = (props: Props) => {
           ))}
         </Callout>
       )}
-    </Card>
+    </div>
   )
 }

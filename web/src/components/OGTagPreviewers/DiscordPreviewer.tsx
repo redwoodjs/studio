@@ -1,8 +1,8 @@
 import React from 'react'
 
-import type { PreviewerProps } from './Previewer'
+import type { ProviderPreviewerProps } from './Previewer'
 
-export const DiscordPreviewer = (props: PreviewerProps) => {
+export const DiscordPreviewer = (props: ProviderPreviewerProps) => {
   const data = {
     ogTitle: 'RedwoodJS: The App Framework for Startups',
     twitterTitle: 'RedwoodJS: The App Framework for Startups',
@@ -36,16 +36,19 @@ export const DiscordPreviewer = (props: PreviewerProps) => {
 
   props.result = data
 
-  const { twitterTitle, twitterImage, ogUrl } = props.result
+  const { ogTitle, ogDescription, ogImage } = props.result
   return (
-    <div className="cursor:pointer border-1 relative isolate h-44 w-96 overflow-hidden rounded-lg border-gray-100 bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
-      <img
-        src={twitterImage[0].url}
-        alt={twitterTitle}
-        className="absolute inset-0 -z-10 h-full w-full object-cover"
-      />
-      <div className="border-1 absolute bottom-1 left-1 rounded-md border-black bg-black p-1 text-xs text-white">
-        {ogUrl}
+    <div className="cursor:pointer h-[330px] w-[440px] overflow-hidden rounded-sm border-gray-500 bg-zinc-800 p-4 shadow-lg">
+      <div className="h-20 w-full space-y-2 py-2">
+        <p className="truncate text-lg font-bold text-sky-500">{ogTitle}</p>
+        <p className="text-sm text-white">{ogDescription}</p>
+      </div>
+      <div className="mb-2 mt-4 h-full w-full">
+        <img
+          src={ogImage[0].url}
+          alt={ogTitle}
+          className=" h-[200px] w-[410px] bg-center object-cover"
+        />
       </div>
     </div>
   )

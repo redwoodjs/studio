@@ -36,16 +36,24 @@ export const GenericPreviewer = (props: ProviderPreviewerProps) => {
 
   props.result = data
 
-  const { twitterTitle, twitterImage, ogUrl } = props.result
+  const { ogTitle, ogUrl, ogImage, ogDescription } = props.result
   return (
-    <div className="cursor:pointer border-1 relative isolate h-44 w-96 overflow-hidden rounded-lg border-gray-100 bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
-      <img
-        src={twitterImage[0].url}
-        alt={twitterTitle}
-        className="absolute inset-0 -z-10 h-full w-full object-cover"
-      />
-      <div className="border-1 absolute bottom-1 left-1 rounded-md border-black bg-black p-1 text-xs text-white">
-        {ogUrl}
+    <div className="cursor:pointer h-full w-full overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-50 p-4 shadow-lg">
+      <div className="h-60 w-full">
+        <img
+          src={ogImage[0].url}
+          alt={ogTitle}
+          className="h-full w-full rounded-lg border-2 border-white bg-center object-contain"
+        />
+      </div>
+      <div className="h-full w-full space-y-2 border-gray-500 bg-white p-4">
+        <p className="truncate text-lg font-bold text-tremor-brand">
+          {ogTitle}
+        </p>
+        <p className="text-md text-slate-800">{ogDescription}</p>
+        <p className="text-xs uppercase text-slate-600">{ogUrl}</p>
+        <p className="text-xs uppercase text-slate-600">date</p>
+        <p className="text-xs uppercase text-slate-600">author</p>
       </div>
     </div>
   )
