@@ -23,6 +23,7 @@ export {
   ExclamationTriangleIcon as ErrorIcon,
   ExclamationTriangleIcon as OGTagErrorIcon,
   EyeIcon,
+  EyeSlashIcon as HideIcon,
   FaceFrownIcon as OGTagWarningIcon,
   FaceSmileIcon as OGTagOKIcon,
   GlobeAltIcon as NetworkPerformanceIcon,
