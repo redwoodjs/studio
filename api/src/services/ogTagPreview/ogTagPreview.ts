@@ -1,8 +1,8 @@
-import openGraphScraper from 'open-graph-scraper'
+import ogs from 'open-graph-scraper'
 import type { QueryResolvers } from 'types/graphql'
 
-
 import { SyntaxError } from '@redwoodjs/graphql-server'
+
 import { auditor } from 'src/lib/og/og'
 import { getUserProjectConfig } from 'src/util/project'
 
@@ -12,7 +12,7 @@ export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
 }) => {
   const config = await getUserProjectConfig()
 
-    // short-cut in the case that SSR is disabled
+  // short-cut in the case that SSR is disabled
   if (!config.experimental?.streamingSsr?.enabled) {
     return {
       id: url,
