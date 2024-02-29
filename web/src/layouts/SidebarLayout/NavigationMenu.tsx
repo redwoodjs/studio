@@ -12,6 +12,7 @@ import {
   OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
+  StudioIcon,
   SpansIcon,
   SqlStatementsIcon,
   TemplatesIcon,
@@ -96,12 +97,15 @@ export const NavigationMenu = () => {
 
   return (
     <>
-      <div className="flex h-16 shrink-0 items-center">
-        <img className="h-8 w-auto" src="/mark.svg" alt="RedwoodJS" />
-        <Flex flexDirection="col" justifyContent="start" alignItems="start">
-          <Title className="pl-4">RedwoodJS Studio</Title>
-        </Flex>
-      </div>
+      <Flex
+        flexDirection="row"
+        justifyContent="start"
+        alignItems="center"
+        className="pt-4"
+      >
+        <StudioIcon className="h-8 w-auto shrink-0 text-tremor-brand-emphasis" />
+        <Title className="pl-3">RedwoodJS Studio</Title>
+      </Flex>
       <nav className="flex flex-1 flex-col">
         <ul className="flex flex-1 flex-col gap-y-7">
           <li>

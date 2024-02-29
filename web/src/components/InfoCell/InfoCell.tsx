@@ -42,7 +42,7 @@ export const Loading = () => <div>Loading...</div>
 export const Empty = () => <div>Empty</div>
 
 export const Failure = ({ error }: CellFailureProps) => (
-  <div style={{ color: 'red' }}>Error: {error?.message}</div>
+  <div className="font-bold text-tremor-brand dark:text-dark-tremor-brand">Error: {error?.message}</div>
 )
 
 interface InfoItemProps {

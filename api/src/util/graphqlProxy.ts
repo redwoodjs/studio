@@ -16,15 +16,14 @@ export async function graphqlProxy(
   _options: never,
   done: HookHandlerDoneFunction
 ) {
-  const webPort = getUserProjectWebPort()
-  const webHost = getUserProjectWebHost()
-  const graphqlEndpoint = getUserProjectGraphQlEndpoint()
-
-  const upstream = `http://${webHost}:${webPort}`
-  const rewritePrefix = '/' + graphqlEndpoint.split('/').slice(3).join('/')
+  const webConfig = getUserProjectConfig().web
+  const webHost = webConfig.host ?? 'localhost'
+  const graphqlEndpoint =
+    webConfig.apiGraphQLUrl ??
+    `http://${webHost}:${webConfig.port}${webConfig.apiUrl}/graphql`
 
   fastify.register(httpProxy, {
-    upstream,
+    upstream: `http://${webHost}:${webConfig.port}`,
     prefix: '/proxies/graphql',
     // Strip the initial scheme://host:port from the graphqlEndpoint
     rewritePrefix,
