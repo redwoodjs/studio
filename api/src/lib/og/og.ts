@@ -76,7 +76,7 @@ const auditForProvider = (
 
   return {
     provider,
-    audit: { severity: 'OK', messages: ['Preview success'] },
+    audit: { severity: 'OK', messages: ['All required tags provided.'] },
   }
 }
 

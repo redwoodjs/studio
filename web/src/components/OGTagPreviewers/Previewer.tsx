@@ -84,12 +84,11 @@ export const Previewer = (props: Props) => {
 
   return (
     <div className="space-y-4 pt-4">
-      {severity !== 'OK' && (
+      {severity === 'OK' && (
         <Flex justifyContent="center" alignItems="center">
           <PreviewComponentForProvider provider={provider} result={result} />
         </Flex>
       )}
-      {severity !== 'OK' && <EmptyPreviewer />}
       {severity && messages && (
         <Callout
           className="mt-4"
