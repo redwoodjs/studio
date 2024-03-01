@@ -15,11 +15,18 @@ export const schema = gql`
     jwtSecret: String
   }
 
+  type WebConfig {
+    id: String!
+    host: String
+    port: Int
+    apiUrl: String
+  }
   type StudioConfig {
     id: String!
     basePort: Int
     graphiql: GraphiQLConfig
   }
+
   type EnabledStatus {
     status: Boolean
     message: String
@@ -33,6 +40,7 @@ export const schema = gql`
   type UserProjectConfig {
     id: String!
     ssr: StreamingSsrConfig
+    web: WebConfig
   }
 
   type Query {

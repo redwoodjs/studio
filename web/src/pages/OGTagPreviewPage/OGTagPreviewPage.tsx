@@ -36,10 +36,16 @@ import type {
   OGTagPreviewResponse,
 } from '../../../types/graphql'
 
-const SSR_STATUS_QUERY = gql`
-  query SsrStatusQuery {
-    status: userProjectConfig {
+const PROJECT_CONFIG_QUERY = gql`
+  query UserProjectConfigQuery {
+    config: userProjectConfig {
       id
+      web {
+        id
+        host
+        port
+        apiUrl
+      }
       ssr {
         id
         enabled {
@@ -151,7 +157,7 @@ const PreviewFetcher = ({
           <div className="w-full">
             <TextInput
               icon={LinkIcon}
-              placeholder="Test URL"
+              placeholder="URL of page to preview"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
             />
@@ -278,7 +284,8 @@ const PreviewTabs = ({
 }
 
 const OgTagPreviewPage = () => {
-  const [url, setUrl] = useState('http://localhost:8910/blog-post/2')
+  const [url, setUrl] = useState<string>('')
+  const [showPreviewer, setShowPreviewer] = useState<boolean | null>(null)
   const [customUserAgent, setCustomUserAgent] = useState<string | null>(null)
   const [error, setError] = useState<Error | null>(null)
   const [result, setResult] = useState<OGTagPreviewResponse['result'] | null>(
@@ -286,24 +293,23 @@ const OgTagPreviewPage = () => {
   )
   const [audits, setAudits] = useState<OGTagPreviewProviderAudit[] | null>(null)
 
-  let showDisabledSection = undefined
+  useQuery(PROJECT_CONFIG_QUERY, {
+    onCompleted(data) {
+      if (data.config) {
+        if (data.config.ssr) {
+          setShowPreviewer(data.config.ssr.enabled.status)
+        }
 
-  const { loading, data, error: ssrError } = useQuery(SSR_STATUS_QUERY)
+        if (data.config.web) {
+          setUrl(`http://${data.config.web.host}:${data.config.web.port}`)
+        }
+      }
+    },
 
-  if (ssrError) {
-    console.error('Failed to load SSR configuration', ssrError)
-  }
-
-  if (!loading && data.status.ssr.enabled.status === false) {
-    console.debug('SSR is disabled')
-
-    showDisabledSection = true
-  }
-
-  if (!loading && data.status.ssr.enabled.status === true) {
-    console.debug('SSR is enabled')
-    showDisabledSection = false
-  }
+    onError(error) {
+      console.error('Failed to load user project configuration', error)
+    },
+  })
 
   return (
     <div className="space-y-4">
@@ -314,7 +320,7 @@ const OgTagPreviewPage = () => {
         your app.
       </Text>
 
-      {showDisabledSection === true && (
+      {showPreviewer === false && (
         <Callout title="SSR is not enabled" color="rose" icon={ErrorIcon}>
           Please{' '}
           <a
@@ -329,7 +335,7 @@ const OgTagPreviewPage = () => {
         </Callout>
       )}
 
-      {showDisabledSection === false && (
+      {showPreviewer === true && (
         <>
           <PreviewFetcher
             url={url}
