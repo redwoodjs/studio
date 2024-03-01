@@ -17,6 +17,8 @@ import {
   TabPanel,
   TabPanels,
   Callout,
+  SearchSelect,
+  SearchSelectItem,
 } from '@tremor/react'
 
 import { Metadata, useQuery } from '@redwoodjs/web'
@@ -35,6 +37,8 @@ import type {
   OGTagPreviewProviderAudit,
   OGTagPreviewResponse,
 } from '../../../types/graphql'
+
+import { TOP_USER_AGENTS } from './userAgents'
 
 const PROJECT_CONFIG_QUERY = gql`
   query UserProjectConfigQuery {
@@ -153,7 +157,7 @@ const PreviewFetcher = ({
   return (
     <Card className="h-full w-full">
       <Flex flexDirection="row" className="space-x-4">
-        <Flex flexDirection="col" className="grow space-y-6">
+        <Flex flexDirection="col" className="grow space-y-4">
           <div className="w-full">
             <TextInput
               icon={LinkIcon}
@@ -163,12 +167,19 @@ const PreviewFetcher = ({
             />
           </div>
           <div className="w-full">
-            <TextInput
+            <SearchSelect
               icon={EyeIcon}
-              placeholder="Custom user-agent (optional)"
               value={customUserAgent || ''}
-              onChange={(e) => setCustomUserAgent(e.target.value)}
-            />
+              onValueChange={setCustomUserAgent}
+            >
+              {TOP_USER_AGENTS.map((agent) => {
+                return (
+                  <SearchSelectItem key={agent} value={agent}>
+                    {agent}
+                  </SearchSelectItem>
+                )
+              })}
+            </SearchSelect>
           </div>
         </Flex>
         <div className="h-full">
@@ -217,9 +228,11 @@ const ResultPanel = ({
 const PrettyResultPanel = ({
   result,
   audits,
+  userAgent,
 }: {
   result: OGTagPreviewResponse['result']
   audits: OGTagPreviewProviderAudit[]
+  userAgent?: string
 }) => {
   if (!result || !audits) {
     return (
@@ -247,7 +260,11 @@ const PrettyResultPanel = ({
                 <Title className="border-b-1 mb-2 border-tremor-brand font-semibold capitalize text-tremor-content">
                   {providerAudit.provider.toLowerCase()} Preview
                 </Title>
-                <Previewer result={result} providerAudit={providerAudit} />
+                <Previewer
+                  result={result}
+                  providerAudit={providerAudit}
+                  userAgent={userAgent}
+                />
               </Card>
             </Col>
           )
@@ -260,9 +277,11 @@ const PrettyResultPanel = ({
 const PreviewTabs = ({
   result,
   audits,
+  userAgent,
 }: {
   result: OGTagPreviewResponse['result']
   audits: OGTagPreviewProviderAudit[]
+  userAgent?: string
 }) => {
   return (
     result &&
@@ -274,7 +293,11 @@ const PreviewTabs = ({
             <Tab icon={CodeBracketIcon}>Data</Tab>
           </TabList>
           <TabPanels>
-            <PrettyResultPanel result={result} audits={audits} />
+            <PrettyResultPanel
+              result={result}
+              audits={audits}
+              userAgent={userAgent}
+            />
             <ResultPanel result={result} />
           </TabPanels>
         </TabGroup>
@@ -347,7 +370,11 @@ const OgTagPreviewPage = () => {
             error={error}
             setError={setError}
           />
-          <PreviewTabs result={result} audits={audits} />
+          <PreviewTabs
+            result={result}
+            audits={audits}
+            userAgent={customUserAgent}
+          />
         </>
       )}
     </div>

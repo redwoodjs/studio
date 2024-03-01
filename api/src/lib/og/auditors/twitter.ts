@@ -7,6 +7,7 @@ const TwitterImageSchema = z.object({
   alt: z.string().optional(),
 })
 
+// https://dev.twitter.com/cards/getting-started
 export const TwitterAuditor = GenericAuditor.extend({
   twitterTitle: z.string(),
   twitterCard: z.string(),

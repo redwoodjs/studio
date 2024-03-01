@@ -12,7 +12,6 @@ import type {
 } from '../../../types/graphql'
 
 import { DiscordPreviewer } from './DiscordPreviewer'
-import { EmptyPreviewer } from './EmptyPreviewer'
 import { FacebookPreviewer } from './FacebookPreviewer'
 import { GenericPreviewer } from './GenericPreviewer'
 import { LinkedInPreviewer } from './LinkedInPreviewer'
@@ -75,10 +74,11 @@ const getCalloutIcon = (severity: OGPreviewSeverity) => {
 type Props = {
   result: OGTagPreviewResponse['result']
   providerAudit: OGTagPreviewProviderAudit
+  userAgent?: string
 }
 
 export const Previewer = (props: Props) => {
-  const { providerAudit, result } = props
+  const { providerAudit, result, userAgent } = props
   const { audit, provider } = providerAudit
   const { severity, messages } = audit
 
@@ -99,6 +99,10 @@ export const Previewer = (props: Props) => {
           {messages.map((message, index) => (
             <div key={index}>{message}</div>
           ))}
+          {userAgent &&
+            userAgent.toLowerCase().includes(provider.toLowerCase()) && (
+              <div>This preview is likely to be used by {userAgent}</div>
+            )}
         </Callout>
       )}
     </div>
