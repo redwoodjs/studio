@@ -276,6 +276,7 @@ const PreviewTabs = ({
     )
   )
 }
+
 const OgTagPreviewPage = () => {
   const [url, setUrl] = useState('http://localhost:8910/blog-post/2')
   const [customUserAgent, setCustomUserAgent] = useState<string | null>(null)
@@ -284,32 +285,24 @@ const OgTagPreviewPage = () => {
     null
   )
   const [audits, setAudits] = useState<OGTagPreviewProviderAudit[] | null>(null)
-  const [showDisabledSection, setShowDisabledSection] = useState(false)
-  const [showPreviewFetcherSection, setShowPreviewFetcherSection] =
-    useState(false)
+
+  let showDisabledSection = undefined
 
   const { loading, data, error: ssrError } = useQuery(SSR_STATUS_QUERY)
 
   if (ssrError) {
     console.error('Failed to load SSR configuration', ssrError)
-    // setError(ssrError)
-    setShowDisabledSection(true)
-  }
-
-  if (loading) {
-    console.debug('Loading SSR configuration')
   }
 
   if (!loading && data.status.ssr.enabled.status === false) {
     console.debug('SSR is disabled')
-    setShowDisabledSection(true)
-    setShowPreviewFetcherSection(false)
+
+    showDisabledSection = true
   }
 
   if (!loading && data.status.ssr.enabled.status === true) {
     console.debug('SSR is enabled')
-    setShowDisabledSection(false)
-    setShowPreviewFetcherSection(true)
+    showDisabledSection = false
   }
 
   return (
@@ -321,14 +314,14 @@ const OgTagPreviewPage = () => {
         your app.
       </Text>
 
-      {showDisabledSection && <div>disabled</div>}
-      {showPreviewFetcherSection && (
+      {showDisabledSection === true && (
         <Callout title="SSR is not enabled" color="rose" icon={ErrorIcon}>
           Please{' '}
           <a
             href="https://community.redwoodjs.com/t/react-streaming-and-server-side-rendering-ssr/5052"
             target="_blank"
             rel="noreferrer"
+            className="font-bold underline"
           >
             enable SSR
           </a>{' '}
@@ -336,7 +329,7 @@ const OgTagPreviewPage = () => {
         </Callout>
       )}
 
-      {showPreviewFetcherSection && (
+      {showDisabledSection === false && (
         <>
           <PreviewFetcher
             url={url}
