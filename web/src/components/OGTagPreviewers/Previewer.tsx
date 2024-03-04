@@ -18,34 +18,7 @@ import { LinkedInPreviewer } from './LinkedInPreviewer'
 import { SlackPreviewer } from './SlackPreviewer'
 import { TwitterCardPreviewer } from './TwitterCardPreviewer'
 
-export type ProviderPreviewerProps = {
-  result: OGTagPreviewResponse['result']
-}
-
-const PreviewComponentForProvider = ({
-  provider,
-  result,
-}: {
-  provider: OGPreviewProvider
-  result: OGTagPreviewResponse['result']
-}) => {
-  switch (provider) {
-    case 'TWITTER':
-      return <TwitterCardPreviewer result={result} />
-    case 'FACEBOOK':
-      return <FacebookPreviewer result={result} />
-    case 'LINKEDIN':
-      return <LinkedInPreviewer result={result} />
-    case 'DISCORD':
-      return <DiscordPreviewer result={result} />
-    case 'SLACK':
-      return <SlackPreviewer result={result} />
-    default:
-      return <GenericPreviewer result={result} />
-  }
-}
-
-const getCalloutColor = (severity: OGPreviewSeverity): string => {
+function getCalloutColor(severity: OGPreviewSeverity): string {
   switch (severity) {
     case 'WARNING':
       return 'amber'
@@ -58,7 +31,7 @@ const getCalloutColor = (severity: OGPreviewSeverity): string => {
   }
 }
 
-const getCalloutIcon = (severity: OGPreviewSeverity) => {
+function getCalloutIcon(severity: OGPreviewSeverity) {
   switch (severity) {
     case 'WARNING':
       return OGTagWarningIcon
@@ -71,13 +44,16 @@ const getCalloutIcon = (severity: OGPreviewSeverity) => {
   }
 }
 
-interface Props {
+export interface ProviderPreviewerProps {
   result: OGTagPreviewResponse['result']
+}
+
+interface Props extends ProviderPreviewerProps {
   providerAudit: OGTagPreviewProviderAudit
   userAgent?: string
 }
 
-export const Previewer = ({ providerAudit, result, userAgent }: Props) => {
+export const Previewer = ({ result, providerAudit, userAgent }: Props) => {
   const { audit, provider } = providerAudit
   const { severity, messages } = audit
 
@@ -85,7 +61,22 @@ export const Previewer = ({ providerAudit, result, userAgent }: Props) => {
     <div className="space-y-4 pt-4">
       {severity === 'OK' && (
         <Flex justifyContent="center" alignItems="center">
-          <PreviewComponentForProvider provider={provider} result={result} />
+          {((provider: OGPreviewProvider) => {
+            switch (provider) {
+              case 'TWITTER':
+                return <TwitterCardPreviewer result={result} />
+              case 'FACEBOOK':
+                return <FacebookPreviewer result={result} />
+              case 'LINKEDIN':
+                return <LinkedInPreviewer result={result} />
+              case 'DISCORD':
+                return <DiscordPreviewer result={result} />
+              case 'SLACK':
+                return <SlackPreviewer result={result} />
+              default:
+                return <GenericPreviewer result={result} />
+            }
+          })(provider)}
         </Flex>
       )}
       {severity && messages && (

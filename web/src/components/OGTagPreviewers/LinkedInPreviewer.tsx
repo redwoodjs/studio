@@ -2,8 +2,8 @@ import React from 'react'
 
 import type { ProviderPreviewerProps } from './Previewer'
 
-export const LinkedInPreviewer = (props: ProviderPreviewerProps) => {
-  const { ogTitle, ogUrl, ogImage } = props.result
+export const LinkedInPreviewer = ({ result }: ProviderPreviewerProps) => {
+  const { ogTitle, ogUrl, ogImage } = result
   return (
     <div className="cursor:pointer border-1 relative isolate h-[300px] w-[520px] overflow-hidden rounded-none border-gray-500 bg-white shadow-lg">
       <div className="h-60 w-full">

@@ -2,8 +2,8 @@ import React from 'react'
 
 import type { ProviderPreviewerProps } from './Previewer'
 
-export const FacebookPreviewer = (props: ProviderPreviewerProps) => {
-  const { ogTitle, ogImage, ogUrl, ogDescription } = props.result
+export const FacebookPreviewer = ({ result }: ProviderPreviewerProps) => {
+  const { ogTitle, ogImage, ogUrl, ogDescription } = result
   return (
     <div className="cursor:pointer relative isolate w-[524px] overflow-hidden bg-slate-50">
       <div className="h-60 w-full">

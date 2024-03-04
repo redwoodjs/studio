@@ -2,7 +2,7 @@ import React from 'react'
 
 import type { ProviderPreviewerProps } from './Previewer'
 
-export const GenericPreviewer = (props: ProviderPreviewerProps) => {
+export const GenericPreviewer = ({ result }: ProviderPreviewerProps) => {
   const {
     ogTitle,
     ogUrl,
@@ -10,7 +10,7 @@ export const GenericPreviewer = (props: ProviderPreviewerProps) => {
     ogDescription,
     articleAuthor,
     articlePublishedDate,
-  } = props.result
+  } = result
   return (
     <div className="cursor:pointer h-full w-full overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-50 p-4 shadow-lg">
       <div className="h-60 w-full">
