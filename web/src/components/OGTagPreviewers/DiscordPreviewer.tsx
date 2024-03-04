@@ -2,8 +2,9 @@ import React from 'react'
 
 import type { ProviderPreviewerProps } from './Previewer'
 
-export const DiscordPreviewer = (props: ProviderPreviewerProps) => {
-  const { ogTitle, ogDescription, ogImage } = props.result
+export const DiscordPreviewer = ({ result }: ProviderPreviewerProps) => {
+  const { ogTitle, ogDescription, ogImage } = result
+
   return (
     <div className="cursor:pointer h-[330px] w-[440px] overflow-hidden rounded-sm border-gray-500 bg-zinc-800 p-4 shadow-lg">
       <div className="h-20 w-full space-y-2 py-2">
