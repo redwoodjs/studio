@@ -71,14 +71,13 @@ const getCalloutIcon = (severity: OGPreviewSeverity) => {
   }
 }
 
-type Props = {
+interface Props {
   result: OGTagPreviewResponse['result']
   providerAudit: OGTagPreviewProviderAudit
   userAgent?: string
 }
 
-export const Previewer = (props: Props) => {
-  const { providerAudit, result, userAgent } = props
+export const Previewer = ({ providerAudit, result, userAgent }: Props) => {
   const { audit, provider } = providerAudit
   const { severity, messages } = audit
 

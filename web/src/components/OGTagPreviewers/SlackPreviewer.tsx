@@ -2,8 +2,9 @@ import React from 'react'
 
 import type { ProviderPreviewerProps } from './Previewer'
 
-export const SlackPreviewer = (props: ProviderPreviewerProps) => {
-  const { ogTitle, ogDescription, ogUrl } = props.result
+export const SlackPreviewer = ({ result }: ProviderPreviewerProps) => {
+  const { ogTitle, ogDescription, ogUrl } = result
+
   return (
     <div className="border-l-4 border-gray-400 bg-white pl-4">
       <div className="py-2">

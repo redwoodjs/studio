@@ -1,4 +1,4 @@
-import ogs from 'open-graph-scraper'
+import openGraphScraper from 'open-graph-scraper'
 import type { QueryResolvers } from 'types/graphql'
 
 import { SyntaxError } from '@redwoodjs/graphql-server'
@@ -29,9 +29,7 @@ export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
     })
 
     const html = await response.text()
-    const customResult = await ogs({
-      html,
-    })
+    const customResult = await openGraphScraper({ html })
 
     const { result, error } = customResult
     const audits = auditor(result, error)

@@ -2,7 +2,7 @@ import React from 'react'
 
 import type { ProviderPreviewerProps } from './Previewer'
 
-export const TwitterCardPreviewer = (props: ProviderPreviewerProps) => {
+export const TwitterCardPreviewer = ({ result }: ProviderPreviewerProps) => {
   const {
     twitterTitle,
     twitterImage,
@@ -10,7 +10,8 @@ export const TwitterCardPreviewer = (props: ProviderPreviewerProps) => {
     ogUrl,
     ogSiteName,
     twitterSite,
-  } = props.result
+  } = result
+
   return (
     <div className="cursor:pointer border-1 relative isolate h-44 w-96 overflow-hidden rounded-lg border-gray-100 bg-gray-900 px-6 py-24">
       <img
