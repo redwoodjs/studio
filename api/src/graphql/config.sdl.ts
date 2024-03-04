@@ -21,6 +21,7 @@ export const schema = gql`
     port: Int
     apiUrl: String
   }
+
   type StudioConfig {
     id: String!
     basePort: Int
