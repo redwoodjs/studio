@@ -1,180 +1,112 @@
 import { useState } from 'react'
 
-import { useLazyQuery } from '@apollo/client'
-import {
-  Title,
-  Grid,
-  Col,
-  Card,
-  Text,
-  Flex,
-  Button,
-  TextInput,
-  Tab,
-  TabGroup,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Callout,
-} from '@tremor/react'
+import { Title, Text, Callout } from '@tremor/react'
 
-import { Metadata } from '@redwoodjs/web'
+import { Metadata, useQuery } from '@redwoodjs/web'
 
-import {
-  CodeBracketIcon,
-  ErrorIcon,
-  EyeIcon,
-  LinkIcon,
-  RectangleStackIcon,
-  RefreshIcon,
-} from 'src/icons/Icons'
+import { ErrorIcon } from 'src/icons/Icons'
 
-const OG_TAG_PREVIEW_QUERY = gql`
-  query OGTagPreview($url: String!, $customUserAgent: String) {
-    ogTagPreview(url: $url, customUserAgent: $customUserAgent) {
+import type {
+  OGTagPreviewProviderAudit,
+  OGTagPreviewResponse,
+} from '../../../types/graphql'
+
+import { PreviewFetcher } from './PreviewFetcher'
+import { PreviewTabs } from './PreviewTabs'
+
+const PROJECT_CONFIG_QUERY = gql`
+  query UserProjectConfigQuery {
+    config: userProjectConfig {
       id
-      userAgent
-      error
-      result
+      web {
+        id
+        host
+        port
+        apiUrl
+      }
+      ssr {
+        id
+        enabled {
+          status
+          message
+        }
+      }
     }
   }
 `
 
-function isValidHttpUrl(possibleURL: string) {
-  let url
-  try {
-    url = new URL(possibleURL)
-  } catch (_error) {
-    return false
-  }
-  return url.protocol === 'http:' || url.protocol === 'https:'
-}
-
 const OgTagPreviewPage = () => {
-  const [url, setUrl] = useState('http://localhost:8910/')
+  const [url, setUrl] = useState<string>('')
+  const [showPreviewer, setShowPreviewer] = useState<boolean | null>(null)
   const [customUserAgent, setCustomUserAgent] = useState<string | null>(null)
+  const [error, setError] = useState<Error | null>(null)
+  const [result, setResult] = useState<OGTagPreviewResponse['result'] | null>(
+    null
+  )
+  const [audits, setAudits] = useState<OGTagPreviewProviderAudit[] | null>(null)
 
-  const [getOGTagPreview, ogTagPreviewQuery] =
-    useLazyQuery(OG_TAG_PREVIEW_QUERY)
+  useQuery(PROJECT_CONFIG_QUERY, {
+    onCompleted(data) {
+      if (data.config) {
+        if (data.config.ssr) {
+          setShowPreviewer(data.config.ssr.enabled.status)
+        }
 
-  const executeFetch = async (url: string, customUserAgent: string | null) => {
-    if (!isValidHttpUrl(url)) {
-      return
-    }
-    await getOGTagPreview({
-      variables: { url, customUserAgent },
-    })
-  }
+        if (data.config.web) {
+          setUrl(`http://${data.config.web.host}:${data.config.web.port}`)
+        }
+      }
+    },
+
+    onError(error) {
+      console.error('Failed to load user project configuration', error)
+    },
+  })
 
   return (
-    <>
-      <Metadata title="OgTagPreview" description="OgTagPreview page" />
-
+    <div className="space-y-4">
+      <Metadata title="OG Tag Preview" description="Preview OpenGraph tags" />
       <Title>OG Tag Preview</Title>
       <Text>
         Examine the OG tags present on your pages without the need to deploy
         your app.
       </Text>
 
-      <Grid numItemsLg={3} className="mt-6 gap-6">
-        {/* Input/Config */}
-        <Col numColSpanLg={3}>
-          <Card className="h-full">
-            <Flex flexDirection="row" className="space-x-6">
-              <Flex flexDirection="col" className="grow space-y-6">
-                <div className="w-full">
-                  <TextInput
-                    icon={LinkIcon}
-                    placeholder="Test URL"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    onKeyUp={async (e) => {
-                      if (e.key === 'Enter') {
-                        await executeFetch(url, customUserAgent)
-                      }
-                    }}
-                  />
-                </div>
-                <div className="w-full">
-                  <TextInput
-                    icon={EyeIcon}
-                    placeholder="Custom user-agent (optional)"
-                    value={customUserAgent || ''}
-                    onChange={(e) => setCustomUserAgent(e.target.value)}
-                    onKeyUp={async (e) => {
-                      if (e.key === 'Enter') {
-                        await executeFetch(url, customUserAgent)
-                      }
-                    }}
-                  />
-                </div>
-              </Flex>
-              <div className="h-full">
-                <Button
-                  className="h-full"
-                  icon={RefreshIcon}
-                  onClick={async () => executeFetch(url, customUserAgent)}
-                  disabled={!isValidHttpUrl(url)}
-                >
-                  Fetch
-                </Button>
-              </div>
-            </Flex>
-          </Card>
-        </Col>
+      {!showPreviewer && (
+        <Callout title="SSR is not enabled" color="rose" icon={ErrorIcon}>
+          Please{' '}
+          <a
+            href="https://community.redwoodjs.com/t/react-streaming-and-server-side-rendering-ssr/5052"
+            target="_blank"
+            rel="noreferrer"
+            className="font-bold underline"
+          >
+            enable SSR
+          </a>{' '}
+          in your project to preview OpenGraph tags.
+        </Callout>
+      )}
 
-        {/* OG tag results */}
-        {ogTagPreviewQuery.loading ? (
-          <Col numColSpanLg={3}>
-            <Card className="h-full p-6">Loading...</Card>
-          </Col>
-        ) : ogTagPreviewQuery.error ? (
-          <Col numColSpanLg={3}>
-            <Card className="h-full p-6">
-              <Callout title="Error" icon={ErrorIcon} color="rose">
-                <div className="h-full w-full overflow-x-auto">
-                  <pre className="text-gray-500 dark:text-gray-600">
-                    {JSON.stringify(ogTagPreviewQuery.error, undefined, 2)}
-                  </pre>
-                </div>
-              </Callout>
-            </Card>
-          </Col>
-        ) : (
-          <Col numColSpanLg={3}>
-            <Card className="h-full p-6">
-              <TabGroup>
-                <TabList>
-                  <Tab icon={CodeBracketIcon}>Raw</Tab>
-                  <Tab icon={RectangleStackIcon}>Pretty</Tab>
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
-                    <div className="h-full w-full overflow-x-auto">
-                      <pre className="text-gray-500 dark:text-gray-600">
-                        {JSON.stringify(
-                          ogTagPreviewQuery.data?.ogTagPreview.result ??
-                            'No data',
-                          undefined,
-                          2
-                        )}
-                      </pre>
-                    </div>
-                  </TabPanel>
-                  <TabPanel>
-                    <Flex flexDirection="col">
-                      <div className="pt-4">
-                        <Text>Not yet implemented...</Text>
-                      </div>
-                    </Flex>
-                  </TabPanel>
-                </TabPanels>
-              </TabGroup>
-            </Card>
-          </Col>
-        )}
-      </Grid>
-    </>
+      {showPreviewer && (
+        <>
+          <PreviewFetcher
+            url={url}
+            setUrl={setUrl}
+            customUserAgent={customUserAgent}
+            setCustomUserAgent={setCustomUserAgent}
+            setAudits={setAudits}
+            setResult={setResult}
+            error={error}
+            setError={setError}
+          />
+          <PreviewTabs
+            result={result}
+            audits={audits}
+            userAgent={customUserAgent}
+          />
+        </>
+      )}
+    </div>
   )
 }
 

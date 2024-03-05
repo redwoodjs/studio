@@ -197,7 +197,9 @@ export const NavigationMenu = () => {
               Development Server
             </div>
             <ul className="-mx-2 mt-2 space-y-1">
-              <ConnectionStatusIndicator />
+              <li>
+                <ConnectionStatusIndicator />
+              </li>
             </ul>
           </li>
         </ul>

@@ -43,10 +43,13 @@ export const Success = ({
         image:
           'https://tailwindui.com/img/ecommerce-images/order-history-page-03-product-03.jpg',
         title: `${blogPost.title} | RedwoodJS Blog`,
-        description: blogPost.body,
+        description: blogPost.body.substring(0, 10),
+        site_name: 'redwoodjs.com',
+        url: `https://redwoodjs.com/blog-posts/${blogPost.id}`,
       }}
       article={{
         author: blogPost.author.fullName,
+        published_date: blogPost.createdAt,
         published_time: blogPost.createdAt,
       }}
       profile={{
@@ -54,11 +57,13 @@ export const Success = ({
       }}
       twitter={{
         card: 'summary_large_image',
-        site: '@redwoodjs',
+        site: 'redwoodjs.com',
+        url: `https://redwoodjs.com/blog-posts/${blogPost.id}`,
         creator: `@${blogPost.author.fullName}`,
         title: `${blogPost.title} | RedwoodJS Blog`,
+        description: blogPost.body.substring(0, 10),
         image:
-          'https://tailwindui.com/img/ecommerce-images/order-history-page-03-product-04.jpg',
+          'https://tailwindui.com/img/ecommerce-images/order-history-page-03-product-03.jpg',
         'image:alt': 'this is a description of image',
       }}
     />
