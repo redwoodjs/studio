@@ -278,9 +278,14 @@ export const startSpanProcessor = async () => {
       return
     }
     const spans = spanDataQueue.splice(0, spanDataQueue.length)
-    for (let i = 0; i < spans.length; i++) {
-      await processSpan(spans[i])
-    }
+    await Promise.allSettled(spans.map(processSpan))
+
+    // Invalidate the appropriate queries
+    await liveQueryStore?.invalidate('Query.otelSpans')
+    await liveQueryStore?.invalidate('Query.otelTraces')
+    await liveQueryStore?.invalidate('Query.otelSpanCount')
+    await liveQueryStore?.invalidate('Query.otelTraceCount')
+
     logger.info(`Processed ${spans.length} OpenTelemetry spans`)
   }
 
@@ -310,12 +315,6 @@ const processSpan = async (body: string) => {
       logger.debug(`Ingested ${spans.length} OpenTelemetry spans`)
     }
   }
-
-  // Invalidate the appropriate queries
-  await liveQueryStore?.invalidate('Query.otelSpans')
-  await liveQueryStore?.invalidate('Query.otelTraces')
-  await liveQueryStore?.invalidate('Query.otelSpanCount')
-  await liveQueryStore?.invalidate('Query.otelTraceCount')
 }
 
 export const handler = async (event: APIGatewayEvent, _context: Context) => {
