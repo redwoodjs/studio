@@ -1,6 +1,6 @@
 import { Flex, Title } from '@tremor/react'
 
-import { NavLink, routes } from '@redwoodjs/router'
+import { routes } from '@redwoodjs/router'
 
 import {
   AboutIcon,
@@ -12,6 +12,7 @@ import {
   OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
+  StudioIcon,
   SpansIcon,
   SqlStatementsIcon,
   TemplatesIcon,
@@ -19,31 +20,9 @@ import {
 } from 'src/icons/Icons'
 
 import { ConnectionStatusIndicator } from './ConnectionStatusIndicator'
+import type { TNavigationItem } from './NavigationItem'
+import { NavigationItem } from './NavigationItem'
 import { OrbitSearch } from './OrbitSearch'
-
-type TNavigationItem = {
-  name: string
-  to: string
-  // https://www.totaltypescript.com/pass-component-as-prop-react
-  icon: React.ElementType<{ className: string }>
-}
-// v7 ships with SSR section disabled as Bighorn introduces the feature
-const includeSSR = false
-
-const NavigationItem = ({ item }: { item: TNavigationItem }) => {
-  return (
-    <div className="flex w-full">
-      <NavLink
-        to={item.to}
-        className="group flex grow gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-500 hover:bg-gray-50 hover:text-orange-500 dark:text-gray-600 dark:hover:bg-gray-950"
-        activeClassName="grow text-orange-500 dark:text-orange-500 bg-gray-50 dark:bg-gray-950 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-      >
-        <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
-        {item.name}
-      </NavLink>
-    </div>
-  )
-}
 
 export const NavigationMenu = () => {
   const navigation: TNavigationItem[] = [
@@ -118,12 +97,15 @@ export const NavigationMenu = () => {
 
   return (
     <>
-      <div className="flex h-16 shrink-0 items-center">
-        <img className="h-8 w-auto" src="/mark.svg" alt="RedwoodJS" />
-        <Flex flexDirection="col" justifyContent="start" alignItems="start">
-          <Title className="pl-4">RedwoodJS Studio</Title>
-        </Flex>
-      </div>
+      <Flex
+        flexDirection="row"
+        justifyContent="start"
+        alignItems="center"
+        className="pt-4"
+      >
+        <StudioIcon className="h-8 w-auto shrink-0 text-tremor-brand-emphasis" />
+        <Title className="pl-3">RedwoodJS Studio</Title>
+      </Flex>
       <nav className="flex flex-1 flex-col">
         <ul className="flex flex-1 flex-col gap-y-7">
           <li>
@@ -186,20 +168,18 @@ export const NavigationMenu = () => {
               ))}
             </ul>
           </li>
-          {includeSSR && (
-            <li>
-              <div className="text-xs font-semibold leading-6 text-gray-400">
-                SSR
-              </div>
-              <ul className="-mx-2 mt-2 space-y-1">
-                {ssrNavigation.map((item) => (
-                  <li key={item.name}>
-                    <NavigationItem item={item} />
-                  </li>
-                ))}
-              </ul>
-            </li>
-          )}
+          <li>
+            <div className="text-xs font-semibold leading-6 text-gray-400">
+              SSR
+            </div>
+            <ul className="-mx-2 mt-2 space-y-1">
+              {ssrNavigation.map((item) => (
+                <li key={item.name}>
+                  <NavigationItem item={item} />
+                </li>
+              ))}
+            </ul>
+          </li>
           <li>
             <div className="text-xs font-semibold leading-6 text-gray-400">
               Studio
@@ -217,7 +197,9 @@ export const NavigationMenu = () => {
               Development Server
             </div>
             <ul className="-mx-2 mt-2 space-y-1">
-              <ConnectionStatusIndicator />
+              <li>
+                <ConnectionStatusIndicator />
+              </li>
             </ul>
           </li>
         </ul>

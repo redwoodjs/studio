@@ -21,7 +21,11 @@ export {
   DocumentDuplicateIcon,
   DocumentTextIcon,
   ExclamationTriangleIcon as ErrorIcon,
+  ExclamationTriangleIcon as OGTagErrorIcon,
   EyeIcon,
+  EyeSlashIcon as HideIcon,
+  FaceFrownIcon as OGTagWarningIcon,
+  FaceSmileIcon as OGTagOKIcon,
   GlobeAltIcon as NetworkPerformanceIcon,
   HomeIcon,
   InboxArrowDownIcon as TemplatesIcon,
@@ -51,3 +55,5 @@ export { DocumentDuplicateIcon as DocumentDuplicateSolidIcon } from '@heroicons/
 
 export { GraphQLIcon } from './GraphQLIcon'
 export { GraphQLIcon as GraphQLPerformanceIcon } from './GraphQLIcon'
+
+export { StudioIcon } from './StudioIcon'
