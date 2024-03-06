@@ -264,13 +264,35 @@ async function createSpan(span: Span, resourceId: string, scopeId: string) {
   })
 }
 
-export const handler = async (event: APIGatewayEvent, _context: Context) => {
-  // Some guidance is available from:
-  // https://github.com/open-telemetry/opentelemetry-proto/blob/main/docs/specification.md
-  // Note the spec for OTLP traces is here:
-  // https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/trace/v1/trace.proto
+let spanProcessingInterval: NodeJS.Timeout | null = null
+const spanDataQueue: string[] = []
+export const startSpanProcessor = async () => {
+  logger.info('Starting OpenTelemetry span processor')
 
-  const { resourceSpans } = JSON.parse(event.body) as TracesData
+  if (spanProcessingInterval) {
+    clearInterval(spanProcessingInterval)
+  }
+
+  const processSpanBatch = async () => {
+    if (spanDataQueue.length === 0) {
+      return
+    }
+    const spans = spanDataQueue.splice(0, spanDataQueue.length)
+    for (let i = 0; i < spans.length; i++) {
+      await processSpan(spans[i])
+    }
+    logger.info(`Processed ${spans.length} OpenTelemetry spans`)
+  }
+
+  spanProcessingInterval = setInterval(processSpanBatch, 1000)
+}
+
+// Some guidance is available from:
+// https://github.com/open-telemetry/opentelemetry-proto/blob/main/docs/specification.md
+// Note the spec for OTLP traces is here:
+// https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/trace/v1/trace.proto
+const processSpan = async (body: string) => {
+  const { resourceSpans } = JSON.parse(body) as TracesData
   for (let i = 0; i < resourceSpans.length; i++) {
     const resourceId = await createResource(resourceSpans[i].resource)
     const scopeSpans = resourceSpans[i].scopeSpans
@@ -294,6 +316,10 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
   await liveQueryStore?.invalidate('Query.otelTraces')
   await liveQueryStore?.invalidate('Query.otelSpanCount')
   await liveQueryStore?.invalidate('Query.otelTraceCount')
+}
+
+export const handler = async (event: APIGatewayEvent, _context: Context) => {
+  spanDataQueue.push(event.body)
 
   // TODO: Currently we always respond with a "full success" but we should respond dynamically based on how we got on
   //       with the parsing/ingesting
@@ -302,6 +328,6 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({}),
+    body: '{}',
   }
 }

@@ -12,6 +12,7 @@ import { coerceRootPath, redwoodFastifyWeb } from '@redwoodjs/fastify-web'
 
 import { logger } from 'src/lib/logger'
 
+import { startSpanProcessor } from './functions/otel-trace/otel-trace'
 import { startConnectionWatching } from './util/connectionWatching'
 import { startWatchers } from './util/fsWatching'
 import { graphqlProxy } from './util/graphqlProxy'
@@ -105,6 +106,9 @@ export async function serve(
 
   // Start connection watchers
   startConnectionWatching()
+
+  // Start span processor
+  await startSpanProcessor()
 
   // Start the mail server
   const smtpServer = new SMTPServer({
