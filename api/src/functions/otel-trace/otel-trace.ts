@@ -29,15 +29,16 @@ function getMD5Hash(value: unknown) {
 }
 
 // TODO: Move this somewhere more appropriate
-function convertLongToBigInt({
-  low,
-  high,
-  unsigned,
-}: {
+type Long = {
   low: number
   high: number
   unsigned?: boolean
-}) {
+}
+function convertLongToBigInt(input: Long | string) {
+  if (typeof input === 'string') {
+    return BigInt(input)
+  }
+  const { low, high, unsigned } = input
   const lowBI = BigInt.asUintN(32, BigInt(low))
   const highBI = BigInt.asUintN(32, BigInt(high))
   const combined = (highBI << 32n) | lowBI
