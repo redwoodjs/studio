@@ -1,15 +1,15 @@
 import { useState } from 'react'
 
 import { Title, Text, Callout } from '@tremor/react'
+import type {
+  OGTagPreviewProviderAudit,
+  OGTagPreviewResponse,
+  PerformanceTiming,
+} from 'types/graphql'
 
 import { Metadata, useQuery } from '@redwoodjs/web'
 
 import { ErrorIcon } from 'src/icons/Icons'
-
-import type {
-  OGTagPreviewProviderAudit,
-  OGTagPreviewResponse,
-} from '../../../types/graphql'
 
 import { PreviewFetcher } from './PreviewFetcher'
 import { PreviewTabs } from './PreviewTabs'
@@ -44,6 +44,8 @@ const OgTagPreviewPage = () => {
     null
   )
   const [audits, setAudits] = useState<OGTagPreviewProviderAudit[] | null>(null)
+  const [performanceTiming, setPerformanceTiming] =
+    useState<PerformanceTiming | null>(null)
 
   useQuery(PROJECT_CONFIG_QUERY, {
     onCompleted(data) {
@@ -96,12 +98,14 @@ const OgTagPreviewPage = () => {
             setCustomUserAgent={setCustomUserAgent}
             setAudits={setAudits}
             setResult={setResult}
+            setPerformanceTiming={setPerformanceTiming}
             error={error}
             setError={setError}
           />
           <PreviewTabs
             result={result}
             audits={audits}
+            performanceTiming={performanceTiming}
             userAgent={customUserAgent}
           />
         </>

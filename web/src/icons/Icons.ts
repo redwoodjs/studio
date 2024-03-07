@@ -41,6 +41,7 @@ export {
   PaperClipIcon,
   PhotoIcon as OGTagPreviewIcon,
   RectangleStackIcon,
+  SparklesIcon as PerformanceTimingIcon,
   Square2StackIcon as DashboardIcon,
   TableCellsIcon,
   VariableIcon,

@@ -6,7 +6,11 @@ import {
   SearchSelectItem,
   TextInput,
 } from '@tremor/react'
-import { OGTagPreviewProviderAudit, OGTagPreviewResponse } from 'types/graphql'
+import {
+  OGTagPreviewProviderAudit,
+  OGTagPreviewResponse,
+  PerformanceTiming,
+} from 'types/graphql'
 
 import { ErrorIcon, EyeIcon, LinkIcon } from 'src/icons/Icons'
 
@@ -20,6 +24,7 @@ interface Props {
   setCustomUserAgent: (customUserAgent: string | null) => void
   setAudits: (audits: OGTagPreviewProviderAudit[] | null) => void
   setResult: (result: OGTagPreviewResponse['result'] | null) => void
+  setPerformanceTiming: (performanceTiming: PerformanceTiming | null) => void
   error: Error
   setError: (error: Error | null) => void
 }
@@ -31,6 +36,7 @@ export const PreviewFetcher = ({
   setCustomUserAgent,
   setAudits,
   setResult,
+  setPerformanceTiming,
   error,
   setError,
 }: Props) => {
@@ -68,6 +74,7 @@ export const PreviewFetcher = ({
             customUserAgent={customUserAgent}
             setAudits={setAudits}
             setResult={setResult}
+            setPerformanceTiming={setPerformanceTiming}
             setError={setError}
           />
         </div>
