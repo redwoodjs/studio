@@ -46,10 +46,7 @@ export const Success = ({
         description: getFirstNSentences(blogPost.body, 1),
         site_name: 'redwoodjs.com',
         image: blogPost.imageUrl,
-        url:
-          blogPost.id === 3
-            ? null
-            : `https://redwoodjs.com/blog-posts/${blogPost.id}`,
+        url: `https://redwoodjs.com/blog-posts/${blogPost.id}`,
       }}
       article={{
         author: blogPost.author.fullName,
@@ -64,7 +61,7 @@ export const Success = ({
         site: 'redwoodjs.com',
         url: `https://redwoodjs.com/blog-posts/${blogPost.id}`,
         creator: `@${blogPost.author.fullName}`,
-        title: `${blogPost.title} | RedwoodJS Blog`,
+        title: blogPost.id === 2 ? null : `${blogPost.title} | RedwoodJS Blog`,
         description: getFirstNSentences(blogPost.body, 1),
         image: blogPost.imageUrl,
         'image:alt': 'this is a description of image',
