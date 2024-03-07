@@ -7,6 +7,7 @@ import { Metadata } from '@redwoodjs/web'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import BlogPost from 'src/components/BlogPost'
+import { getFirstNSentences } from 'src/lib/formatters'
 
 export const QUERY = gql`
   query FindBlogPostQuery($id: Int!) {
@@ -41,11 +42,14 @@ export const Success = ({
     <Metadata
       title={blogPost.title}
       og={{
-        image: blogPost.imageUrl,
         title: `${blogPost.title} | RedwoodJS Blog`,
-        description: blogPost.body.substring(0, 10),
+        description: getFirstNSentences(blogPost.body, 1),
         site_name: 'redwoodjs.com',
-        url: `https://redwoodjs.com/blog-posts/${blogPost.id}`,
+        image: blogPost.imageUrl,
+        url:
+          blogPost.id === 3
+            ? null
+            : `https://redwoodjs.com/blog-posts/${blogPost.id}`,
       }}
       article={{
         author: blogPost.author.fullName,
@@ -56,12 +60,12 @@ export const Success = ({
         username: blogPost.author.fullName,
       }}
       twitter={{
-        card: 'summary_large_image',
+        card: blogPost.id === 3 ? null : 'summary_large_image',
         site: 'redwoodjs.com',
         url: `https://redwoodjs.com/blog-posts/${blogPost.id}`,
         creator: `@${blogPost.author.fullName}`,
         title: `${blogPost.title} | RedwoodJS Blog`,
-        description: blogPost.body.substring(0, 10),
+        description: getFirstNSentences(blogPost.body, 1),
         image: blogPost.imageUrl,
         'image:alt': 'this is a description of image',
       }}
