@@ -153,9 +153,14 @@ async function main() {
   if (!verbose) {
     spinner.start('Copying over db files...')
   }
+  fs.mkdirSync(path.join(packagedDir, 'api', 'db'), { recursive: true })
   fs.copySync(
-    path.join(studioPath, 'api', 'db'),
-    path.join(packagedDir, 'api', 'db')
+    path.join(studioPath, 'api', 'db', 'schema.prisma'),
+    path.join(packagedDir, 'api', 'db', 'schema.prisma')
+  )
+  fs.copySync(
+    path.join(studioPath, 'api', 'db', 'migrations'),
+    path.join(packagedDir, 'api', 'db', 'migrations')
   )
   if (!verbose) {
     spinner.succeed('DB files copied!')
