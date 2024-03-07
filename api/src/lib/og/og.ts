@@ -91,5 +91,25 @@ export const auditor = (
     }))
   }
 
-  return PROVIDERS.map((provider) => auditForProvider(result, provider))
+  const audits = PROVIDERS.map((provider) => auditForProvider(result, provider))
+
+  const errors = []
+
+  audits?.map((providerAudit) => {
+    const { audit } = providerAudit
+    if (audit) {
+      const { severity, messages } = audit
+      if (severity !== 'OK') {
+        errors.push(messages)
+      }
+    }
+  })
+
+  if (errors.length > 0) {
+    result.success = false
+    result.error = errors.join(', ')
+    result.errorDetails = new Error('Validation failed')
+  }
+
+  return audits
 }
