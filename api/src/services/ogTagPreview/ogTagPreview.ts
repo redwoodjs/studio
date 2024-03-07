@@ -6,6 +6,46 @@ import { SyntaxError } from '@redwoodjs/graphql-server'
 import { auditor } from 'src/lib/og/og'
 import { getUserProjectConfig } from 'src/util/project'
 
+async function fetchWithTiming(url, headers) {
+  // Start timing just before the request is made
+  const start = performance.now()
+
+  try {
+    // Make the fetch request
+    const response = await fetch(url, headers)
+
+    // Time after receiving the first byte
+    const firstByteTime = performance.now()
+
+    // Clone the response to read the body without affecting the original response
+    const clone = response.clone()
+
+    // Ensure the body is fully read
+    await clone.blob()
+
+    // Time after receiving the last byte
+    const lastByteTime = performance.now()
+
+    // Read the body as text
+    const html = await response.text()
+
+    // Calculate timing
+    const performanceTiming = {
+      startTime: start,
+      firstByte: firstByteTime - start,
+      lastByte: lastByteTime - start,
+      totalTime: lastByteTime - start,
+    }
+
+    console.log('Timing:', performanceTiming)
+
+    return { html, performanceTiming }
+  } catch (error) {
+    console.error('Fetch error:', error)
+    throw error // Rethrow the error after logging
+  }
+}
+
 export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
   url,
   customUserAgent,
@@ -22,13 +62,12 @@ export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
   }
 
   try {
-    const response = await fetch(url, {
+    const { html, performanceTiming } = await fetchWithTiming(url, {
       headers: {
         'User-Agent': customUserAgent,
       },
     })
 
-    const html = await response.text()
     const customResult = await openGraphScraper({ html })
 
     const { result, error } = customResult
@@ -40,6 +79,7 @@ export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
       error,
       result: auditedResult,
       audits,
+      performanceTiming,
     }
   } catch {
     throw new SyntaxError(
