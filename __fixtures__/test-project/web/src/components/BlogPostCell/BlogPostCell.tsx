@@ -14,6 +14,7 @@ export const QUERY = gql`
       id
       title
       body
+      imageUrl
       author {
         email
         fullName
@@ -40,8 +41,7 @@ export const Success = ({
     <Metadata
       title={blogPost.title}
       og={{
-        image:
-          'https://tailwindui.com/img/ecommerce-images/order-history-page-03-product-03.jpg',
+        image: blogPost.imageUrl,
         title: `${blogPost.title} | RedwoodJS Blog`,
         description: blogPost.body.substring(0, 10),
         site_name: 'redwoodjs.com',
@@ -62,8 +62,7 @@ export const Success = ({
         creator: `@${blogPost.author.fullName}`,
         title: `${blogPost.title} | RedwoodJS Blog`,
         description: blogPost.body.substring(0, 10),
-        image:
-          'https://tailwindui.com/img/ecommerce-images/order-history-page-03-product-03.jpg',
+        image: blogPost.imageUrl,
         'image:alt': 'this is a description of image',
       }}
     />
