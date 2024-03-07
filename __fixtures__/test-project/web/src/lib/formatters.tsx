@@ -56,3 +56,13 @@ export const timeTag = (dateTime?: string) => {
 export const checkboxInputTag = (checked: boolean) => {
   return <input type="checkbox" checked={checked} disabled />
 }
+
+export const getFirstNSentences = (
+  text: string,
+  numberOfSentences = 1
+): string => {
+  const sentences: string[] = text.match(/[^.!?]+[.!?](\s|$)/g) || []
+  if (sentences.length === 0) return ''
+
+  return sentences.slice(0, numberOfSentences).join(' ').trim()
+}

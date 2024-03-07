@@ -1,6 +1,7 @@
 import React from 'react'
 
 import type { ProviderPreviewerProps } from './Previewer'
+import { extractDomain } from './Previewer'
 
 export const TwitterCardPreviewer = ({ result }: ProviderPreviewerProps) => {
   const {
@@ -20,7 +21,7 @@ export const TwitterCardPreviewer = ({ result }: ProviderPreviewerProps) => {
         className="absolute inset-0 -z-10 h-full w-full bg-left object-cover"
       />
       <div className="border-1 absolute bottom-1 left-1 rounded-md border-black bg-black p-1 text-xs text-white">
-        {twitterSite || ogSiteName || twitterUrl || ogUrl}
+        {twitterSite || ogSiteName || twitterUrl || extractDomain(ogUrl)}
       </div>
     </div>
   )
