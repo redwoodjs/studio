@@ -12,7 +12,7 @@ import { z } from 'zod'
 export const BasicMetadataAuditor = z.object({
   ogTitle: z.string(),
   ogType: z.string(),
-  ogUrl: z.string(),
+  ogUrl: z.string().url(),
   ogDescription: z.string().optional(),
   ogSiteName: z.string().optional(),
 })
