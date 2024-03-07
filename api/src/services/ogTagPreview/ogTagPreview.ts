@@ -32,13 +32,13 @@ export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
     const customResult = await openGraphScraper({ html })
 
     const { result, error } = customResult
-    const audits = auditor(result, error)
+    const { audits, auditedResult } = auditor(result, error)
 
     return {
       id: url,
       userAgent: customUserAgent,
       error,
-      result,
+      result: auditedResult,
       audits,
     }
   } catch {

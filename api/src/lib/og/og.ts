@@ -1,5 +1,6 @@
+import type { OgObject } from 'open-graph-scraper/dist/lib/types'
+
 import type {
-  OGTagPreviewResponse,
   OGTagPreviewProviderAudit,
   OGPreviewProvider,
   OGTagPreviewAudit,
@@ -59,7 +60,7 @@ const getProviderAuditor = (provider: OGPreviewProvider) => {
 }
 
 const auditForProvider = (
-  result,
+  result: OgObject,
   provider: OGPreviewProvider
 ): OGTagPreviewProviderAudit => {
   const auditResult = getProviderAuditor(provider).safeParse(result)
@@ -81,35 +82,51 @@ const auditForProvider = (
 }
 
 export const auditor = (
-  result: OGTagPreviewResponse['result'],
+  result: OgObject,
   error: boolean
-): OGTagPreviewProviderAudit[] => {
+): { audits: OGTagPreviewProviderAudit[]; auditedResult: OgObject } => {
   if (error) {
-    return PROVIDERS.map((provider) => ({
-      provider,
-      audit: { severity: 'ERROR', messages: ['Unable to preview'] },
-    }))
+    return {
+      audits: PROVIDERS.map((provider) => ({
+        provider,
+        audit: { severity: 'ERROR', messages: ['Unable to preview'] },
+      })),
+      auditedResult: result,
+    }
   }
 
   const audits = PROVIDERS.map((provider) => auditForProvider(result, provider))
 
-  const errors = []
+  return {
+    audits,
+    auditedResult: resultWithValidationResultMessages(audits, result),
+  }
+}
+
+export const resultWithValidationResultMessages = (
+  audits: OGTagPreviewProviderAudit[],
+  result: OgObject
+): OgObject => {
+  const validationMessages = []
+  const providers = []
 
   audits?.map((providerAudit) => {
-    const { audit } = providerAudit
+    const { provider, audit } = providerAudit
     if (audit) {
       const { severity, messages } = audit
       if (severity !== 'OK') {
-        errors.push(messages)
+        providers.push(provider)
+        validationMessages.push(messages)
       }
     }
   })
 
-  if (errors.length > 0) {
+  if (validationMessages.length > 0) {
     result.success = false
-    result.error = errors.join(', ')
-    result.errorDetails = new Error('Validation failed')
+    result.error = `Audit failed for ${providers.join(
+      ', '
+    )}. ${validationMessages.join(', ')}`
   }
 
-  return audits
+  return result
 }
