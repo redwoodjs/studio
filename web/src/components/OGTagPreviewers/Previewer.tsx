@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Callout, Flex } from '@tremor/react'
 
+import { EmptyPreviewer } from 'src/components/OGTagPreviewers/EmptyPreviewer'
 import { OGTagWarningIcon, OGTagErrorIcon, OGTagOKIcon } from 'src/icons/Icons'
 
 import type {
@@ -88,6 +89,7 @@ export const Previewer = ({ result, providerAudit, userAgent }: Props) => {
           })(provider)}
         </Flex>
       )}
+      {severity !== 'OK' && <EmptyPreviewer />}
       {severity && messages && (
         <Callout
           className="mt-4"
