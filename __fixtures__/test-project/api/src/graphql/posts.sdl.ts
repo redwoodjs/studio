@@ -3,6 +3,7 @@ export const schema = gql`
     id: Int!
     title: String!
     body: String!
+    imageUrl: String
     authorId: Int!
     author: User!
     createdAt: DateTime!

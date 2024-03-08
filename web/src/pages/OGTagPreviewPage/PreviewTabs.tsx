@@ -6,19 +6,29 @@ import {
   TabPanel,
   TabPanels,
 } from '@tremor/react'
-import { OGTagPreviewProviderAudit, OGTagPreviewResponse } from 'types/graphql'
+import {
+  OGTagPreviewProviderAudit,
+  OGTagPreviewResponse,
+  PerformanceMetric,
+} from 'types/graphql'
 
-import { CodeBracketIcon, RectangleStackIcon } from 'src/icons/Icons'
+import {
+  CodeBracketIcon,
+  RectangleStackIcon,
+  PerformanceMetricIcon,
+} from 'src/icons/Icons'
 
 import { PrettyResultPanel } from './PrettyResultPanel'
-
+import { PreviewData } from './PreviewData'
+import { PreviewPerformance } from './PreviewPerformance'
 interface Props {
   result: OGTagPreviewResponse['result']
   audits: OGTagPreviewProviderAudit[]
+  metrics: PerformanceMetric
   userAgent?: string
 }
 
-export const PreviewTabs = ({ result, audits, userAgent }: Props) => {
+export const PreviewTabs = ({ result, audits, metrics, userAgent }: Props) => {
   if (!result || !audits) {
     return null
   }
@@ -29,6 +39,7 @@ export const PreviewTabs = ({ result, audits, userAgent }: Props) => {
         <TabList>
           <Tab icon={RectangleStackIcon}>Previews</Tab>
           <Tab icon={CodeBracketIcon}>Data</Tab>
+          <Tab icon={PerformanceMetricIcon}>Performance</Tab>
         </TabList>
         <TabPanels>
           <PrettyResultPanel
@@ -37,11 +48,10 @@ export const PreviewTabs = ({ result, audits, userAgent }: Props) => {
             userAgent={userAgent}
           />
           <TabPanel>
-            <div className="h-full w-full overflow-x-auto">
-              <pre className="text-gray-500 dark:text-gray-600">
-                {JSON.stringify(result, undefined, 2)}
-              </pre>
-            </div>
+            <PreviewData result={result} />
+          </TabPanel>
+          <TabPanel>
+            <PreviewPerformance metrics={metrics} />
           </TabPanel>
         </TabPanels>
       </TabGroup>

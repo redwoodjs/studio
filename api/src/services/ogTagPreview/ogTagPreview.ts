@@ -6,6 +6,41 @@ import { SyntaxError } from '@redwoodjs/graphql-server'
 import { auditor } from 'src/lib/og/og'
 import { getUserProjectConfig } from 'src/util/project'
 
+const fetchWithTiming = async (url, headers) => {
+  // Start timing just before the request is made
+  const start = performance.now()
+
+  try {
+    const response = await fetch(url, headers)
+
+    // Time after receiving the first byte
+    const executionTime = performance.now()
+
+    const clone = response.clone()
+
+    // Ensure the body is fully read
+    const content = await clone.blob()
+
+    // Time after receiving the last byte
+    const responseTime = performance.now()
+
+    const html = await response.text()
+    const size = content.size
+
+    const metrics = {
+      startTime: start,
+      executionTime: executionTime - start,
+      responseTime: responseTime - start,
+      responseSize: size,
+    }
+
+    return { html, metrics }
+  } catch (error) {
+    console.error('Fetch error:', error)
+    throw error // Rethrow the error after logging
+  }
+}
+
 export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
   url,
   customUserAgent,
@@ -22,24 +57,24 @@ export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
   }
 
   try {
-    const response = await fetch(url, {
+    const { html, metrics } = await fetchWithTiming(url, {
       headers: {
         'User-Agent': customUserAgent,
       },
     })
 
-    const html = await response.text()
     const customResult = await openGraphScraper({ html })
 
     const { result, error } = customResult
-    const audits = auditor(result, error)
+    const { audits, auditedResult } = auditor(result, error)
 
     return {
       id: url,
       userAgent: customUserAgent,
       error,
-      result,
+      result: auditedResult,
       audits,
+      metrics,
     }
   } catch {
     throw new SyntaxError(

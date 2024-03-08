@@ -1,5 +1,6 @@
+import type { OgObject } from 'open-graph-scraper/dist/lib/types'
+
 import type {
-  OGTagPreviewResponse,
   OGTagPreviewProviderAudit,
   OGPreviewProvider,
   OGTagPreviewAudit,
@@ -59,7 +60,7 @@ const getProviderAuditor = (provider: OGPreviewProvider) => {
 }
 
 const auditForProvider = (
-  result,
+  result: OgObject,
   provider: OGPreviewProvider
 ): OGTagPreviewProviderAudit => {
   const auditResult = getProviderAuditor(provider).safeParse(result)
@@ -81,15 +82,51 @@ const auditForProvider = (
 }
 
 export const auditor = (
-  result: OGTagPreviewResponse['result'],
+  result: OgObject,
   error: boolean
-): OGTagPreviewProviderAudit[] => {
+): { audits: OGTagPreviewProviderAudit[]; auditedResult: OgObject } => {
   if (error) {
-    return PROVIDERS.map((provider) => ({
-      provider,
-      audit: { severity: 'ERROR', messages: ['Unable to preview'] },
-    }))
+    return {
+      audits: PROVIDERS.map((provider) => ({
+        provider,
+        audit: { severity: 'ERROR', messages: ['Unable to preview'] },
+      })),
+      auditedResult: result,
+    }
   }
 
-  return PROVIDERS.map((provider) => auditForProvider(result, provider))
+  const audits = PROVIDERS.map((provider) => auditForProvider(result, provider))
+
+  return {
+    audits,
+    auditedResult: resultWithValidationResultMessages(audits, result),
+  }
+}
+
+export const resultWithValidationResultMessages = (
+  audits: OGTagPreviewProviderAudit[],
+  result: OgObject
+): OgObject => {
+  const validationMessages = []
+  const providers = []
+
+  audits?.map((providerAudit) => {
+    const { provider, audit } = providerAudit
+    if (audit) {
+      const { severity, messages } = audit
+      if (severity !== 'OK') {
+        providers.push(provider)
+        validationMessages.push(messages)
+      }
+    }
+  })
+
+  if (validationMessages.length > 0) {
+    result.success = false
+    result.error = `Audit failed for ${providers.join(
+      ', '
+    )}. ${validationMessages.join(', ')}`
+  }
+
+  return result
 }

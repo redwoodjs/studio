@@ -1,6 +1,10 @@
 import { useLazyQuery } from '@apollo/client'
 import { Button } from '@tremor/react'
-import { OGTagPreviewProviderAudit, OGTagPreviewResponse } from 'types/graphql'
+import {
+  OGTagPreviewProviderAudit,
+  OGTagPreviewResponse,
+  PerformanceMetric,
+} from 'types/graphql'
 
 import { RefreshIcon } from 'src/icons/Icons'
 
@@ -18,6 +22,12 @@ const OG_TAG_PREVIEW_QUERY = gql`
           messages
         }
       }
+      metrics {
+        startTime
+        executionTime
+        responseTime
+        responseSize
+      }
     }
   }
 `
@@ -27,6 +37,7 @@ interface Props {
   customUserAgent: string
   setAudits: (audits: OGTagPreviewProviderAudit[] | null) => void
   setResult: (result: OGTagPreviewResponse['result'] | null) => void
+  setMetrics: (metrics: PerformanceMetric | null) => void
   setError: (error: Error | null) => void
 }
 
@@ -35,6 +46,7 @@ export const PreviewButton = ({
   customUserAgent,
   setAudits,
   setResult,
+  setMetrics,
   setError,
 }: Props) => {
   const [getOGTagPreview, { loading, data }] = useLazyQuery(
@@ -44,12 +56,14 @@ export const PreviewButton = ({
       onCompleted: () => {
         setAudits(data?.ogTagPreview.audits)
         setResult(data?.ogTagPreview.result)
+        setMetrics(data?.ogTagPreview.metrics)
       },
       onError: (error) => {
         console.log(error)
         setError(error)
         setAudits(null)
         setResult(null)
+        setMetrics(null)
       },
     }
   )
@@ -58,6 +72,7 @@ export const PreviewButton = ({
     setError(null)
     setAudits(null)
     setResult(null)
+    setMetrics(null)
 
     return (
       <div>

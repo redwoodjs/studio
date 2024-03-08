@@ -7,6 +7,7 @@ import { Metadata } from '@redwoodjs/web'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import BlogPost from 'src/components/BlogPost'
+import { getFirstNSentences } from 'src/lib/formatters'
 
 export const QUERY = gql`
   query FindBlogPostQuery($id: Int!) {
@@ -14,6 +15,7 @@ export const QUERY = gql`
       id
       title
       body
+      imageUrl
       author {
         email
         fullName
@@ -40,11 +42,10 @@ export const Success = ({
     <Metadata
       title={blogPost.title}
       og={{
-        image:
-          'https://tailwindui.com/img/ecommerce-images/order-history-page-03-product-03.jpg',
         title: `${blogPost.title} | RedwoodJS Blog`,
-        description: blogPost.body.substring(0, 10),
+        description: getFirstNSentences(blogPost.body, 1),
         site_name: 'redwoodjs.com',
+        image: blogPost.imageUrl,
         url: `https://redwoodjs.com/blog-posts/${blogPost.id}`,
       }}
       article={{
@@ -56,14 +57,13 @@ export const Success = ({
         username: blogPost.author.fullName,
       }}
       twitter={{
-        card: 'summary_large_image',
+        card: blogPost.id === 3 ? null : 'summary_large_image',
         site: 'redwoodjs.com',
         url: `https://redwoodjs.com/blog-posts/${blogPost.id}`,
         creator: `@${blogPost.author.fullName}`,
-        title: `${blogPost.title} | RedwoodJS Blog`,
-        description: blogPost.body.substring(0, 10),
-        image:
-          'https://tailwindui.com/img/ecommerce-images/order-history-page-03-product-03.jpg',
+        title: blogPost.id === 2 ? null : `${blogPost.title} | RedwoodJS Blog`,
+        description: getFirstNSentences(blogPost.body, 1),
+        image: blogPost.imageUrl,
         'image:alt': 'this is a description of image',
       }}
     />

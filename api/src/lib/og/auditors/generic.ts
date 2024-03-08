@@ -12,7 +12,7 @@ import { z } from 'zod'
 export const BasicMetadataAuditor = z.object({
   ogTitle: z.string(),
   ogType: z.string(),
-  ogUrl: z.string(),
+  ogUrl: z.string().url(),
   ogDescription: z.string().optional(),
   ogSiteName: z.string().optional(),
 })
@@ -20,8 +20,8 @@ export const BasicMetadataAuditor = z.object({
 export const ArticleAuditor = BasicMetadataAuditor.extend({
   articleAuthor: z.string().optional(),
   articlePublisher: z.string().optional(),
-  articlePublishedDate: z.string().optional(),
-  articlePublishedTime: z.string().optional(),
+  articlePublishedDate: z.string().datetime().optional(),
+  articlePublishedTime: z.string().datetime().optional(),
 })
 
 export const GenericAuditor = ArticleAuditor.extend({})

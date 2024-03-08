@@ -4,9 +4,9 @@ datasource db {
 }
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = "native"
-previewFeatures = ["tracing"]
+  provider        = "prisma-client-js"
+  binaryTargets   = "native"
+  previewFeatures = ["tracing"]
 }
 
 // Define your own datamodels here and run `yarn redwood prisma migrate dev`
@@ -18,11 +18,11 @@ model UserExample {
   name  String?
 }
 
-
 model Post {
   id        Int      @id @default(autoincrement())
   title     String
   body      String
+  imageUrl  String   @default("https://source.unsplash.com/random/800x400")
   authorId  Int
   author    User     @relation(fields: [authorId], references: [id])
   createdAt DateTime @default(now())
@@ -41,7 +41,7 @@ model User {
 }
 
 model Contact {
-  id        Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
   email     String
   message   String

@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Callout, Flex } from '@tremor/react'
 
+import { EmptyPreviewer } from 'src/components/OGTagPreviewers/EmptyPreviewer'
 import { OGTagWarningIcon, OGTagErrorIcon, OGTagOKIcon } from 'src/icons/Icons'
 
 import type {
@@ -53,6 +54,15 @@ interface Props extends ProviderPreviewerProps {
   userAgent?: string
 }
 
+export const extractDomain = (url: string) => {
+  try {
+    const parsedUrl = new URL(url)
+    return parsedUrl.hostname
+  } catch {
+    return url
+  }
+}
+
 export const Previewer = ({ result, providerAudit, userAgent }: Props) => {
   const { audit, provider } = providerAudit
   const { severity, messages } = audit
@@ -79,6 +89,7 @@ export const Previewer = ({ result, providerAudit, userAgent }: Props) => {
           })(provider)}
         </Flex>
       )}
+      {severity !== 'OK' && <EmptyPreviewer />}
       {severity && messages && (
         <Callout
           className="mt-4"
