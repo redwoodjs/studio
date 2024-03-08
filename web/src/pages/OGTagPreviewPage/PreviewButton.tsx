@@ -3,7 +3,7 @@ import { Button } from '@tremor/react'
 import {
   OGTagPreviewProviderAudit,
   OGTagPreviewResponse,
-  PerformanceTiming,
+  PerformanceMetric,
 } from 'types/graphql'
 
 import { RefreshIcon } from 'src/icons/Icons'
@@ -22,11 +22,11 @@ const OG_TAG_PREVIEW_QUERY = gql`
           messages
         }
       }
-      performanceTiming {
+      metrics {
         startTime
-        firstByte
-        lastByte
-        totalTime
+        executionTime
+        responseTime
+        responseSize
       }
     }
   }
@@ -37,7 +37,7 @@ interface Props {
   customUserAgent: string
   setAudits: (audits: OGTagPreviewProviderAudit[] | null) => void
   setResult: (result: OGTagPreviewResponse['result'] | null) => void
-  setPerformanceTiming: (performanceTiming: PerformanceTiming | null) => void
+  setMetrics: (metrics: PerformanceMetric | null) => void
   setError: (error: Error | null) => void
 }
 
@@ -46,7 +46,7 @@ export const PreviewButton = ({
   customUserAgent,
   setAudits,
   setResult,
-  setPerformanceTiming,
+  setMetrics,
   setError,
 }: Props) => {
   const [getOGTagPreview, { loading, data }] = useLazyQuery(
@@ -56,14 +56,14 @@ export const PreviewButton = ({
       onCompleted: () => {
         setAudits(data?.ogTagPreview.audits)
         setResult(data?.ogTagPreview.result)
-        setPerformanceTiming(data?.ogTagPreview.performanceTiming)
+        setMetrics(data?.ogTagPreview.metrics)
       },
       onError: (error) => {
         console.log(error)
         setError(error)
         setAudits(null)
         setResult(null)
-        setPerformanceTiming(null)
+        setMetrics(null)
       },
     }
   )
@@ -72,7 +72,7 @@ export const PreviewButton = ({
     setError(null)
     setAudits(null)
     setResult(null)
-    setPerformanceTiming(null)
+    setMetrics(null)
 
     return (
       <div>

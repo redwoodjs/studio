@@ -14,11 +14,11 @@ export const schema = gql`
     SLACK
   }
 
-  type PerformanceTiming {
+  type PerformanceMetric {
     startTime: Float!
-    firstByte: Float!
-    lastByte: Float!
-    totalTime: Float!
+    executionTime: Float!
+    responseTime: Float!
+    responseSize: Float!
   }
 
   type OGTagPreviewProviderAudit {
@@ -37,7 +37,7 @@ export const schema = gql`
     error: Boolean!
     result: JSON
     audits: [OGTagPreviewProviderAudit!]
-    performanceTiming: PerformanceTiming!
+    metrics: PerformanceMetric!
   }
 
   type Query {

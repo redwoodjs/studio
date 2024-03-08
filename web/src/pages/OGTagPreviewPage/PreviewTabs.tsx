@@ -9,13 +9,13 @@ import {
 import {
   OGTagPreviewProviderAudit,
   OGTagPreviewResponse,
-  PerformanceTiming,
+  PerformanceMetric,
 } from 'types/graphql'
 
 import {
   CodeBracketIcon,
   RectangleStackIcon,
-  PerformanceTimingIcon,
+  PerformanceMetricIcon,
 } from 'src/icons/Icons'
 
 import { PrettyResultPanel } from './PrettyResultPanel'
@@ -24,16 +24,11 @@ import { PreviewPerformance } from './PreviewPerformance'
 interface Props {
   result: OGTagPreviewResponse['result']
   audits: OGTagPreviewProviderAudit[]
-  performanceTiming: PerformanceTiming
+  metrics: PerformanceMetric
   userAgent?: string
 }
 
-export const PreviewTabs = ({
-  result,
-  audits,
-  performanceTiming,
-  userAgent,
-}: Props) => {
+export const PreviewTabs = ({ result, audits, metrics, userAgent }: Props) => {
   if (!result || !audits) {
     return null
   }
@@ -44,7 +39,7 @@ export const PreviewTabs = ({
         <TabList>
           <Tab icon={RectangleStackIcon}>Previews</Tab>
           <Tab icon={CodeBracketIcon}>Data</Tab>
-          <Tab icon={PerformanceTimingIcon}>Performance</Tab>
+          <Tab icon={PerformanceMetricIcon}>Performance</Tab>
         </TabList>
         <TabPanels>
           <PrettyResultPanel
@@ -56,7 +51,7 @@ export const PreviewTabs = ({
             <PreviewData result={result} />
           </TabPanel>
           <TabPanel>
-            <PreviewPerformance performanceTiming={performanceTiming} />
+            <PreviewPerformance metrics={metrics} />
           </TabPanel>
         </TabPanels>
       </TabGroup>

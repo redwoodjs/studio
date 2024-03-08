@@ -14,26 +14,27 @@ const fetchWithTiming = async (url, headers) => {
     const response = await fetch(url, headers)
 
     // Time after receiving the first byte
-    const firstByteTime = performance.now()
+    const executionTime = performance.now()
 
     const clone = response.clone()
 
     // Ensure the body is fully read
-    await clone.blob()
+    const content = await clone.blob()
 
     // Time after receiving the last byte
-    const lastByteTime = performance.now()
+    const responseTime = performance.now()
 
     const html = await response.text()
+    const size = content.size
 
-    const performanceTiming = {
+    const metrics = {
       startTime: start,
-      firstByte: firstByteTime - start,
-      lastByte: lastByteTime - start,
-      totalTime: lastByteTime - firstByteTime,
+      executionTime: executionTime - start,
+      responseTime: responseTime - start,
+      responseSize: size,
     }
 
-    return { html, performanceTiming }
+    return { html, metrics }
   } catch (error) {
     console.error('Fetch error:', error)
     throw error // Rethrow the error after logging
@@ -56,7 +57,7 @@ export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
   }
 
   try {
-    const { html, performanceTiming } = await fetchWithTiming(url, {
+    const { html, metrics } = await fetchWithTiming(url, {
       headers: {
         'User-Agent': customUserAgent,
       },
@@ -73,7 +74,7 @@ export const ogTagPreview: QueryResolvers['ogTagPreview'] = async ({
       error,
       result: auditedResult,
       audits,
-      performanceTiming,
+      metrics,
     }
   } catch {
     throw new SyntaxError(
