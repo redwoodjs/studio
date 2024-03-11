@@ -23,6 +23,8 @@ const Routes = () => {
         <Route path="/mailer/inbox" page={MailerInboxPage} name="mailerInbox" />
         <Route path="/mailer/template-preview" page={MailerTemplatePreviewPage} name="mailerTemplatePreview" />
 
+        <Route path="/rsc/render-graph" page={RenderGraphPage} name="renderGraph" />
+
         <Route path="/ssr/og-tag-preview" page={OGTagPreviewPage} name="ogTagPreview" />
         <Route path="/studio/settings" page={InfoPage} name="settings" />
         <Route path="/studio/about" page={AboutPage} name="about" />
