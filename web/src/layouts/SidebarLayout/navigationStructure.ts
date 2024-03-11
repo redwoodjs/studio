@@ -111,6 +111,11 @@ export function useNavigationStructure(routes: AvailableRoutes) {
       to: routes.flights(),
       icon: FlightIcon,
     },
+    {
+      name: 'Render Routes',
+      to: routes.renderGraphRoutes(),
+      icon: FlightIcon,
+    },
   ]
 
   const ssrNavigation: TNavigationItem[] = [
