@@ -30,12 +30,14 @@ export const userProjectConfig = async (): Promise<
   Query['userProjectConfig']
 > => {
   const config = getUserProjectConfig()
-  const status = config.experimental?.streamingSsr?.enabled
-  const message = status ? 'SSR is enabled' : 'SSR is not enabled'
+  const rscStatus = config.experimental?.rsc?.enabled
+  const rscMessage = rscStatus ? 'SSR is enabled' : 'SSR is not enabled'
+  const ssrStatus = config.experimental?.streamingSsr?.enabled
+  const ssrMessage = ssrStatus ? 'RSC is enabled' : 'RSC is not enabled'
 
   const { host, port, apiUrl } = config.web
 
-  // TODO: initially SSR will be behind a feature flag that’s on by default in
+  // TODO: initially RSC and SSR will be behind feature flags that’s on by default in
   // our new (yet to be created) Bighorn template
   return {
     id: 'user-project-config-id',
@@ -45,6 +47,13 @@ export const userProjectConfig = async (): Promise<
       port,
       apiUrl,
     },
-    ssr: { id: 'user-project-config-ssr-id', enabled: { status, message } },
+    rsc: {
+      id: 'user-project-config-rsc-id',
+      enabled: { status: rscStatus, message: rscMessage },
+    },
+    ssr: {
+      id: 'user-project-config-ssr-id',
+      enabled: { status: ssrStatus, message: ssrMessage },
+    },
   }
 }

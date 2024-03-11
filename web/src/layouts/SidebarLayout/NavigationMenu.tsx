@@ -12,6 +12,7 @@ import {
   OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
+  RoutesIcon,
   StudioIcon,
   SpansIcon,
   SqlStatementsIcon,
@@ -86,7 +87,7 @@ export const NavigationMenu = () => {
     {
       name: 'Render Routes',
       to: routes.renderGraphRoutes(),
-      icon: OGTagPreviewIcon,
+      icon: RoutesIcon,
     },
   ]
 

@@ -35,5 +35,8 @@
   # Secret is used by Netlify
   # authImpersonation.jwtSecret = "secret"
 
+[experimental.rsc]
+  enabled = false
+
 [experimental.streamingSsr]
   enabled = true

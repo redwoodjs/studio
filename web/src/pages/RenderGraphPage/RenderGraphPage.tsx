@@ -1,9 +1,9 @@
 import RenderGraphCell from 'src/components/RenderGraphCell'
 
-const RenderGraphPage = ({ _props }) => {
+const RenderGraphPage = ({ routeName }: { routeName: string }) => {
   return (
     <div>
-      <RenderGraphCell routeName="posts" />
+      <RenderGraphCell routeName={routeName} />
     </div>
   )
 }

@@ -33,6 +33,11 @@ export const schema = gql`
     message: String
   }
 
+  type RscConfig {
+    id: String!
+    enabled: EnabledStatus
+  }
+
   type StreamingSsrConfig {
     id: String!
     enabled: EnabledStatus
@@ -40,6 +45,7 @@ export const schema = gql`
 
   type UserProjectConfig {
     id: String!
+    rsc: RscConfig
     ssr: StreamingSsrConfig
     web: WebConfig
   }

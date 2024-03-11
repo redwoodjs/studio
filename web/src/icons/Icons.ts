@@ -38,6 +38,7 @@ export {
   ListBulletIcon as OperationsIcon,
   MagnifyingGlassCircleIcon as InspectorIcon,
   MapIcon,
+  MapIcon as RoutesIcon,
   NewspaperIcon as ErdIcon,
   PaperClipIcon,
   PhotoIcon as OGTagPreviewIcon,

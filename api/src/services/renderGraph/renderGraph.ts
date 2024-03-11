@@ -3,6 +3,7 @@ import crypto from 'node:crypto'
 import path from 'path'
 import { basename, normalize } from 'path'
 
+import { SyntaxError, ValidationError } from '@redwoodjs/graphql-server'
 import {
   //getPaths,
   resolveFile,
@@ -12,6 +13,7 @@ import type { RWLayout } from '@redwoodjs/structure/dist/model/RWLayout'
 import type { RWPage } from '@redwoodjs/structure/dist/model/RWPage'
 import type { RWRoute } from '@redwoodjs/structure/dist/model/RWRoute'
 
+import { getUserProjectConfig } from 'src/util/project'
 import { getUserProjectPaths as getPaths } from 'src/util/project'
 type ComponentType = 'Page' | 'Layout' | 'Route' | 'Cell' | 'Component'
 type RenderContext = 'client' | 'server' | 'shared'
@@ -48,6 +50,13 @@ interface ComponentData {
 }
 
 export const renderGraph = async ({ routeName }) => {
+  const config = await getUserProjectConfig()
+
+  // short-cut in the case that RSC is disabled
+  if (!config.experimental?.rsc?.enabled) {
+    throw new SyntaxError('RSC is not enabled')
+  }
+
   const parser = require('@babel/parser')
   const traverse = require('@babel/traverse').default
 
@@ -509,7 +518,7 @@ export const renderGraph = async ({ routeName }) => {
     : getRoutes()
 
   if (routes.length === 0) {
-    throw new Error(
+    throw new ValidationError(
       `No route found for ${routeName}. Try: ${getRoutes()
         .map((route) => route.name)
         .join(', ')}`
