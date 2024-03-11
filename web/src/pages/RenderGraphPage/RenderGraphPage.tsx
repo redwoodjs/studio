@@ -1,9 +1,9 @@
 import RenderGraphCell from 'src/components/RenderGraphCell'
 
-const RenderGraphPage = () => {
+const RenderGraphPage = ({ _props }) => {
   return (
     <div>
-      <RenderGraphCell routeName="newContact" />
+      <RenderGraphCell routeName="posts" />
     </div>
   )
 }
