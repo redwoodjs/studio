@@ -5,6 +5,6 @@ export const schema = gql`
     initialEdges: JSON
   }
   type Query {
-    renderGraph(routeName: String!): RenderGraph!
+    renderGraph(routeName: String!): RenderGraph! @skipAuth
   }
 `

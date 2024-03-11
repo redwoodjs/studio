@@ -3,11 +3,19 @@ import crypto from 'node:crypto'
 import path from 'path'
 import { basename, normalize } from 'path'
 
-import { getPaths, resolveFile } from '@redwoodjs/project-config'
+import {
+  //getPaths,
+  resolveFile,
+} from '@redwoodjs/project-config'
 import { getProject } from '@redwoodjs/structure'
 import type { RWLayout } from '@redwoodjs/structure/dist/model/RWLayout'
 import type { RWPage } from '@redwoodjs/structure/dist/model/RWPage'
 import type { RWRoute } from '@redwoodjs/structure/dist/model/RWRoute'
+
+import {
+  getUserProjectPaths as getPaths,
+  // getUserProject,
+} from 'src/util/project'
 type ComponentType = 'Page' | 'Layout' | 'Route' | 'Cell' | 'Component'
 type RenderContext = 'client' | 'server' | 'shared'
 
@@ -237,9 +245,6 @@ export const renderGraph = async ({ routeName }) => {
   // To track processed files and avoid duplicates
   const processedFiles = new Set()
 
-  // Object to hold the dependency graph
-  // const dependencyGraph = {}
-
   // Function to process a file and extract its dependencies
   function processComponentFilePathForGraph(
     nodes: Node[],
@@ -295,9 +300,9 @@ export const renderGraph = async ({ routeName }) => {
               // we assume that valid components are PascalCase
               if (isValidComponentSpecifier(name)) {
                 // Create a unique identifier for the import
-                const importId = `${path.basename(
-                  filePath
-                )} -> ${relativeImportPath}`
+                const importId = generateId(
+                  `${path.basename(filePath)} -> ${relativeImportPath}`
+                )
 
                 let sourceType = 'Component'
                 let sourceId: string | null = null
@@ -320,9 +325,9 @@ export const renderGraph = async ({ routeName }) => {
                 } else {
                   sourceType = 'Component'
                   if (basenameNoExt(importPath) === name) {
-                    sourceId = filePath
+                    sourceId = generateId(filePath)
                   } else {
-                    sourceId = `${filePath}-${name}`
+                    sourceId = generateId(`${filePath}-${name}`)
                   }
                 }
 
@@ -339,9 +344,9 @@ export const renderGraph = async ({ routeName }) => {
                 } else {
                   targetType = 'Component'
                   if (basenameNoExt(importPath) === name) {
-                    targetId = importPath
+                    targetId = generateId(importPath)
                   } else {
-                    targetId = `${importPath}-${name}`
+                    targetId = generateId(`${importPath}-${name}`)
                   }
                 }
 
@@ -533,6 +538,7 @@ export const renderGraph = async ({ routeName }) => {
   determineRenderContext(nodes, edges, pageNodes[0])
 
   return {
+    id: generateId(routeName),
     initialNodes: nodes,
     initialEdges: edges,
   }
