@@ -46,6 +46,8 @@ export const Success = ({
 }: CellSuccessProps<FindRenderGraphQuery, FindRenderGraphQueryVariables>) => {
   const { initialNodes: n, initialEdges: e } = renderGraph
 
+  // since we are mutating the nodes and edges, we need to make a deep copy
+  // for the positioning to work correctly
   const initialNodes = JSON.parse(JSON.stringify(n))
   const initialEdges = JSON.parse(JSON.stringify(e))
 

@@ -12,10 +12,7 @@ import type { RWLayout } from '@redwoodjs/structure/dist/model/RWLayout'
 import type { RWPage } from '@redwoodjs/structure/dist/model/RWPage'
 import type { RWRoute } from '@redwoodjs/structure/dist/model/RWRoute'
 
-import {
-  getUserProjectPaths as getPaths,
-  // getUserProject,
-} from 'src/util/project'
+import { getUserProjectPaths as getPaths } from 'src/util/project'
 type ComponentType = 'Page' | 'Layout' | 'Route' | 'Cell' | 'Component'
 type RenderContext = 'client' | 'server' | 'shared'
 

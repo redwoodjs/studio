@@ -1,4 +1,9 @@
 export const schema = gql`
+  type Route {
+    id: ID
+    name: String!
+  }
+
   type RenderGraph {
     id: ID!
     initialNodes: JSON
@@ -6,5 +11,6 @@ export const schema = gql`
   }
   type Query {
     renderGraph(routeName: String!): RenderGraph! @skipAuth
+    renderGraphRoutes: [Route!] @skipAuth
   }
 `

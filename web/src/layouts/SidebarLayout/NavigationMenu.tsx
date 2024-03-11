@@ -82,6 +82,14 @@ export const NavigationMenu = () => {
     },
   ]
 
+  const rscNavigation: TNavigationItem[] = [
+    {
+      name: 'Render Routes',
+      to: routes.renderGraphRoutes(),
+      icon: OGTagPreviewIcon,
+    },
+  ]
+
   const ssrNavigation: TNavigationItem[] = [
     {
       name: 'OG Tag Preview',
@@ -168,6 +176,19 @@ export const NavigationMenu = () => {
               ))}
             </ul>
           </li>
+          <li>
+            <div className="text-xs font-semibold leading-6 text-gray-400">
+              RSC
+            </div>
+            <ul className="-mx-2 mt-2 space-y-1">
+              {rscNavigation.map((item) => (
+                <li key={item.name}>
+                  <NavigationItem item={item} />
+                </li>
+              ))}
+            </ul>
+          </li>
+
           <li>
             <div className="text-xs font-semibold leading-6 text-gray-400">
               SSR
