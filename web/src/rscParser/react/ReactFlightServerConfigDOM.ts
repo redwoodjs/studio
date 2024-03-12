@@ -13,13 +13,13 @@ import type {
   PreinitStyleOptions,
   PreinitScriptOptions,
   PreinitModuleScriptOptions,
-} from "./ReactDOMTypes";
+} from './ReactDOMTypes'
 
 // We use zero to represent the absence of an explicit precedence because it is
 // small, smaller than how we encode undefined, and is unambiguous. We could use
 // a different tuple structure to encode this instead but this makes the runtime
 // cost cheaper by eliminating a type checks in more positions.
-type UnspecifiedPrecedence = 0;
+type UnspecifiedPrecedence = 0
 
 // prettier-ignore
 type TypeMap = {
@@ -48,7 +48,7 @@ type TypeMap = {
       | [/* href */ string, PreinitModuleScriptOptions],
   }
 
-export type HintCode = keyof TypeMap;
-export type HintModel<T extends HintCode> = TypeMap[T];
+export type HintCode = keyof TypeMap
+export type HintModel<T extends HintCode> = TypeMap[T]
 
-export type Hints = Set<string>;
+export type Hints = Set<string>

@@ -1,31 +1,32 @@
-import { useEffect, useMemo, useState, useTransition } from "react";
-import { RscChunkMessage } from "../types";
-import { getColorForFetch } from "../color";
+import { useEffect, useMemo, useState, useTransition } from 'react'
+
+import { getColorForFetch } from '../color'
+import { RscChunkMessage } from '../types'
 
 export function useTimeScrubber(
   messages: RscChunkMessage[],
-  { follow }: { follow: boolean },
+  { follow }: { follow: boolean }
 ) {
-  const { minStartTime, maxEndTime } = useTimeRange(messages);
-  const [endTime, setEndTime] = useState(maxEndTime);
+  const { minStartTime, maxEndTime } = useTimeRange(messages)
+  const [endTime, setEndTime] = useState(maxEndTime)
 
-  const [visibleEndTime, setVisibleEndTime] = useState(endTime);
-  const [isPending, startTransition] = useTransition();
+  const [visibleEndTime, setVisibleEndTime] = useState(endTime)
+  const [isPending, startTransition] = useTransition()
 
   const changeEndTime = (value: number) => {
-    setVisibleEndTime(value);
+    setVisibleEndTime(value)
     startTransition(() => {
-      setEndTime(value);
-    });
-  };
+      setEndTime(value)
+    })
+  }
 
   useEffect(() => {
     if (follow) {
       if (endTime !== maxEndTime) {
-        changeEndTime(maxEndTime);
+        changeEndTime(maxEndTime)
       }
     }
-  }, [messages]);
+  }, [messages])
 
   return {
     messages,
@@ -36,53 +37,53 @@ export function useTimeScrubber(
     startTransition,
     minStartTime,
     maxEndTime,
-  };
+  }
 }
 
 function useTracks(messages: RscChunkMessage[]) {
   return useMemo(() => {
-    const messageTracks: Array<Array<RscChunkMessage>> = [[]];
+    const messageTracks: Array<Array<RscChunkMessage>> = [[]]
 
     for (const message of messages) {
       // Find a track that doesn't overlap with the current message
       const track = messageTracks.find((track) => {
-        const lastMessage = track[track.length - 1];
+        const lastMessage = track[track.length - 1]
 
         if (!lastMessage) {
-          return true;
+          return true
         }
 
         if (lastMessage.data.fetchStartTime === message.data.fetchStartTime) {
-          return true;
+          return true
         }
 
         const lastMessageWithSameFetchUrl = messages
           .filter(
-            (m) => m.data.fetchStartTime === lastMessage.data.fetchStartTime,
+            (m) => m.data.fetchStartTime === lastMessage.data.fetchStartTime
           )
-          .at(-1);
+          .at(-1)
 
         if (
           lastMessage.data.fetchStartTime !== message.data.fetchStartTime &&
-          typeof lastMessageWithSameFetchUrl !== "undefined" &&
+          typeof lastMessageWithSameFetchUrl !== 'undefined' &&
           lastMessageWithSameFetchUrl.data.chunkEndTime <
             message.data.fetchStartTime
         ) {
-          return true;
+          return true
         }
 
-        return false;
-      });
+        return false
+      })
 
       if (track) {
-        track.push(message);
+        track.push(message)
       } else {
-        messageTracks.push([message]);
+        messageTracks.push([message])
       }
     }
 
-    return messageTracks;
-  }, [messages]);
+    return messageTracks
+  }, [messages])
 }
 
 export function TimeScrubber({
@@ -94,12 +95,12 @@ export function TimeScrubber({
   minStartTime,
   maxEndTime,
 }: ReturnType<typeof useTimeScrubber>) {
-  const filteredMessages = useFilterMessagesByEndTime(messages, endTime);
-  const tracks = useTracks(messages);
+  const filteredMessages = useFilterMessagesByEndTime(messages, endTime)
+  const tracks = useTracks(messages)
 
-  const messageHeight = 12;
-  const trackSpacing = 4;
-  const trackPadding = 8;
+  const messageHeight = 12
+  const trackSpacing = 4
+  const trackPadding = 8
 
   return (
     <div className="flex w-full flex-col gap-1.5 rounded-md bg-slate-200 p-1.5 dark:bg-slate-800">
@@ -107,24 +108,24 @@ export function TimeScrubber({
         <input
           type="range"
           className={[
-            "absolute h-full w-full rounded z-20",
-            "appearance-none",
-            "bg-transparent bg-gradient-to-r from-blue-100/25 to-blue-100/25 dark:from-blue-100/10 dark:to-blue-100/10 bg-no-repeat",
-            "[&::-webkit-slider-runnable-track]:bg-transparent",
-            "[&::-webkit-slider-runnable-track]:h-full",
-            "[&::-webkit-slider-thumb]:h-[calc(100%-6px)]",
-            "[&::-webkit-slider-thumb]:mt-[calc(6px/2)]",
-            "[&::-webkit-slider-thumb]:w-1",
-            "[&::-webkit-slider-thumb]:appearance-none",
-            "[&::-webkit-slider-thumb]:rounded-md",
-            "[&::-webkit-slider-thumb]:transition-colors",
-            "[&::-webkit-slider-thumb]:delay-75",
-            "[&::-webkit-slider-thumb]:duration-100",
+            'absolute z-20 h-full w-full rounded',
+            'appearance-none',
+            'bg-transparent bg-gradient-to-r from-blue-100/25 to-blue-100/25 bg-no-repeat dark:from-blue-100/10 dark:to-blue-100/10',
+            '[&::-webkit-slider-runnable-track]:bg-transparent',
+            '[&::-webkit-slider-runnable-track]:h-full',
+            '[&::-webkit-slider-thumb]:h-[calc(100%-6px)]',
+            '[&::-webkit-slider-thumb]:mt-[calc(6px/2)]',
+            '[&::-webkit-slider-thumb]:w-1',
+            '[&::-webkit-slider-thumb]:appearance-none',
+            '[&::-webkit-slider-thumb]:rounded-md',
+            '[&::-webkit-slider-thumb]:transition-colors',
+            '[&::-webkit-slider-thumb]:delay-75',
+            '[&::-webkit-slider-thumb]:duration-100',
             isPending
-              ? "[&::-webkit-slider-thumb]:bg-blue-300"
-              : "[&::-webkit-slider-thumb]:bg-blue-500",
-            "[&::-webkit-slider-thumb]:z-20",
-          ].join(" ")}
+              ? '[&::-webkit-slider-thumb]:bg-blue-300'
+              : '[&::-webkit-slider-thumb]:bg-blue-500',
+            '[&::-webkit-slider-thumb]:z-20',
+          ].join(' ')}
           min={minStartTime}
           max={maxEndTime}
           value={visibleEndTime}
@@ -132,11 +133,11 @@ export function TimeScrubber({
             backgroundSize:
               ((visibleEndTime - minStartTime) * 100) /
                 (maxEndTime - minStartTime) +
-              "% 100%",
+              '% 100%',
           }}
           onChange={(event) => {
-            const numberValue = Number.parseFloat(event.target.value);
-            changeEndTime(numberValue);
+            const numberValue = Number.parseFloat(event.target.value)
+            changeEndTime(numberValue)
           }}
         ></input>
 
@@ -156,110 +157,111 @@ export function TimeScrubber({
               const x =
                 ((message.data.chunkStartTime - minStartTime) /
                   (maxEndTime - minStartTime)) *
-                100;
+                100
 
-              const y = idx * (messageHeight + trackSpacing) + trackPadding;
+              const y = idx * (messageHeight + trackSpacing) + trackPadding
 
               const width =
                 ((message.data.chunkEndTime - message.data.chunkStartTime) /
                   (maxEndTime - minStartTime)) *
-                100;
+                100
 
               return (
                 <rect
+                  key={idx}
                   x={`${x * 0.98 + 1}%`}
                   y={`${y}px`}
-                  width={width > 0.2 ? `${width}%` : "0.2%"}
+                  width={width > 0.2 ? `${width}%` : '0.2%'}
                   height={messageHeight}
                   fill={getColorForFetch(message.data.fetchStartTime)}
                   rx="1"
                 />
-              );
-            });
+              )
+            })
           })}
         </svg>
       </div>
 
       <div className="flex flex-row justify-between px-1">
         <div className="tabular-nums text-slate-700 dark:text-slate-300">
-          {new Date(visibleEndTime).toLocaleTimeString()} /{" "}
+          {new Date(visibleEndTime).toLocaleTimeString()} /{' '}
           {new Date(maxEndTime).toLocaleTimeString()}
         </div>
 
         <div className="whitespace-nowrap tabular-nums text-slate-700 dark:text-slate-300">
           {String(filteredMessages.length).padStart(
             String(messages.length).length,
-            "0",
-          )}{" "}
+            '0'
+          )}{' '}
           / {messages.length}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export function useGroupedMessages(messages: RscChunkMessage[]) {
   return useMemo(() => {
-    const groupedMessages = new Map<string, RscChunkMessage[]>();
+    const groupedMessages = new Map<string, RscChunkMessage[]>()
 
     for (const message of messages) {
       if (groupedMessages.has(message.data.fetchUrl)) {
         groupedMessages.set(message.data.fetchUrl, [
           ...(groupedMessages.get(message.data.fetchUrl) ?? []),
           message,
-        ]);
+        ])
       } else {
-        groupedMessages.set(message.data.fetchUrl, [message]);
+        groupedMessages.set(message.data.fetchUrl, [message])
       }
     }
-    return groupedMessages;
-  }, [messages]);
+    return groupedMessages
+  }, [messages])
 }
 
 function useTimeRange(messages: RscChunkMessage[]) {
   return useMemo(() => {
-    let minStartTime = Number.MAX_SAFE_INTEGER;
-    let maxEndTime = 0;
+    let minStartTime = Number.MAX_SAFE_INTEGER
+    let maxEndTime = 0
 
     for (const message of messages) {
-      minStartTime = Math.min(minStartTime, message.data.chunkStartTime);
-      maxEndTime = Math.max(maxEndTime, message.data.chunkEndTime);
+      minStartTime = Math.min(minStartTime, message.data.chunkStartTime)
+      maxEndTime = Math.max(maxEndTime, message.data.chunkEndTime)
     }
 
-    const timeRange = maxEndTime - minStartTime;
+    const timeRange = maxEndTime - minStartTime
 
     return {
       minStartTime,
       maxEndTime,
       timeRange,
-    };
-  }, [messages]);
+    }
+  }, [messages])
 }
 
 export function useFilterMessagesByEndTime(
   messages: RscChunkMessage[],
-  endTime: number,
+  endTime: number
 ) {
   return useMemo(() => {
-    return messages.filter((message) => message.data.chunkStartTime <= endTime);
-  }, [messages, endTime]);
+    return messages.filter((message) => message.data.chunkStartTime <= endTime)
+  }, [messages, endTime])
 }
 
 export function useSortedFetchPaths(messages: RscChunkMessage[]) {
   return useMemo(() => {
-    const tabs: string[] = [];
+    const tabs: string[] = []
 
     const sorted = messages.sort(
-      (a, b) => a.data.chunkStartTime - b.data.chunkStartTime,
-    );
+      (a, b) => a.data.chunkStartTime - b.data.chunkStartTime
+    )
 
     for (const message of sorted) {
-      const tab = message.data.fetchUrl;
+      const tab = message.data.fetchUrl
       if (!tabs.includes(tab)) {
-        tabs.push(tab);
+        tabs.push(tab)
       }
     }
 
-    return tabs;
-  }, [messages]);
+    return tabs
+  }, [messages])
 }

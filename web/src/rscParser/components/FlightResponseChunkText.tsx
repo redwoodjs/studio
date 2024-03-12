@@ -1,9 +1,9 @@
-import { TextChunk } from "../react/ReactFlightClient";
+import { TextChunk } from '../react/ReactFlightClient'
 
 export function FlightResponseChunkText({
   data,
 }: {
-  data: TextChunk["value"];
+  data: TextChunk['value']
 }) {
-  return <p>{data}</p>;
+  return <p>{data}</p>
 }

@@ -1,22 +1,22 @@
-import { ModuleChunk } from "../react/ReactFlightClient";
+import { ModuleChunk } from '../react/ReactFlightClient'
 
 function groupChunks(array: (string | number)[]) {
-  const newArray = [];
+  const newArray = []
   for (let i = 0; i < array.length; i += 2) {
-    newArray.push({ name: array[i], path: array[i + 1] });
+    newArray.push({ name: array[i], path: array[i + 1] })
   }
-  return newArray;
+  return newArray
 }
 
 export function FlightResponseChunkModule({
   data,
 }: {
-  data: ModuleChunk["value"];
+  data: ModuleChunk['value']
 }) {
   return (
     <div className="flex flex-col gap-4">
       <h3 className="text-xl font-semibold">
-        Import {data[2] == "" ? "unknown" : data[2]}
+        Import {data[2] == '' ? 'unknown' : data[2]}
       </h3>
       <p>Id: {data[0]}</p>
       <div>
@@ -27,10 +27,10 @@ export function FlightResponseChunkModule({
               <li key={item.name}>
                 {item.name} - {item.path}
               </li>
-            );
+            )
           })}
         </ul>
       </div>
     </div>
-  );
+  )
 }

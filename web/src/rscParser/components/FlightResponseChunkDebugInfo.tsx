@@ -1,9 +1,9 @@
-import { DebugInfoChunk } from "../react/ReactFlightClient";
+import { DebugInfoChunk } from '../react/ReactFlightClient'
 
 export function FlightResponseChunkDebugInfo({
   data,
 }: {
-  data: DebugInfoChunk["value"];
+  data: DebugInfoChunk['value']
 }) {
-  return <p>React component name: {data.name}</p>;
+  return <p>React component name: {data.name}</p>
 }

@@ -6,4 +6,4 @@
  *
  */
 
-export type CrossOriginString = string;
+export type CrossOriginString = string

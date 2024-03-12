@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 export function GenericErrorBoundaryFallback({ error }: { error: Error }) {
   return (
@@ -6,5 +6,5 @@ export function GenericErrorBoundaryFallback({ error }: { error: Error }) {
       <p className="dark:text-red-400">Something went wrong:</p>
       <pre className="text-red-600 dark:text-red-500">{error.message}</pre>
     </div>
-  );
+  )
 }

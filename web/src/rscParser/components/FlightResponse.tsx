@@ -1,19 +1,20 @@
-import { ErrorBoundary } from "react-error-boundary";
-import * as Ariakit from "@ariakit/react";
+import * as Ariakit from '@ariakit/react'
+import { ErrorBoundary } from 'react-error-boundary'
 
-import { GenericErrorBoundaryFallback } from "./GenericErrorBoundaryFallback";
-import type { FlightResponse } from "../react/ReactFlightClient";
-import { FlightResponseTabSplit } from "./FlightResponseTabSplit";
-import { FlightResponseTabNetwork } from "./FlightResponseTabNetwork";
-import { FlightResponseTabRaw } from "./FlightResponseTabRaw";
+import type { FlightResponse } from '../react/ReactFlightClient'
+
+import { FlightResponseTabNetwork } from './FlightResponseTabNetwork'
+import { FlightResponseTabRaw } from './FlightResponseTabRaw'
+import { FlightResponseTabSplit } from './FlightResponseTabSplit'
+import { GenericErrorBoundaryFallback } from './GenericErrorBoundaryFallback'
 
 export function FlightResponse({
   flightResponse,
 }: {
-  flightResponse: FlightResponse;
+  flightResponse: FlightResponse
 }) {
-  const defaultSelectedId = "split";
-  const tab = Ariakit.useTabStore({ defaultSelectedId });
+  const defaultSelectedId = 'split'
+  const tab = Ariakit.useTabStore({ defaultSelectedId })
 
   return (
     <ErrorBoundary FallbackComponent={GenericErrorBoundaryFallback}>
@@ -24,7 +25,7 @@ export function FlightResponse({
           ) : (
             <span>
               Data from {flightResponse._chunks.length} fetch chunk
-              {flightResponse._chunks.length === 1 ? "" : "s"}
+              {flightResponse._chunks.length === 1 ? '' : 's'}
             </span>
           )}
 
@@ -78,5 +79,5 @@ export function FlightResponse({
         </div>
       </div>
     </ErrorBoundary>
-  );
+  )
 }

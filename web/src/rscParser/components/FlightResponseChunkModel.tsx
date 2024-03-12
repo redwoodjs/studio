@@ -4,31 +4,33 @@ import React, {
   useContext,
   useState,
   useTransition,
-} from "react";
-import * as Ariakit from "@ariakit/react";
-import { ErrorBoundary } from "react-error-boundary";
+} from 'react'
 
-import { GenericErrorBoundaryFallback } from "./GenericErrorBoundaryFallback.jsx";
-import { DownArrowIcon, RightArrowIcon } from "./FlightResponseIcons.jsx";
+import * as Ariakit from '@ariakit/react'
+import { ErrorBoundary } from 'react-error-boundary'
+
 import {
   createElement,
   Reference,
   isElement,
   isReference,
-} from "../react/ReactFlightClient.js";
+} from '../react/ReactFlightClient.js'
+
+import { DownArrowIcon, RightArrowIcon } from './FlightResponseIcons.jsx'
+import { GenericErrorBoundaryFallback } from './GenericErrorBoundaryFallback.jsx'
 
 const ClickIDContext = createContext<{
-  onClickID: (name: string) => void;
+  onClickID: (name: string) => void
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-}>(null);
+}>(null)
 
 export function FlightResponseChunkModel({
   data,
   onClickID,
 }: {
-  data: unknown;
-  onClickID: (name: string) => void;
+  data: unknown
+  onClickID: (name: string) => void
 }) {
   return (
     <div className="font-code ligatures-none">
@@ -36,7 +38,7 @@ export function FlightResponseChunkModel({
         <Node value={data} />
       </ClickIDContext.Provider>
     </div>
-  );
+  )
 }
 
 function Node({ value }: { value: unknown }) {
@@ -47,137 +49,137 @@ function Node({ value }: { value: unknown }) {
     >
       <NodeSwitch value={value} />
     </ErrorBoundary>
-  );
+  )
 }
 
 function NodeSwitch({ value }: { value: unknown }) {
   if (isElement(value)) {
-    return <NodeElement value={value} />;
+    return <NodeElement value={value} />
   }
 
   if (Array.isArray(value)) {
-    return <NodeArray value={value} />;
+    return <NodeArray value={value} />
   }
 
   if (isReference(value)) {
-    return <NodeReference value={value} />;
+    return <NodeReference value={value} />
   }
 
   if (value instanceof Set) {
-    return <NodeSet value={value} />;
+    return <NodeSet value={value} />
   }
 
-  if (typeof value === "symbol") {
-    return <NodeSymbol value={value} />;
+  if (typeof value === 'symbol') {
+    return <NodeSymbol value={value} />
   }
 
   if (value instanceof Date) {
-    return <NodeDate value={value} />;
+    return <NodeDate value={value} />
   }
 
   if (Number.isNaN(value)) {
-    return <NodeNaN />;
+    return <NodeNaN />
   }
 
-  if (typeof value === "bigint") {
-    return <NodeBigInt value={value} />;
+  if (typeof value === 'bigint') {
+    return <NodeBigInt value={value} />
   }
 
-  if (typeof value === "number" && isFinite(value) === false && value > 0) {
-    return <NodePositiveInfinity />;
+  if (typeof value === 'number' && isFinite(value) === false && value > 0) {
+    return <NodePositiveInfinity />
   }
 
-  if (typeof value === "number" && isFinite(value) === false && value < 0) {
-    return <NodeNegativeInfinity />;
+  if (typeof value === 'number' && isFinite(value) === false && value < 0) {
+    return <NodeNegativeInfinity />
   }
 
-  if (typeof value === "number") {
-    return <NodeNumber value={value} />;
+  if (typeof value === 'number') {
+    return <NodeNumber value={value} />
   }
 
   if (value === undefined) {
-    return <NodeUndefined />;
+    return <NodeUndefined />
   }
 
   if (value === null) {
-    return <NodeNull />;
+    return <NodeNull />
   }
 
-  if (typeof value === "string") {
-    return <NodeString value={value} />;
+  if (typeof value === 'string') {
+    return <NodeString value={value} />
   }
 
   if (
     value !== null &&
-    typeof value === "object" &&
+    typeof value === 'object' &&
     Array.isArray(value) === false &&
     !(value instanceof Array)
   ) {
-    return <NodeObject value={value} />;
+    return <NodeObject value={value} />
   }
 
-  return <NodeUnknown value={value} />;
+  return <NodeUnknown value={value} />
 }
 
 function removeChildren(props: Record<string, unknown>) {
   return Object.keys(props)
-    .filter((key) => key !== "children")
+    .filter((key) => key !== 'children')
     .reduce<Record<string, unknown>>((result, current) => {
-      result[current] = props[current];
-      return result;
-    }, {});
+      result[current] = props[current]
+      return result
+    }, {})
 }
 
 function NodeElement({
   value: { type, props },
 }: {
-  value: ReturnType<typeof createElement>;
+  value: ReturnType<typeof createElement>
 }) {
-  const [isOpen, setIsOpen] = useState(true);
-  const [isPending, startTransition] = useTransition();
+  const [isOpen, setIsOpen] = useState(true)
+  const [isPending, startTransition] = useTransition()
   const disclosure = Ariakit.useDisclosureStore({
     open: isOpen,
     setOpen: (open) => {
       startTransition(() => {
-        setIsOpen(open);
-      });
+        setIsOpen(open)
+      })
     },
-  });
+  })
 
-  const isInsideProps = useContext(PropsContext);
+  const isInsideProps = useContext(PropsContext)
 
   if (isInsideProps === undefined) {
-    throw new Error("PropsContext must be used within a PropsContext.Provider");
+    throw new Error('PropsContext must be used within a PropsContext.Provider')
   }
 
-  const propsWithoutChildren = removeChildren(props);
+  const propsWithoutChildren = removeChildren(props)
   const hasVisibleProps =
     propsWithoutChildren !== undefined &&
-    Object.keys(propsWithoutChildren).length > 0;
+    Object.keys(propsWithoutChildren).length > 0
 
-  const newTag = typeof type === "string" ? type : <Node value={type} />;
+  const newTag = typeof type === 'string' ? type : <Node value={type} />
 
   if (Object.keys(props).length === 0) {
     return (
       <div>
-        <span className={isInsideProps ? "" : "ml-[18px]"}>
+        <span className={isInsideProps ? '' : 'ml-[18px]'}>
           <Purple>
             <LeftArrow />
           </Purple>
-          <Pink>{newTag}</Pink>{" "}
+          <Pink>{newTag}</Pink>{' '}
           <Purple>
             /<RightArrow />
           </Purple>
         </span>
       </div>
-    );
+    )
   }
 
   return (
     <ObjectContext.Provider value={false}>
       <Ariakit.Disclosure
         store={disclosure}
-        className="-my-0.5 cursor-pointer rounded-lg py-0.5 outline outline-2 outline-transparent transition-all duration-200 ligatures-none hover:bg-slate-700/10 focus:bg-slate-700/10 dark:hover:bg-white/10 dark:focus:bg-white/10"
+        className="ligatures-none -my-0.5 cursor-pointer rounded-lg py-0.5 outline outline-2 outline-transparent transition-all duration-200 hover:bg-slate-700/10 focus:bg-slate-700/10 dark:hover:bg-white/10 dark:focus:bg-white/10"
         style={{ opacity: isPending ? 0.7 : 1 }}
       >
         {isOpen ? <DownArrowIcon /> : <RightArrowIcon />}
@@ -192,7 +194,7 @@ function NodeElement({
               <Purple>
                 {props.children === undefined ? (
                   <>
-                    {" "}
+                    {' '}
                     /<RightArrow />
                   </>
                 ) : (
@@ -207,7 +209,7 @@ function NodeElement({
               <RightArrow />
             </Purple>
 
-            <span className="mx-1 rounded-lg border-1 border-solid border-slate-400 px-1.5">
+            <span className="border-1 mx-1 rounded-lg border-solid border-slate-400 px-1.5">
               ⋯
             </span>
             <Purple>
@@ -270,18 +272,18 @@ function NodeElement({
         ) : null}
       </Ariakit.DisclosureContent>
     </ObjectContext.Provider>
-  );
+  )
 }
 
-const PropsContext = createContext(false);
+const PropsContext = createContext(false)
 
 function Prop({ propKey, value }: { propKey: string; value: unknown }) {
   return (
     <>
       <Green>{propKey}</Green>
       <Pink>{`=`}</Pink>
-      {(typeof value === "string" && value === "$undefined") ||
-      typeof value !== "string" ? (
+      {(typeof value === 'string' && value === '$undefined') ||
+      typeof value !== 'string' ? (
         <Blue>
           <LeftCurlyBrace />
         </Blue>
@@ -291,14 +293,14 @@ function Prop({ propKey, value }: { propKey: string; value: unknown }) {
         <Node value={value} />
       </PropsContext.Provider>
 
-      {(typeof value === "string" && value === "$undefined") ||
-      typeof value !== "string" ? (
+      {(typeof value === 'string' && value === '$undefined') ||
+      typeof value !== 'string' ? (
         <Blue>
           <RightCurlyBrace />
         </Blue>
       ) : null}
     </>
-  );
+  )
 }
 
 function Props({ props }: { props: { [key: string]: unknown } }) {
@@ -307,39 +309,39 @@ function Props({ props }: { props: { [key: string]: unknown } }) {
       <div className="pl-[3ch]">
         <Node value={props} />
       </div>
-    );
+    )
   }
 
-  const rootProps = Object.keys(props);
+  const rootProps = Object.keys(props)
 
   if (
     rootProps.length === 0 ||
-    (rootProps.length === 1 && rootProps[0] === "children")
+    (rootProps.length === 1 && rootProps[0] === 'children')
   ) {
-    return null;
+    return null
   }
 
   return (
     <div className="pl-[3ch]">
       {rootProps
-        .filter((rootProp) => rootProp !== "children")
+        .filter((rootProp) => rootProp !== 'children')
         .map((rootProp, i) => {
           return (
             <div key={rootProp}>
               <Prop propKey={rootProp} value={props[rootProp]} />
-              {i < rootProps.length - 1 ? " " : null}
+              {i < rootProps.length - 1 ? ' ' : null}
             </div>
-          );
+          )
         })}
     </div>
-  );
+  )
 }
 
 function NodeArray({ value }: { value: unknown[] }) {
-  const isInsideProps = useContext(PropsContext);
+  const isInsideProps = useContext(PropsContext)
 
   if (isInsideProps === undefined) {
-    throw new Error("PropsContext must be used within a PropsContext.Provider");
+    throw new Error('PropsContext must be used within a PropsContext.Provider')
   }
 
   if (value.length == 0) {
@@ -348,7 +350,7 @@ function NodeArray({ value }: { value: unknown[] }) {
         <LeftSquareBracket />
         <RightSquareBracket />
       </div>
-    );
+    )
   }
 
   return (
@@ -360,7 +362,7 @@ function NodeArray({ value }: { value: unknown[] }) {
       ) : null}
       <ul
         className={`flex w-full flex-col ${
-          isInsideProps ? "pl-[4ch]" : "gap-1"
+          isInsideProps ? 'pl-[4ch]' : 'gap-1'
         }`}
       >
         {/* TODO: Why is this spread needed for arrays like `[undefined]` ? */}
@@ -372,7 +374,7 @@ function NodeArray({ value }: { value: unknown[] }) {
                 <span className="">,</span>
               ) : null}
             </li>
-          );
+          )
         })}
       </ul>
       {isInsideProps ? (
@@ -381,37 +383,37 @@ function NodeArray({ value }: { value: unknown[] }) {
         </div>
       ) : null}
     </div>
-  );
+  )
 }
 
 function NodeReference({ value }: { value: Reference }) {
   return (
     <span className="inline-flex flex-row gap-2">
       <TabJumpButton destinationTab={value.id}>
-        {value.id} ({value.identifier === "" ? null : `${value.identifier} - `}
+        {value.id} ({value.identifier === '' ? null : `${value.identifier} - `}
         {value.type})
       </TabJumpButton>
     </span>
-  );
+  )
 }
 
 function TabJumpButton({
   destinationTab,
   children,
 }: {
-  destinationTab: string;
-  children: ReactNode;
+  destinationTab: string
+  children: ReactNode
 }) {
-  const { onClickID } = useContext(ClickIDContext);
+  const { onClickID } = useContext(ClickIDContext)
 
   return (
     <button
       className="inline-flex flex-row items-center gap-1 rounded bg-blue-300 px-1 py-0.5 text-left text-black dark:bg-slate-700 dark:text-white"
       onClick={() => {
-        onClickID(destinationTab);
+        onClickID(destinationTab)
       }}
     >
-      {children}{" "}
+      {children}{' '}
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -436,15 +438,15 @@ function TabJumpButton({
         </g>
       </svg>
     </button>
-  );
+  )
 }
 
 function NodeSet({ value }: { value: Set<unknown> }) {
   return (
     <JSContainerWrapperForObjects>
-      Set([{[...value.values()].join(",")}])
+      Set([{[...value.values()].join(',')}])
     </JSContainerWrapperForObjects>
-  );
+  )
 }
 
 function NodeSymbol({ value }: { value: symbol }) {
@@ -452,7 +454,7 @@ function NodeSymbol({ value }: { value: symbol }) {
     <JSContainerWrapperForObjects>
       {value.toString()}
     </JSContainerWrapperForObjects>
-  );
+  )
 }
 
 function NodeDate({ value }: { value: Date }) {
@@ -460,11 +462,11 @@ function NodeDate({ value }: { value: Date }) {
     <JSContainerWrapperForObjects>
       JS Date: {value.toString()}
     </JSContainerWrapperForObjects>
-  );
+  )
 }
 
 function NodeNaN() {
-  return <JSContainerWrapperForObjects>NaN</JSContainerWrapperForObjects>;
+  return <JSContainerWrapperForObjects>NaN</JSContainerWrapperForObjects>
 }
 
 function NodeBigInt({ value }: { value: bigint }) {
@@ -472,15 +474,15 @@ function NodeBigInt({ value }: { value: bigint }) {
     <JSContainerWrapperForObjects>
       BigInt: {value.toString()}
     </JSContainerWrapperForObjects>
-  );
+  )
 }
 
 function NodePositiveInfinity() {
-  return <JSContainerWrapperForObjects>Infinity</JSContainerWrapperForObjects>;
+  return <JSContainerWrapperForObjects>Infinity</JSContainerWrapperForObjects>
 }
 
 function NodeNegativeInfinity() {
-  return <JSContainerWrapperForObjects>-Infinity</JSContainerWrapperForObjects>;
+  return <JSContainerWrapperForObjects>-Infinity</JSContainerWrapperForObjects>
 }
 
 function NodeNumber({ value }: { value: number }) {
@@ -488,37 +490,37 @@ function NodeNumber({ value }: { value: number }) {
     <JSContainerWrapperForObjects>
       {value.toString()}
     </JSContainerWrapperForObjects>
-  );
+  )
 }
 
 function NodeNull() {
-  return <JSContainerWrapperForObjects>null</JSContainerWrapperForObjects>;
+  return <JSContainerWrapperForObjects>null</JSContainerWrapperForObjects>
 }
 
 function NodeUndefined() {
-  return <JSContainerWrapperForObjects>undefined</JSContainerWrapperForObjects>;
+  return <JSContainerWrapperForObjects>undefined</JSContainerWrapperForObjects>
 }
 
 function NodeString({ value }: { value: string }) {
-  const isInsideProps = useContext(PropsContext);
+  const isInsideProps = useContext(PropsContext)
 
   if (isInsideProps === undefined) {
-    throw new Error("PropsContext must be used within a PropsContext.Provider");
+    throw new Error('PropsContext must be used within a PropsContext.Provider')
   }
 
   const needsSpecialHandling =
-    value.includes("\\") ||
-    value.includes("{") ||
-    value.includes("}") ||
-    value.includes("<") ||
-    value.includes(">") ||
-    value.includes("(") ||
-    value.includes(")") ||
-    value.includes("`");
+    value.includes('\\') ||
+    value.includes('{') ||
+    value.includes('}') ||
+    value.includes('<') ||
+    value.includes('>') ||
+    value.includes('(') ||
+    value.includes(')') ||
+    value.includes('`')
 
   const formattedString = value
     .replaceAll(`"`, `&#92;"`)
-    .replaceAll(`\``, "\\`");
+    .replaceAll(`\``, '\\`')
 
   if (!isInsideProps) {
     return (
@@ -547,7 +549,7 @@ function NodeString({ value }: { value: string }) {
           />
         )}
       </div>
-    );
+    )
   }
 
   return (
@@ -558,7 +560,7 @@ function NodeString({ value }: { value: string }) {
         &quot;
       </Yellow>
     </div>
-  );
+  )
 }
 
 function NodeObject({ value }: { value: object }) {
@@ -566,7 +568,7 @@ function NodeObject({ value }: { value: object }) {
     <ObjectContext.Provider value={true}>
       <JSObjectValue value={value} />
     </ObjectContext.Provider>
-  );
+  )
 }
 
 function NodeUnknown({ value }: { value: unknown }) {
@@ -574,14 +576,14 @@ function NodeUnknown({ value }: { value: unknown }) {
     <JSContainerWrapperForObjects>
       {JSON.stringify(value, null, 2)}
     </JSContainerWrapperForObjects>
-  );
+  )
 }
 
 function JSContainer({ children }: { children: ReactNode }) {
-  const isInsideProps = useContext(PropsContext);
+  const isInsideProps = useContext(PropsContext)
 
   if (isInsideProps === undefined) {
-    throw new Error("PropsContext must be used within a PropsContext.Provider");
+    throw new Error('PropsContext must be used within a PropsContext.Provider')
   }
 
   return (
@@ -600,20 +602,20 @@ function JSContainer({ children }: { children: ReactNode }) {
         </Blue>
       )}
     </span>
-  );
+  )
 }
 
-const ObjectContext = createContext(false);
+const ObjectContext = createContext(false)
 
 function isLetter(letter: string) {
-  return RegExp(/^\p{L}/, "u").test(letter);
+  return RegExp(/^\p{L}/, 'u').test(letter)
 }
 
 function JSObjectValue({ value }: { value: object }) {
-  const isInsideProps = useContext(PropsContext);
+  const isInsideProps = useContext(PropsContext)
 
   if (isInsideProps === undefined) {
-    throw new Error("PropsContext must be used within a PropsContext.Provider");
+    throw new Error('PropsContext must be used within a PropsContext.Provider')
   }
 
   return (
@@ -626,18 +628,18 @@ function JSObjectValue({ value }: { value: object }) {
 
       <div className="flex flex-col pl-[2ch]">
         {Object.entries(value).map(([entryKey, entryValue], i) => {
-          const needsDoubleQuotes = !isLetter(entryKey[0]);
+          const needsDoubleQuotes = !isLetter(entryKey[0])
           return (
             <span key={entryKey}>
               <span>
                 {needsDoubleQuotes ? `"` : null}
                 {entryKey}
-                {needsDoubleQuotes ? `"` : null}:{" "}
+                {needsDoubleQuotes ? `"` : null}:{' '}
               </span>
               <Node value={entryValue} />
               {i !== Object.keys(value).length - 1 ? <>,</> : null}
             </span>
-          );
+          )
         })}
       </div>
 
@@ -647,67 +649,67 @@ function JSObjectValue({ value }: { value: object }) {
         </Blue>
       ) : null}
     </JSContainer>
-  );
+  )
 }
 
 function JSContainerWrapperForObjects({ children }: { children: ReactNode }) {
-  const isInsideObject = useContext(ObjectContext);
+  const isInsideObject = useContext(ObjectContext)
 
   if (isInsideObject === undefined) {
     throw new Error(
-      "ObjectContext must be used within a ObjectContext.Provider",
-    );
+      'ObjectContext must be used within a ObjectContext.Provider'
+    )
   }
 
   if (isInsideObject) {
-    return <JSContainer>{children}</JSContainer>;
+    return <JSContainer>{children}</JSContainer>
   }
 
-  return children;
+  return children
 }
 
 function Purple({ children }: { children: ReactNode }) {
-  return <span className="text-purple-500">{children}</span>;
+  return <span className="text-purple-500">{children}</span>
 }
 
 function Pink({ children }: { children: ReactNode }) {
-  return <span className="text-pink-700 dark:text-pink-500">{children}</span>;
+  return <span className="text-pink-700 dark:text-pink-500">{children}</span>
 }
 
 function Yellow({ children }: { children: ReactNode }) {
   return (
     <span className="text-yellow-600 dark:text-yellow-300">{children}</span>
-  );
+  )
 }
 
 function Blue({ children }: { children: ReactNode }) {
-  return <span className="text-blue-500">{children}</span>;
+  return <span className="text-blue-500">{children}</span>
 }
 
 function Green({ children }: { children: ReactNode }) {
-  return <span className="text-green-700 dark:text-green-400">{children}</span>;
+  return <span className="text-green-700 dark:text-green-400">{children}</span>
 }
 
 function LeftCurlyBrace() {
-  return <>&#123;</>;
+  return <>&#123;</>
 }
 
 function RightCurlyBrace() {
-  return <>&#125;</>;
+  return <>&#125;</>
 }
 
 function LeftSquareBracket() {
-  return <>&#91;</>;
+  return <>&#91;</>
 }
 
 function RightSquareBracket() {
-  return <>&#93;</>;
+  return <>&#93;</>
 }
 
 function LeftArrow() {
-  return <>&lt;</>;
+  return <>&lt;</>
 }
 
 function RightArrow() {
-  return <>&gt;</>;
+  return <>&gt;</>
 }

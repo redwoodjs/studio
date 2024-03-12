@@ -1,70 +1,73 @@
-import { useContext, useState, useTransition } from "react";
-import * as Ariakit from "@ariakit/react";
-import { ErrorBoundary } from "react-error-boundary";
-import { GenericErrorBoundaryFallback } from "./GenericErrorBoundaryFallback";
-import { FlightResponse } from "../react/ReactFlightClient";
-import { Chunk } from "../react/ReactFlightClient";
-import { FlightResponseChunkModule } from "./FlightResponseChunkModule";
-import { FlightResponseChunkHint } from "./FlightResponseChunkHint";
-import { FlightResponseChunkModel } from "./FlightResponseChunkModel";
-import { DownArrowIcon, RightArrowIcon } from "./FlightResponseIcons";
-import { EndTimeContext } from "./ViewerStreams";
-import { FlightResponseChunkDebugInfo } from "./FlightResponseChunkDebugInfo";
-import { FlightResponseChunkText } from "./FlightResponseChunkText";
-import { FlightResponseChunkUnknown } from "./FlightResponseChunkUnknown";
+import { useContext, useState, useTransition } from 'react'
+
+import * as Ariakit from '@ariakit/react'
+import { ErrorBoundary } from 'react-error-boundary'
+
+import { FlightResponse } from '../react/ReactFlightClient'
+import { Chunk } from '../react/ReactFlightClient'
+
+import { FlightResponseChunkDebugInfo } from './FlightResponseChunkDebugInfo'
+import { FlightResponseChunkHint } from './FlightResponseChunkHint'
+import { FlightResponseChunkModel } from './FlightResponseChunkModel'
+import { FlightResponseChunkModule } from './FlightResponseChunkModule'
+import { FlightResponseChunkText } from './FlightResponseChunkText'
+import { FlightResponseChunkUnknown } from './FlightResponseChunkUnknown'
+import { DownArrowIcon, RightArrowIcon } from './FlightResponseIcons'
+import { GenericErrorBoundaryFallback } from './GenericErrorBoundaryFallback'
+import { EndTimeContext } from './ViewerStreams'
 
 export function FlightResponseTabSplit({
   flightResponse,
 }: {
-  flightResponse: FlightResponse;
+  flightResponse: FlightResponse
 }) {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition()
   const [selectedTab, setSelectedTab] = useState<string | null | undefined>(
-    null,
-  );
-  const [currentTab, setCurrentTab] = useState<string | null | undefined>(null);
+    null
+  )
+  const [currentTab, setCurrentTab] = useState<string | null | undefined>(null)
 
   const payloadSize = parseFloat(
     stringToKiloBytes(
       flightResponse._chunks
         .map((chunk) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { _response, ...chunkWithoutResponse } = chunk;
-          return JSON.stringify(chunkWithoutResponse);
+          const { _response, ...chunkWithoutResponse } = chunk
+          return JSON.stringify(chunkWithoutResponse)
         })
-        .join(""),
-    ),
-  );
+        .join('')
+    )
+  )
 
   const selectTab = (nextTab: string | null | undefined) => {
     if (nextTab !== selectedTab) {
-      setSelectedTab(nextTab);
+      setSelectedTab(nextTab)
       startTransition(() => {
-        setCurrentTab(nextTab);
-      });
+        setCurrentTab(nextTab)
+      })
     }
-  };
+  }
 
   const selectTabByID = (id: string) => {
     for (const chunk of flightResponse._chunks) {
       if (id === chunk.id) {
         // TODO: Don't hard-code this
-        window.scrollTo(0, 680);
-        tab.setSelectedId(String(chunk.id));
+        window.scrollTo(0, 680)
+        tab.setSelectedId(String(chunk.id))
       }
     }
-  };
+  }
 
   const tab = Ariakit.useTabStore({
     selectedId: selectedTab,
     setSelectedId: selectTab,
-  });
+  })
 
-  const endTime = useContext(EndTimeContext);
+  const endTime = useContext(EndTimeContext)
 
   const timeFilteredChunks = flightResponse._chunks.filter(
-    (chunk) => chunk.startTime <= endTime,
-  );
+    (chunk) => chunk.startTime <= endTime
+  )
 
   return (
     <div className="divide-y-1 dark:divide-slate-600">
@@ -107,7 +110,7 @@ export function FlightResponseTabSplit({
             aria-label="Chunks"
             aria-busy={isPending}
             style={{
-              opacity: isPending ? "0.6" : "1",
+              opacity: isPending ? '0.6' : '1',
             }}
           >
             {timeFilteredChunks.length === 0 ? (
@@ -134,21 +137,21 @@ export function FlightResponseTabSplit({
         </>
       )}
     </div>
-  );
+  )
 }
 
 function ChunkTab({
   chunk,
   payloadSize,
 }: {
-  chunk: Chunk;
-  payloadSize: number;
+  chunk: Chunk
+  payloadSize: number
 }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { _response, ...chunkWithoutResponse } = chunk;
+  const { _response, ...chunkWithoutResponse } = chunk
   const chunkSize = parseFloat(
-    stringToKiloBytes(JSON.stringify(chunkWithoutResponse)),
-  );
+    stringToKiloBytes(JSON.stringify(chunkWithoutResponse))
+  )
 
   return (
     <div className="flex flex-row gap-1.5 rounded-md border-2 border-transparent bg-slate-200 px-2 py-0.5 transition-all duration-100 group-aria-selected:border-slate-400 dark:bg-slate-800 dark:group-aria-selected:border-slate-500">
@@ -158,7 +161,7 @@ function ChunkTab({
         <Meter fraction={chunkSize / payloadSize} />
       </div>
     </div>
-  );
+  )
 }
 
 function ChunkTabFallback({
@@ -166,15 +169,15 @@ function ChunkTabFallback({
   chunk,
   payloadSize,
 }: {
-  error: Error;
-  chunk: Chunk;
-  payloadSize: number;
+  error: Error
+  chunk: Chunk
+  payloadSize: number
 }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { _response, ...chunkWithoutResponse } = chunk;
+  const { _response, ...chunkWithoutResponse } = chunk
   const chunkSize = parseFloat(
-    stringToKiloBytes(JSON.stringify(chunkWithoutResponse)),
-  );
+    stringToKiloBytes(JSON.stringify(chunkWithoutResponse))
+  )
 
   if (error instanceof Error) {
     return (
@@ -182,10 +185,10 @@ function ChunkTabFallback({
         <div>Error</div>
         <Meter fraction={chunkSize / payloadSize} />
       </div>
-    );
+    )
   }
 
-  return <span>Error</span>;
+  return <span>Error</span>
 }
 
 export function ChunkTabPanel({
@@ -193,12 +196,12 @@ export function ChunkTabPanel({
   payloadSize,
   selectTabByID,
 }: {
-  chunk: Chunk;
-  payloadSize: number;
-  selectTabByID: (id: string) => void;
+  chunk: Chunk
+  payloadSize: number
+  selectTabByID: (id: string) => void
 }) {
   return (
-    <div className="flex flex-col divide-y-1 dark:divide-slate-600">
+    <div className="divide-y-1 flex flex-col dark:divide-slate-600">
       <div className="flex flex-row justify-between pb-3">
         <ErrorBoundary
           FallbackComponent={GenericErrorBoundaryFallback}
@@ -232,7 +235,7 @@ export function ChunkTabPanel({
         </ErrorBoundary>
       </div>
     </div>
-  );
+  )
 }
 
 function ChunkTabPanelMeta({ chunk }: { chunk: Chunk }) {
@@ -241,21 +244,21 @@ function ChunkTabPanelMeta({ chunk }: { chunk: Chunk }) {
       <h3 className="inline-block rounded-md text-xl font-bold">{chunk.id}</h3>
       <h4 className="font-medium">{chunk.type}</h4>
     </div>
-  );
+  )
 }
 
 function ChunkTabPanelSize({
   chunk,
   payloadSize,
 }: {
-  chunk: Chunk;
-  payloadSize: number;
+  chunk: Chunk
+  payloadSize: number
 }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { _response, ...chunkWithoutResponse } = chunk;
+  const { _response, ...chunkWithoutResponse } = chunk
   const chunkSize = parseFloat(
-    stringToKiloBytes(JSON.stringify(chunkWithoutResponse)),
-  );
+    stringToKiloBytes(JSON.stringify(chunkWithoutResponse))
+  )
 
   return (
     <div className="text-right ">
@@ -265,54 +268,54 @@ function ChunkTabPanelSize({
       <div>{((chunkSize / payloadSize) * 100).toFixed(2)}% of total</div>
       <Meter fraction={chunkSize / payloadSize} />
     </div>
-  );
+  )
 }
 
 function ChunkTabPanelExplorer({
   chunk,
   selectTabByID,
 }: {
-  chunk: Chunk;
-  selectTabByID: (id: string) => void;
+  chunk: Chunk
+  selectTabByID: (id: string) => void
 }) {
   switch (chunk.type) {
-    case "model": {
+    case 'model': {
       return (
         <FlightResponseChunkModel
           data={chunk.value}
           onClickID={(id) => {
-            selectTabByID(id);
+            selectTabByID(id)
           }}
         />
-      );
+      )
     }
-    case "module": {
-      return <FlightResponseChunkModule data={chunk.value} />;
+    case 'module': {
+      return <FlightResponseChunkModule data={chunk.value} />
     }
-    case "hint": {
-      return <FlightResponseChunkHint data={chunk.value} />;
+    case 'hint': {
+      return <FlightResponseChunkHint data={chunk.value} />
     }
-    case "text":
-      return <FlightResponseChunkText data={chunk.value} />;
-    case "debugInfo":
-      return <FlightResponseChunkDebugInfo data={chunk.value} />;
+    case 'text':
+      return <FlightResponseChunkText data={chunk.value} />
+    case 'debugInfo':
+      return <FlightResponseChunkDebugInfo data={chunk.value} />
     default: {
-      return <FlightResponseChunkUnknown chunk={chunk} />;
+      return <FlightResponseChunkUnknown chunk={chunk} />
     }
   }
 }
 
 function ChunkTabPanelGenericData({ chunk }: { chunk: Chunk }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [isOpen, setIsOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
   const disclosure = Ariakit.useDisclosureStore({
     open: isOpen,
     setOpen: (open) => {
       startTransition(() => {
-        setIsOpen(open);
-      });
+        setIsOpen(open)
+      })
     },
-  });
+  })
 
   return (
     <div className="flex flex-col gap-2">
@@ -328,22 +331,22 @@ function ChunkTabPanelGenericData({ chunk }: { chunk: Chunk }) {
         {isOpen ? <ChunkTabRawJson chunk={chunk} /> : null}
       </Ariakit.DisclosureContent>
     </div>
-  );
+  )
 }
 
 function ChunkTabRawJson({ chunk }: { chunk: Chunk }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { _response, ...chunkWithoutResponse } = chunk;
+  const { _response, ...chunkWithoutResponse } = chunk
 
   return (
     <pre className="overflow-hidden whitespace-break-spaces break-all">
       {JSON.stringify(chunkWithoutResponse, null, 1)}
     </pre>
-  );
+  )
 }
 
 function stringToKiloBytes(data: string) {
-  return ((encodeURI(data).split(/%..|./).length - 1) / 1024).toFixed(2);
+  return ((encodeURI(data).split(/%..|./).length - 1) / 1024).toFixed(2)
 }
 
 function Meter({ fraction }: { fraction: number }) {
@@ -353,18 +356,18 @@ function Meter({ fraction }: { fraction: number }) {
       min="0"
       max="1"
       className={[
-        "h-3 w-14",
-        "[&::-webkit-meter-bar]:rounded-lg",
-        "[&::-webkit-meter-optimum-value]:rounded-lg",
-        "[&::-webkit-meter-bar]:border-0",
-        "[&::-webkit-meter-optimum-value]:border-0",
-        "[&::-webkit-meter-bar]:bg-slate-300",
-        "dark:[&::-webkit-meter-bar]:bg-slate-500",
-        "[&::-webkit-meter-optimum-value]:bg-black",
-        "dark:[&::-webkit-meter-optimum-value]:bg-white",
-      ].join(" ")}
+        'h-3 w-14',
+        '[&::-webkit-meter-bar]:rounded-lg',
+        '[&::-webkit-meter-optimum-value]:rounded-lg',
+        '[&::-webkit-meter-bar]:border-0',
+        '[&::-webkit-meter-optimum-value]:border-0',
+        '[&::-webkit-meter-bar]:bg-slate-300',
+        'dark:[&::-webkit-meter-bar]:bg-slate-500',
+        '[&::-webkit-meter-optimum-value]:bg-black',
+        'dark:[&::-webkit-meter-optimum-value]:bg-white',
+      ].join(' ')}
     >
       {(fraction * 100).toFixed(2)}%
     </meter>
-  );
+  )
 }

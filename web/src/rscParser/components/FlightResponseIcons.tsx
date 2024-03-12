@@ -9,7 +9,7 @@ export function DownArrowIcon() {
       <title>Down arrow</title>
       <path d="M12 16L6 10H18L12 16Z" fill="currentColor"></path>
     </svg>
-  );
+  )
 }
 
 export function RightArrowIcon() {
@@ -23,5 +23,5 @@ export function RightArrowIcon() {
       <title>Right arrow</title>
       <path d="M16 12L10 18V6L16 12Z" fill="currentColor"></path>
     </svg>
-  );
+  )
 }

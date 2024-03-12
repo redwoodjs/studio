@@ -1,48 +1,51 @@
-import { ReactNode, useEffect, useState, useTransition } from "react";
-import * as Ariakit from "@ariakit/react";
-import { RscChunkMessage } from "../main";
-import { getColorForFetch } from "../color";
-import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { useSortedFetchPaths } from "./TimeScrubber";
+import { ReactNode, useEffect, useState, useTransition } from 'react'
+
+import * as Ariakit from '@ariakit/react'
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
+
+import { getColorForFetch } from '../color'
+import { RscChunkMessage } from '../main'
+
+import { useSortedFetchPaths } from './TimeScrubber'
 
 export function useFlightResponseSelector(
   messages: RscChunkMessage[],
   {
     follow,
   }: {
-    follow: boolean;
-  },
+    follow: boolean
+  }
 ) {
-  const tabs = useSortedFetchPaths(messages);
+  const tabs = useSortedFetchPaths(messages)
 
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition()
   const [selectedTab, setSelectedTab] = useState<string | null | undefined>(
-    null,
-  );
-  const [currentTab, setCurrentTab] = useState<string | null | undefined>(null);
+    null
+  )
+  const [currentTab, setCurrentTab] = useState<string | null | undefined>(null)
 
   const selectTab = (nextTab: string | null | undefined) => {
     if (nextTab !== selectedTab) {
-      setSelectedTab(nextTab);
+      setSelectedTab(nextTab)
       startTransition(() => {
-        setCurrentTab(nextTab);
-      });
+        setCurrentTab(nextTab)
+      })
     }
-  };
+  }
 
   useEffect(() => {
     if (follow) {
-      const lastTab = tabs.at(-1);
+      const lastTab = tabs.at(-1)
       if (lastTab !== selectedTab) {
-        selectTab(lastTab);
+        selectTab(lastTab)
       }
     }
-  }, [tabs]);
+  }, [tabs])
 
   const tabStore = Ariakit.useTabStore({
     selectedId: selectedTab,
     setSelectedId: selectTab,
-  });
+  })
 
   return {
     tabs,
@@ -50,7 +53,7 @@ export function useFlightResponseSelector(
     isPending,
     currentTab,
     tabStore,
-  };
+  }
 }
 
 export function FlightResponseSelector({
@@ -73,7 +76,7 @@ export function FlightResponseSelector({
                   style={{
                     background: getColorForFetch(
                       messages.find((m) => m.data.fetchUrl === tab)?.data
-                        .fetchStartTime ?? 0,
+                        .fetchStartTime ?? 0
                     ),
                   }}
                 ></div>
@@ -99,7 +102,7 @@ export function FlightResponseSelector({
           tabId={currentTab}
           alwaysVisible={true}
           className={`flex min-w-0 grow flex-col gap-4 pl-3 transition-opacity delay-75 duration-100 ${
-            isPending ? "opacity-60" : ""
+            isPending ? 'opacity-60' : ''
           }`}
           aria-label="Paths"
           aria-busy={isPending}
@@ -108,5 +111,5 @@ export function FlightResponseSelector({
         </Ariakit.TabPanel>
       </Panel>
     </PanelGroup>
-  );
+  )
 }

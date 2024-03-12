@@ -6,24 +6,24 @@
  *
  */
 
-export type StringDecoder = TextDecoder;
+export type StringDecoder = TextDecoder
 
 export function createStringDecoder(): StringDecoder {
-  return new TextDecoder();
+  return new TextDecoder()
 }
 
-const decoderOptions = { stream: true };
+const decoderOptions = { stream: true }
 
 export function readPartialStringChunk(
   decoder: StringDecoder,
-  buffer: Uint8Array,
+  buffer: Uint8Array
 ): string {
-  return decoder.decode(buffer, decoderOptions);
+  return decoder.decode(buffer, decoderOptions)
 }
 
 export function readFinalStringChunk(
   decoder: StringDecoder,
-  buffer: Uint8Array,
+  buffer: Uint8Array
 ): string {
-  return decoder.decode(buffer);
+  return decoder.decode(buffer)
 }

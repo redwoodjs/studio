@@ -7,23 +7,23 @@
  */
 
 // This is the parsed shape of the wire format which is why it is
-// condensed to only the essentialy information
+// condensed to only the essentially information
 export type ImportMetadata =
   | [
       /* id */ string,
       /* chunks id/filename pairs, double indexed */ Array<string>,
       /* name */ string,
-      /* async */ 1,
+      /* async */ 1
     ]
   | [
       /* id */ string,
       /* chunks id/filename pairs, double indexed */ Array<string>,
-      /* name */ string,
-    ];
+      /* name */ string
+    ]
 
-export const ID = 0;
-export const CHUNKS = 1;
-export const NAME = 2;
+export const ID = 0
+export const CHUNKS = 1
+export const NAME = 2
 // export const ASYNC = 3;
 
 // This logic is correct because currently only include the 4th tuple member
@@ -31,5 +31,5 @@ export const NAME = 2;
 // the value is true. We don't index into the 4th slot because flow does not
 // like the potential out of bounds access
 export function isAsyncImport(metadata: ImportMetadata): boolean {
-  return metadata.length === 4;
+  return metadata.length === 4
 }

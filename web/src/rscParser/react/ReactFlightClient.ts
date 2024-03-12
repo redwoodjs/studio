@@ -10,115 +10,115 @@ import {
   StringDecoder,
   readFinalStringChunk,
   readPartialStringChunk,
-} from "./ReactFlightClientConfigBrowser";
-import { ClientReferenceMetadata } from "./ReactFlightClientConfigBundlerWebpack";
-import { ImportMetadata } from "./ReactFlightImportMetadata";
-import { HintCode, HintModel } from "./ReactFlightServerConfigDOM";
-import { REACT_ELEMENT_TYPE } from "./ReactSymbols";
+} from './ReactFlightClientConfigBrowser'
+import { ClientReferenceMetadata } from './ReactFlightClientConfigBundlerWebpack'
+import { ImportMetadata } from './ReactFlightImportMetadata'
+import { HintCode, HintModel } from './ReactFlightServerConfigDOM'
+import { REACT_ELEMENT_TYPE } from './ReactSymbols'
 
-const __DEV__ = process.env.NODE_ENV === "development";
-const enablePostpone = true;
+const __DEV__ = process.env.NODE_ENV === 'development'
+const enablePostpone = true
 
 export type TextChunk = {
-  type: "text";
-  id: string;
-  value: string;
-  originalValue: string;
-  startTime: number;
-  endTime: number;
-  _response: FlightResponse;
-};
+  type: 'text'
+  id: string
+  value: string
+  originalValue: string
+  startTime: number
+  endTime: number
+  _response: FlightResponse
+}
 
 export type ModuleChunk = {
-  type: "module";
-  id: string;
-  value: ImportMetadata;
-  originalValue: string;
-  startTime: number;
-  endTime: number;
-  _response: FlightResponse;
-};
+  type: 'module'
+  id: string
+  value: ImportMetadata
+  originalValue: string
+  startTime: number
+  endTime: number
+  _response: FlightResponse
+}
 
 export type ModelChunk = {
-  type: "model";
-  id: string;
-  value: unknown;
-  originalValue: string;
-  startTime: number;
-  endTime: number;
-  _response: FlightResponse;
-};
+  type: 'model'
+  id: string
+  value: unknown
+  originalValue: string
+  startTime: number
+  endTime: number
+  _response: FlightResponse
+}
 
 export type HintChunk = {
-  type: "hint";
-  id: string;
-  code: string;
-  value: HintModel<HintCode>;
-  originalValue: { code: string; model: string };
-  startTime: number;
-  endTime: number;
-  _response: FlightResponse;
-};
+  type: 'hint'
+  id: string
+  code: string
+  value: HintModel<HintCode>
+  originalValue: { code: string; model: string }
+  startTime: number
+  endTime: number
+  _response: FlightResponse
+}
 
 export type ErrorDevChunk = {
-  type: "errorDev";
-  id: string;
-  error: ErrorWithDigest;
-  originalValue: { digest: string; message: string; stack: string };
-  startTime: number;
-  endTime: number;
-  _response: FlightResponse;
-};
+  type: 'errorDev'
+  id: string
+  error: ErrorWithDigest
+  originalValue: { digest: string; message: string; stack: string }
+  startTime: number
+  endTime: number
+  _response: FlightResponse
+}
 
 export type ErrorProdChunk = {
-  type: "errorProd";
-  id: string;
-  error: ErrorWithDigest;
-  originalValue: string;
-  startTime: number;
-  endTime: number;
-  _response: FlightResponse;
-};
+  type: 'errorProd'
+  id: string
+  error: ErrorWithDigest
+  originalValue: string
+  startTime: number
+  endTime: number
+  _response: FlightResponse
+}
 
 export type PostponeDevChunk = {
-  type: "postponeDev";
-  id: string;
-  error: Postpone;
-  originalValue: { reason: string; stack: string };
-  startTime: number;
-  endTime: number;
-  _response: FlightResponse;
-};
+  type: 'postponeDev'
+  id: string
+  error: Postpone
+  originalValue: { reason: string; stack: string }
+  startTime: number
+  endTime: number
+  _response: FlightResponse
+}
 
 export type PostponeProdChunk = {
-  type: "postponeProd";
-  id: string;
-  error: Postpone;
-  originalValue: undefined;
-  startTime: number;
-  endTime: number;
-  _response: FlightResponse;
-};
+  type: 'postponeProd'
+  id: string
+  error: Postpone
+  originalValue: undefined
+  startTime: number
+  endTime: number
+  _response: FlightResponse
+}
 
 export type BufferChunk = {
-  type: "buffer";
-  id: string;
-  value: ArrayBufferView | ArrayBuffer;
-  originalValue: string;
-  startTime: number;
-  endTime: number;
-  _response: FlightResponse;
-};
+  type: 'buffer'
+  id: string
+  value: ArrayBufferView | ArrayBuffer
+  originalValue: string
+  startTime: number
+  endTime: number
+  _response: FlightResponse
+}
 
 export type DebugInfoChunk = {
-  type: "debugInfo";
-  id: string;
-  value: { name: string };
-  originalValue: { name: string };
-  startTime: number;
-  endTime: number;
-  _response: FlightResponse;
-};
+  type: 'debugInfo'
+  id: string
+  value: { name: string }
+  originalValue: { name: string }
+  startTime: number
+  endTime: number
+  _response: FlightResponse
+}
 
 export type Chunk =
   | TextChunk
@@ -130,11 +130,11 @@ export type Chunk =
   | PostponeDevChunk
   | PostponeProdChunk
   | BufferChunk
-  | DebugInfoChunk;
+  | DebugInfoChunk
 
-type RowParserState = 0 | 1 | 2 | 3 | 4;
+type RowParserState = 0 | 1 | 2 | 3 | 4
 
-type UninitializedModel = string;
+type UninitializedModel = string
 
 type JSONValue =
   | string
@@ -142,164 +142,164 @@ type JSONValue =
   | boolean
   | null
   | Array<JSONValue>
-  | { [key: string]: JSONValue };
+  | { [key: string]: JSONValue }
 
 export type FlightResponse = {
-  _rowState: RowParserState;
-  _rowID: number; // parts of a row ID parsed so far
-  _rowTag: number; // 0 indicates that we're currently parsing the row ID
-  _rowLength: number; // remaining bytes in the row. 0 indicates that we're looking for a newline.
-  _buffer: Array<Uint8Array>; // chunks received so far as part of this row
-  _stringDecoder: StringDecoder;
-  _chunks: Chunk[];
-  _currentStartTime: number;
-  _currentEndTime: number;
+  _rowState: RowParserState
+  _rowID: number // parts of a row ID parsed so far
+  _rowTag: number // 0 indicates that we're currently parsing the row ID
+  _rowLength: number // remaining bytes in the row. 0 indicates that we're looking for a newline.
+  _buffer: Array<Uint8Array> // chunks received so far as part of this row
+  _stringDecoder: StringDecoder
+  _chunks: Chunk[]
+  _currentStartTime: number
+  _currentEndTime: number
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _fromJSON: (key: string, value: JSONValue) => any;
-};
+  _fromJSON: (key: string, value: JSONValue) => any
+}
 
 export type Reference = {
-  $$type: "reference";
-  id: string;
-  identifier: string;
-  type: string;
-};
+  $$type: 'reference'
+  id: string
+  identifier: string
+  type: string
+}
 
 export function isReference(x: unknown): x is Reference {
   return (
-    typeof x === "object" &&
+    typeof x === 'object' &&
     x !== null &&
-    "$$type" in x &&
-    x.$$type === "reference"
-  );
+    '$$type' in x &&
+    x.$$type === 'reference'
+  )
 }
 
 function parseModelString(
   response: FlightResponse,
   parentObject: object,
   key: string,
-  value: string,
+  value: string
 ) {
-  if (value[0] === "$") {
-    if (value === "$") {
+  if (value[0] === '$') {
+    if (value === '$') {
       // A very common symbol.
-      return REACT_ELEMENT_TYPE;
+      return REACT_ELEMENT_TYPE
     }
     switch (value[1]) {
-      case "$": {
+      case '$': {
         // This was an escaped string value.
-        return value.slice(1);
+        return value.slice(1)
       }
-      case "L": {
+      case 'L': {
         // Lazy node
-        const id = parseInt(value.slice(2), 16);
+        const id = parseInt(value.slice(2), 16)
         // const chunk = getChunk(response, id);
         // // We create a React.lazy wrapper around any lazy values.
         // // When passed into React, we'll know how to suspend on this.
         // return createLazyChunkWrapper(chunk);
 
         return {
-          $$type: "reference",
+          $$type: 'reference',
           id: new Number(id).toString(16),
-          identifier: "L",
-          type: "Lazy node",
-        } satisfies Reference;
+          identifier: 'L',
+          type: 'Lazy node',
+        } satisfies Reference
       }
-      case "@": {
+      case '@': {
         // Promise
-        const id = parseInt(value.slice(2), 16);
+        const id = parseInt(value.slice(2), 16)
         // const chunk = getChunk(response, id);
         // return chunk;
 
         return {
-          $$type: "reference",
+          $$type: 'reference',
           id: new Number(id).toString(16),
-          identifier: "@",
-          type: "Promise",
-        } satisfies Reference;
+          identifier: '@',
+          type: 'Promise',
+        } satisfies Reference
       }
-      case "S": {
+      case 'S': {
         // Symbol
-        return Symbol.for(value.slice(2));
+        return Symbol.for(value.slice(2))
       }
-      case "P": {
+      case 'P': {
         // Server Context Provider
         // return getOrCreateServerContext(value.slice(2)).Provider;
 
         // TODO: Remove this since it's no longer going to be a thing?
-        return value;
+        return value
       }
-      case "F": {
+      case 'F': {
         // Server Reference
-        const id = parseInt(value.slice(2), 16);
+        const id = parseInt(value.slice(2), 16)
         // const metadata = getOutlinedModel(response, id);
         // return createServerReferenceProxy(response, metadata);
 
         return {
-          $$type: "reference",
+          $$type: 'reference',
           id: new Number(id).toString(16),
-          identifier: "F",
-          type: "Server Reference",
-        } satisfies Reference;
+          identifier: 'F',
+          type: 'Server Reference',
+        } satisfies Reference
       }
-      case "Q": {
+      case 'Q': {
         // Map
-        const id = parseInt(value.slice(2), 16);
+        const id = parseInt(value.slice(2), 16)
         // const data = getOutlinedModel(response, id);
         // return new Map(data);
 
         return {
-          $$type: "reference",
+          $$type: 'reference',
           id: new Number(id).toString(16),
-          identifier: "Q",
-          type: "Map",
-        } satisfies Reference;
+          identifier: 'Q',
+          type: 'Map',
+        } satisfies Reference
       }
-      case "W": {
+      case 'W': {
         // Set
-        const id = parseInt(value.slice(2), 16);
+        const id = parseInt(value.slice(2), 16)
         // const data = getOutlinedModel(response, id);
         // return new Set(data);
 
         return {
-          $$type: "reference",
+          $$type: 'reference',
           id: new Number(id).toString(16),
-          identifier: "W",
-          type: "Set",
-        } satisfies Reference;
+          identifier: 'W',
+          type: 'Set',
+        } satisfies Reference
       }
-      case "I": {
+      case 'I': {
         // $Infinity
-        return Infinity;
+        return Infinity
       }
-      case "-": {
+      case '-': {
         // $-0 or $-Infinity
-        if (value === "$-0") {
-          return -0;
+        if (value === '$-0') {
+          return -0
         } else {
-          return -Infinity;
+          return -Infinity
         }
       }
-      case "N": {
+      case 'N': {
         // $NaN
-        return NaN;
+        return NaN
       }
-      case "u": {
+      case 'u': {
         // matches "$undefined"
         // Special encoding for `undefined` which can't be serialized as JSON otherwise.
-        return undefined;
+        return undefined
       }
-      case "D": {
+      case 'D': {
         // Date
-        return new Date(Date.parse(value.slice(2)));
+        return new Date(Date.parse(value.slice(2)))
       }
-      case "n": {
+      case 'n': {
         // BigInt
-        return BigInt(value.slice(2));
+        return BigInt(value.slice(2))
       }
       default: {
         // We assume that anything else is a reference ID.
-        const id = parseInt(value.slice(1), 16);
+        const id = parseInt(value.slice(1), 16)
 
         // const chunk = getChunk(response, id);
         // switch (chunk.status) {
@@ -333,36 +333,36 @@ function parseModelString(
         // }
 
         return {
-          $$type: "reference",
+          $$type: 'reference',
           id: new Number(id).toString(16),
-          identifier: "",
-          type: "Reference",
-        } satisfies Reference;
+          identifier: '',
+          type: 'Reference',
+        } satisfies Reference
       }
     }
   }
-  return value;
+  return value
 }
 
 function parseModelTuple(
   response: FlightResponse,
-  value: { [key: string]: JSONValue } | ReadonlyArray<JSONValue>,
+  value: { [key: string]: JSONValue } | ReadonlyArray<JSONValue>
 ) {
   if (!Array.isArray(value)) {
-    return value;
+    return value
   }
 
   if (value.length < 4) {
-    return value;
+    return value
   }
 
   if (value[0] === REACT_ELEMENT_TYPE) {
     // TODO: Consider having React just directly accept these arrays as elements.
     // Or even change the ReactElement type to be an array.
-    return createElement(value[1], value[2], value[3]);
+    return createElement(value[1], value[2], value[3])
   }
 
-  return value;
+  return value
 }
 
 export function createElement(type: unknown, key: unknown, props: unknown) {
@@ -378,7 +378,7 @@ export function createElement(type: unknown, key: unknown, props: unknown) {
 
     // // Record the component responsible for creating this element.
     // _owner: null,
-  };
+  }
   // if (__DEV__) {
   //   // We don't really need to add any of these but keeping them for good measure.
   //   // Unfortunately, _store is enumerable in jest matchers so for equality to
@@ -405,101 +405,101 @@ export function createElement(type: unknown, key: unknown, props: unknown) {
   //     value: null,
   //   });
   // }
-  return element;
+  return element
 }
 
 export function isElement(x: unknown): x is ReturnType<typeof createElement> {
   return (
-    typeof x === "object" &&
+    typeof x === 'object' &&
     x !== null &&
-    "$$typeof" in x &&
+    '$$typeof' in x &&
     x.$$typeof === REACT_ELEMENT_TYPE
-  );
+  )
 }
 
 function resolveModel(
   response: FlightResponse,
   id: number,
-  model: UninitializedModel,
+  model: UninitializedModel
 ): void {
-  const chunks = response._chunks;
+  const chunks = response._chunks
 
-  const value = parseModel(response, model);
+  const value = parseModel(response, model)
 
   chunks.push({
-    type: "model",
+    type: 'model',
     id: new Number(id).toString(16),
     value: value,
     originalValue: model,
     startTime: response._currentStartTime,
     endTime: response._currentEndTime,
     _response: response,
-  });
+  })
 }
 
 function resolveText(response: FlightResponse, id: number, text: string): void {
-  const chunks = response._chunks;
+  const chunks = response._chunks
   // We assume that we always reference large strings after they've been
   // emitted.
 
   chunks.push({
-    type: "text",
+    type: 'text',
     id: new Number(id).toString(16),
     value: text,
     originalValue: text,
     startTime: response._currentStartTime,
     endTime: response._currentEndTime,
     _response: response,
-  });
+  })
 }
 
 function resolveBuffer(
   response: FlightResponse,
   id: number,
-  buffer: ArrayBufferView | ArrayBuffer,
+  buffer: ArrayBufferView | ArrayBuffer
 ): void {
-  const chunks = response._chunks;
+  const chunks = response._chunks
   // We assume that we always reference buffers after they've been emitted.
 
   chunks.push({
-    type: "buffer",
+    type: 'buffer',
     id: new Number(id).toString(16),
     value: buffer,
     originalValue: buffer.toString(),
     startTime: response._currentStartTime,
     endTime: response._currentEndTime,
     _response: response,
-  });
+  })
 }
 
 function resolveModule(
   response: FlightResponse,
   id: number,
-  model: UninitializedModel,
+  model: UninitializedModel
 ): void {
-  const chunks = response._chunks;
+  const chunks = response._chunks
 
   const clientReferenceMetadata: ClientReferenceMetadata = parseModel(
     response,
-    model,
-  );
+    model
+  )
 
   chunks.push({
-    type: "module",
+    type: 'module',
     id: new Number(id).toString(16),
     value: clientReferenceMetadata,
     originalValue: model,
     startTime: response._currentStartTime,
     endTime: response._currentEndTime,
     _response: response,
-  });
+  })
 }
 
-type ErrorWithDigest = Error & { digest?: string };
+type ErrorWithDigest = Error & { digest?: string }
 function resolveErrorProd(
   response: FlightResponse,
   id: number,
-  digest: string,
+  digest: string
 ): void {
   // if (__DEV__) {
   //   // These errors should never make it into a build so we don't need to encode them in codes.json
@@ -509,25 +509,25 @@ function resolveErrorProd(
   //   );
   // }
   const error = new Error(
-    "An error occurred in the Server Components render. The specific message is omitted in production" +
-      " builds to avoid leaking sensitive details. A digest property is included on this error instance which" +
-      " may provide additional details about the nature of the error.",
-  );
-  error.stack = "Error: " + error.message;
+    'An error occurred in the Server Components render. The specific message is omitted in production' +
+      ' builds to avoid leaking sensitive details. A digest property is included on this error instance which' +
+      ' may provide additional details about the nature of the error.'
+  )
+  error.stack = 'Error: ' + error.message
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (error as any).digest = digest;
-  const errorWithDigest = error as ErrorWithDigest;
-  const chunks = response._chunks;
+  ;(error as any).digest = digest
+  const errorWithDigest = error as ErrorWithDigest
+  const chunks = response._chunks
 
   chunks.push({
-    type: "errorProd",
+    type: 'errorProd',
     id: new Number(id).toString(16),
     error: errorWithDigest,
     originalValue: digest,
     startTime: response._currentStartTime,
     endTime: response._currentEndTime,
     _response: response,
-  });
+  })
 }
 
 function resolveErrorDev(
@@ -535,7 +535,7 @@ function resolveErrorDev(
   id: number,
   digest: string,
   message: string,
-  stack: string,
+  stack: string
 ): void {
   // if (!__DEV__) {
   //   // These errors should never make it into a build so we don't need to encode them in codes.json
@@ -547,30 +547,30 @@ function resolveErrorDev(
   // // eslint-disable-next-line react-internal/prod-error-codes
   const error = new Error(
     message ||
-      "An error occurred in the Server Components render but no message was provided",
-  );
-  error.stack = stack;
+      'An error occurred in the Server Components render but no message was provided'
+  )
+  error.stack = stack
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (error as any).digest = digest;
-  const errorWithDigest = error as ErrorWithDigest;
-  const chunks = response._chunks;
+  ;(error as any).digest = digest
+  const errorWithDigest = error as ErrorWithDigest
+  const chunks = response._chunks
 
   chunks.push({
-    type: "errorDev",
+    type: 'errorDev',
     id: new Number(id).toString(16),
     error: errorWithDigest,
     originalValue: { digest, message, stack },
     startTime: response._currentStartTime,
     endTime: response._currentEndTime,
     _response: response,
-  });
+  })
 }
 
 declare class Postpone extends Error {
-  $$typeof: symbol;
+  $$typeof: symbol
 }
 
-const REACT_POSTPONE_TYPE = Symbol.for("react.postpone");
+const REACT_POSTPONE_TYPE = Symbol.for('react.postpone')
 
 function resolvePostponeProd(response: FlightResponse, id: number): void {
   // if (__DEV__) {
@@ -581,30 +581,30 @@ function resolvePostponeProd(response: FlightResponse, id: number): void {
   //   );
   // }
   const error = new Error(
-    "A Server Component was postponed. The reason is omitted in production" +
-      " builds to avoid leaking sensitive details.",
-  );
-  const postponeInstance = error as Postpone;
-  postponeInstance.$$typeof = REACT_POSTPONE_TYPE;
-  postponeInstance.stack = "Error: " + error.message;
-  const chunks = response._chunks;
+    'A Server Component was postponed. The reason is omitted in production' +
+      ' builds to avoid leaking sensitive details.'
+  )
+  const postponeInstance = error as Postpone
+  postponeInstance.$$typeof = REACT_POSTPONE_TYPE
+  postponeInstance.stack = 'Error: ' + error.message
+  const chunks = response._chunks
 
   chunks.push({
-    type: "postponeProd",
+    type: 'postponeProd',
     id: new Number(id).toString(16),
     error: postponeInstance,
     originalValue: undefined,
     startTime: response._currentStartTime,
     endTime: response._currentEndTime,
     _response: response,
-  });
+  })
 }
 
 function resolvePostponeDev(
   response: FlightResponse,
   id: number,
   reason: string,
-  stack: string,
+  stack: string
 ): void {
   // if (!__DEV__) {
   //   // These errors should never make it into a build so we don't need to encode them in codes.json
@@ -614,35 +614,35 @@ function resolvePostponeDev(
   //   );
   // }
   // // eslint-disable-next-line react-internal/prod-error-codes
-  const error = new Error(reason || "");
-  const postponeInstance = error as Postpone;
-  postponeInstance.$$typeof = REACT_POSTPONE_TYPE;
-  postponeInstance.stack = stack;
-  const chunks = response._chunks;
+  const error = new Error(reason || '')
+  const postponeInstance = error as Postpone
+  postponeInstance.$$typeof = REACT_POSTPONE_TYPE
+  postponeInstance.stack = stack
+  const chunks = response._chunks
 
   chunks.push({
-    type: "postponeDev",
+    type: 'postponeDev',
     id: new Number(id).toString(16),
     error: postponeInstance,
     originalValue: { reason, stack },
     startTime: response._currentStartTime,
     endTime: response._currentEndTime,
     _response: response,
-  });
+  })
 }
 
 function resolveHint<Code extends HintCode>(
   response: FlightResponse,
   id: number,
   code: Code,
-  model: UninitializedModel,
+  model: UninitializedModel
 ): void {
-  const hintModel: HintModel<Code> = parseModel(response, model);
+  const hintModel: HintModel<Code> = parseModel(response, model)
 
-  const chunks = response._chunks;
+  const chunks = response._chunks
 
   chunks.push({
-    type: "hint",
+    type: 'hint',
     id: new Number(id).toString(16),
     code: code,
     value: hintModel,
@@ -650,13 +650,13 @@ function resolveHint<Code extends HintCode>(
     startTime: response._currentStartTime,
     endTime: response._currentEndTime,
     _response: response,
-  });
+  })
 }
 
 function resolveDebugInfo(
   response: FlightResponse,
   id: number,
-  debugInfo: { name: string },
+  debugInfo: { name: string }
 ): void {
   // if (!__DEV__) {
   //   // These errors should never make it into a build so we don't need to encode them in codes.json
@@ -666,40 +666,40 @@ function resolveDebugInfo(
   //   );
   // }
 
-  const chunks = response._chunks;
+  const chunks = response._chunks
 
   chunks.push({
-    type: "debugInfo",
+    type: 'debugInfo',
     id: new Number(id).toString(16),
     value: debugInfo,
     originalValue: debugInfo,
     startTime: response._currentStartTime,
     endTime: response._currentEndTime,
     _response: response,
-  });
+  })
 }
 
 function mergeBuffer(
   buffer: Array<Uint8Array>,
-  lastChunk: Uint8Array,
+  lastChunk: Uint8Array
 ): Uint8Array {
-  const l = buffer.length;
+  const l = buffer.length
   // Count the bytes we'll need
-  let byteLength = lastChunk.length;
+  let byteLength = lastChunk.length
   for (let i = 0; i < l; i++) {
-    byteLength += buffer[i].byteLength;
+    byteLength += buffer[i].byteLength
   }
   // Allocate enough contiguous space
-  const result = new Uint8Array(byteLength);
-  let offset = 0;
+  const result = new Uint8Array(byteLength)
+  let offset = 0
   // Copy all the buffers into it.
   for (let i = 0; i < l; i++) {
-    const chunk = buffer[i];
-    result.set(chunk, offset);
-    offset += chunk.byteLength;
+    const chunk = buffer[i]
+    result.set(chunk, offset)
+    offset += chunk.byteLength
   }
-  result.set(lastChunk, offset);
-  return result;
+  result.set(lastChunk, offset)
+  return result
 }
 
 function resolveTypedArray(
@@ -719,7 +719,7 @@ function resolveTypedArray(
     | BigInt64ArrayConstructor
     | BigUint64ArrayConstructor
     | DataViewConstructor,
-  bytesPerElement: number,
+  bytesPerElement: number
 ): void {
   // If the view fits into one original buffer, we just reuse that buffer instead of
   // copying it out to a separate copy. This means that it's not always possible to
@@ -729,7 +729,7 @@ function resolveTypedArray(
   const chunk =
     buffer.length === 0 && lastChunk.byteOffset % bytesPerElement === 0
       ? lastChunk
-      : mergeBuffer(buffer, lastChunk);
+      : mergeBuffer(buffer, lastChunk)
   // TODO: The transfer protocol of RSC is little-endian. If the client isn't little-endian
   // we should convert it instead. In practice big endian isn't really Web compatible so it's
   // somewhat safe to assume that browsers aren't going to run it, but maybe there's some SSR
@@ -737,9 +737,9 @@ function resolveTypedArray(
   const view: ArrayBufferView = new constructor(
     chunk.buffer,
     chunk.byteOffset,
-    chunk.byteLength / bytesPerElement,
-  );
-  resolveBuffer(response, id, view);
+    chunk.byteLength / bytesPerElement
+  )
+  resolveBuffer(response, id, view)
 }
 
 function processFullRow(
@@ -747,98 +747,98 @@ function processFullRow(
   id: number,
   tag: number,
   buffer: Array<Uint8Array>,
-  chunk: Uint8Array,
+  chunk: Uint8Array
 ): void {
   if (enableBinaryFlight) {
     switch (tag) {
       case 65 /* "A" */:
         // We must always clone to extract it into a separate buffer instead of just a view.
-        resolveBuffer(response, id, mergeBuffer(buffer, chunk).buffer);
-        return;
+        resolveBuffer(response, id, mergeBuffer(buffer, chunk).buffer)
+        return
       case 67 /* "C" */:
-        resolveTypedArray(response, id, buffer, chunk, Int8Array, 1);
-        return;
+        resolveTypedArray(response, id, buffer, chunk, Int8Array, 1)
+        return
       case 99 /* "c" */:
         resolveBuffer(
           response,
           id,
-          buffer.length === 0 ? chunk : mergeBuffer(buffer, chunk),
-        );
-        return;
+          buffer.length === 0 ? chunk : mergeBuffer(buffer, chunk)
+        )
+        return
       case 85 /* "U" */:
-        resolveTypedArray(response, id, buffer, chunk, Uint8ClampedArray, 1);
-        return;
+        resolveTypedArray(response, id, buffer, chunk, Uint8ClampedArray, 1)
+        return
       case 83 /* "S" */:
-        resolveTypedArray(response, id, buffer, chunk, Int16Array, 2);
-        return;
+        resolveTypedArray(response, id, buffer, chunk, Int16Array, 2)
+        return
       case 115 /* "s" */:
-        resolveTypedArray(response, id, buffer, chunk, Uint16Array, 2);
-        return;
+        resolveTypedArray(response, id, buffer, chunk, Uint16Array, 2)
+        return
       case 76 /* "L" */:
-        resolveTypedArray(response, id, buffer, chunk, Int32Array, 4);
-        return;
+        resolveTypedArray(response, id, buffer, chunk, Int32Array, 4)
+        return
       case 108 /* "l" */:
-        resolveTypedArray(response, id, buffer, chunk, Uint32Array, 4);
-        return;
+        resolveTypedArray(response, id, buffer, chunk, Uint32Array, 4)
+        return
       case 70 /* "F" */:
-        resolveTypedArray(response, id, buffer, chunk, Float32Array, 4);
-        return;
+        resolveTypedArray(response, id, buffer, chunk, Float32Array, 4)
+        return
       case 100 /* "d" */:
-        resolveTypedArray(response, id, buffer, chunk, Float64Array, 8);
-        return;
+        resolveTypedArray(response, id, buffer, chunk, Float64Array, 8)
+        return
       case 78 /* "N" */:
-        resolveTypedArray(response, id, buffer, chunk, BigInt64Array, 8);
-        return;
+        resolveTypedArray(response, id, buffer, chunk, BigInt64Array, 8)
+        return
       case 109 /* "m" */:
-        resolveTypedArray(response, id, buffer, chunk, BigUint64Array, 8);
-        return;
+        resolveTypedArray(response, id, buffer, chunk, BigUint64Array, 8)
+        return
       case 86 /* "V" */:
-        resolveTypedArray(response, id, buffer, chunk, DataView, 1);
-        return;
+        resolveTypedArray(response, id, buffer, chunk, DataView, 1)
+        return
     }
   }
 
-  const stringDecoder = response._stringDecoder;
-  let row = "";
+  const stringDecoder = response._stringDecoder
+  let row = ''
   for (let i = 0; i < buffer.length; i++) {
-    row += readPartialStringChunk(stringDecoder, buffer[i]);
+    row += readPartialStringChunk(stringDecoder, buffer[i])
   }
-  row += readFinalStringChunk(stringDecoder, chunk);
+  row += readFinalStringChunk(stringDecoder, chunk)
 
   switch (tag) {
     case 73 /* "I" */: {
-      resolveModule(response, id, row);
-      return;
+      resolveModule(response, id, row)
+      return
     }
     case 72 /* "H" */: {
-      const code = row[0] as HintCode;
-      resolveHint(response, id, code, row.slice(1));
-      return;
+      const code = row[0] as HintCode
+      resolveHint(response, id, code, row.slice(1))
+      return
     }
     case 69 /* "E" */: {
-      const errorInfo = JSON.parse(row);
+      const errorInfo = JSON.parse(row)
       if (__DEV__) {
         resolveErrorDev(
           response,
           id,
           errorInfo.digest,
           errorInfo.message,
-          errorInfo.stack,
-        );
+          errorInfo.stack
+        )
       } else {
-        resolveErrorProd(response, id, errorInfo.digest);
+        resolveErrorProd(response, id, errorInfo.digest)
       }
-      return;
+      return
     }
     case 84 /* "T" */: {
-      resolveText(response, id, row);
-      return;
+      resolveText(response, id, row)
+      return
     }
     case 68 /* "D" */: {
       //if (__DEV__) {
-      const debugInfo = JSON.parse(row);
-      resolveDebugInfo(response, id, debugInfo);
-      return;
+      const debugInfo = JSON.parse(row)
+      resolveDebugInfo(response, id, debugInfo)
+      return
       //}
       // throw new Error(
       //   "Failed to read a RSC payload created by a development version of React " +
@@ -849,62 +849,62 @@ function processFullRow(
     case 80 /* "P" */: {
       if (enablePostpone) {
         if (__DEV__) {
-          const postponeInfo = JSON.parse(row);
+          const postponeInfo = JSON.parse(row)
           resolvePostponeDev(
             response,
             id,
             postponeInfo.reason,
-            postponeInfo.stack,
-          );
+            postponeInfo.stack
+          )
         } else {
-          resolvePostponeProd(response, id);
+          resolvePostponeProd(response, id)
         }
-        return;
+        return
       }
     }
     // Fallthrough
     default: /* """ "{" "[" "t" "f" "n" "0" - "9" */ {
       // We assume anything else is JSON.
-      resolveModel(response, id, row);
-      return;
+      resolveModel(response, id, row)
+      return
     }
   }
 }
 
-const enableBinaryFlight = true;
+const enableBinaryFlight = true
 
-const ROW_ID = 0;
-const ROW_TAG = 1;
-const ROW_LENGTH = 2;
-const ROW_CHUNK_BY_NEWLINE = 3;
-const ROW_CHUNK_BY_LENGTH = 4;
+const ROW_ID = 0
+const ROW_TAG = 1
+const ROW_LENGTH = 2
+const ROW_CHUNK_BY_NEWLINE = 3
+const ROW_CHUNK_BY_LENGTH = 4
 
 export function processBinaryChunk(
   response: FlightResponse,
-  chunk: Uint8Array,
+  chunk: Uint8Array
 ): void {
-  let i = 0;
-  let rowState = response._rowState;
-  let rowID = response._rowID;
-  let rowTag = response._rowTag;
-  let rowLength = response._rowLength;
-  const buffer = response._buffer;
-  const chunkLength = chunk.length;
+  let i = 0
+  let rowState = response._rowState
+  let rowID = response._rowID
+  let rowTag = response._rowTag
+  let rowLength = response._rowLength
+  const buffer = response._buffer
+  const chunkLength = chunk.length
   while (i < chunkLength) {
-    let lastIdx = -1;
+    let lastIdx = -1
     switch (rowState) {
       case ROW_ID: {
-        const byte = chunk[i++];
+        const byte = chunk[i++]
         if (byte === 58 /* ":" */) {
           // Finished the rowID, next we'll parse the tag.
-          rowState = ROW_TAG;
+          rowState = ROW_TAG
         } else {
-          rowID = (rowID << 4) | (byte > 96 ? byte - 87 : byte - 48);
+          rowID = (rowID << 4) | (byte > 96 ? byte - 87 : byte - 48)
         }
-        continue;
+        continue
       }
       case ROW_TAG: {
-        const resolvedRowTag = chunk[i];
+        const resolvedRowTag = chunk[i]
         if (
           resolvedRowTag === 84 /* "T" */ ||
           (enableBinaryFlight &&
@@ -922,93 +922,93 @@ export function processBinaryChunk(
               resolvedRowTag === 109 /* "m" */ ||
               resolvedRowTag === 86)) /* "V" */
         ) {
-          rowTag = resolvedRowTag;
-          rowState = ROW_LENGTH;
-          i++;
+          rowTag = resolvedRowTag
+          rowState = ROW_LENGTH
+          i++
         } else if (resolvedRowTag > 64 && resolvedRowTag < 91 /* "A"-"Z" */) {
-          rowTag = resolvedRowTag;
-          rowState = ROW_CHUNK_BY_NEWLINE;
-          i++;
+          rowTag = resolvedRowTag
+          rowState = ROW_CHUNK_BY_NEWLINE
+          i++
         } else {
-          rowTag = 0;
-          rowState = ROW_CHUNK_BY_NEWLINE;
+          rowTag = 0
+          rowState = ROW_CHUNK_BY_NEWLINE
           // This was an unknown tag so it was probably part of the data.
         }
-        continue;
+        continue
       }
       case ROW_LENGTH: {
-        const byte = chunk[i++];
+        const byte = chunk[i++]
         if (byte === 44 /* "," */) {
           // Finished the rowLength, next we'll buffer up to that length.
-          rowState = ROW_CHUNK_BY_LENGTH;
+          rowState = ROW_CHUNK_BY_LENGTH
         } else {
-          rowLength = (rowLength << 4) | (byte > 96 ? byte - 87 : byte - 48);
+          rowLength = (rowLength << 4) | (byte > 96 ? byte - 87 : byte - 48)
         }
-        continue;
+        continue
       }
       case ROW_CHUNK_BY_NEWLINE: {
         // We're looking for a newline
-        lastIdx = chunk.indexOf(10 /* "\n" */, i);
-        break;
+        lastIdx = chunk.indexOf(10 /* "\n" */, i)
+        break
       }
       case ROW_CHUNK_BY_LENGTH: {
         // We're looking for the remaining byte length
-        lastIdx = i + rowLength;
+        lastIdx = i + rowLength
         if (lastIdx > chunk.length) {
-          lastIdx = -1;
+          lastIdx = -1
         }
-        break;
+        break
       }
     }
-    const offset = chunk.byteOffset + i;
+    const offset = chunk.byteOffset + i
     if (lastIdx > -1) {
       // We found the last chunk of the row
-      const length = lastIdx - i;
-      const lastChunk = new Uint8Array(chunk.buffer, offset, length);
-      processFullRow(response, rowID, rowTag, buffer, lastChunk);
+      const length = lastIdx - i
+      const lastChunk = new Uint8Array(chunk.buffer, offset, length)
+      processFullRow(response, rowID, rowTag, buffer, lastChunk)
       // Reset state machine for a new row
-      i = lastIdx;
+      i = lastIdx
       if (rowState === ROW_CHUNK_BY_NEWLINE) {
         // If we're trailing by a newline we need to skip it.
-        i++;
+        i++
       }
-      rowState = ROW_ID;
-      rowTag = 0;
-      rowID = 0;
-      rowLength = 0;
-      buffer.length = 0;
+      rowState = ROW_ID
+      rowTag = 0
+      rowID = 0
+      rowLength = 0
+      buffer.length = 0
     } else {
       // The rest of this row is in a future chunk. We stash the rest of the
       // current chunk until we can process the full row.
-      const length = chunk.byteLength - i;
-      const remainingSlice = new Uint8Array(chunk.buffer, offset, length);
-      buffer.push(remainingSlice);
+      const length = chunk.byteLength - i
+      const remainingSlice = new Uint8Array(chunk.buffer, offset, length)
+      buffer.push(remainingSlice)
       // Update how many bytes we're still waiting for. If we're looking for
       // a newline, this doesn't hurt since we'll just ignore it.
-      rowLength -= remainingSlice.byteLength;
-      break;
+      rowLength -= remainingSlice.byteLength
+      break
     }
   }
-  response._rowState = rowState;
-  response._rowID = rowID;
-  response._rowTag = rowTag;
-  response._rowLength = rowLength;
+  response._rowState = rowState
+  response._rowID = rowID
+  response._rowTag = rowTag
+  response._rowLength = rowLength
 }
 
 function parseModel<T>(response: FlightResponse, json: UninitializedModel): T {
-  return JSON.parse(json, response._fromJSON);
+  return JSON.parse(json, response._fromJSON)
 }
 
 export function createFromJSONCallback(response: FlightResponse) {
   return function (key: string, value: JSONValue) {
-    if (typeof value === "string") {
+    if (typeof value === 'string') {
       // We can't use .bind here because we need the "this" value.
-      // @ts-expect-error `this` doesn't work
-      return parseModelString(response, this, key, value);
+      // ts-expect-error `this` doesn't work
+      return parseModelString(response, this, key, value)
     }
-    if (typeof value === "object" && value !== null) {
-      return parseModelTuple(response, value);
+    if (typeof value === 'object' && value !== null) {
+      return parseModelTuple(response, value)
     }
-    return value;
-  };
+    return value
+  }
 }

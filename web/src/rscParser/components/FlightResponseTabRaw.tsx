@@ -1,26 +1,28 @@
-import { useContext } from "react";
-import { FlightResponse } from "../react/ReactFlightClient";
-import { FlightResponseChunkRaw } from "./FlightResponseChunkRaw";
-import { EndTimeContext } from "./ViewerStreams";
+import { useContext } from 'react'
+
+import { FlightResponse } from '../react/ReactFlightClient'
+
+import { FlightResponseChunkRaw } from './FlightResponseChunkRaw'
+import { EndTimeContext } from './ViewerStreams'
 
 export function FlightResponseTabRaw({
   flightResponse,
 }: {
-  flightResponse: FlightResponse;
+  flightResponse: FlightResponse
 }) {
-  const endTime = useContext(EndTimeContext);
+  const endTime = useContext(EndTimeContext)
 
   const timeFilteredChunks = flightResponse._chunks.filter(
-    (chunk) => chunk.startTime <= endTime,
-  );
+    (chunk) => chunk.startTime <= endTime
+  )
 
   return (
-    <ul className="flex flex-col gap-4 font-code">
+    <ul className="font-code flex flex-col gap-4">
       {timeFilteredChunks.map((chunk) => (
         <li key={chunk.id}>
           <FlightResponseChunkRaw data={chunk} />
         </li>
       ))}
     </ul>
-  );
+  )
 }

@@ -1,19 +1,21 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import React, { ChangeEvent, useEffect, useState } from 'react'
 
-import { GenericErrorBoundaryFallback } from "./GenericErrorBoundaryFallback";
-import { createFlightResponse } from "../createFlightResponse";
-import { RscChunkMessage } from "../types";
-import { FlightResponse } from "./FlightResponse";
-import { EndTimeContext } from "./ViewerStreams";
+import { ErrorBoundary } from 'react-error-boundary'
+
+import { createFlightResponse } from '../createFlightResponse'
+import { RscChunkMessage } from '../types'
+
+import { FlightResponse } from './FlightResponse'
+import { GenericErrorBoundaryFallback } from './GenericErrorBoundaryFallback'
+import { EndTimeContext } from './ViewerStreams'
 
 export function ViewerPayload({ defaultPayload }: { defaultPayload: string }) {
-  const [payload, setPayload] = useState(defaultPayload);
+  const [payload, setPayload] = useState(defaultPayload)
 
   useEffect(() => {
-    const previous = localStorage.getItem("payload");
-    setPayload(previous ?? defaultPayload);
-  }, []);
+    const previous = localStorage.getItem('payload')
+    setPayload(previous ?? defaultPayload)
+  }, [])
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -29,8 +31,8 @@ export function ViewerPayload({ defaultPayload }: { defaultPayload: string }) {
           rows={12}
           value={payload}
           onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-            setPayload(event.target.value);
-            localStorage.setItem("payload", event.target.value);
+            setPayload(event.target.value)
+            localStorage.setItem('payload', event.target.value)
           }}
           spellCheck="false"
         />
@@ -44,18 +46,18 @@ export function ViewerPayload({ defaultPayload }: { defaultPayload: string }) {
         </ErrorBoundary>
       </div>
     </div>
-  );
+  )
 }
 
 function Viewer({ payload }: { payload: string }) {
   const messages = [
     {
-      type: "RSC_CHUNK",
+      type: 'RSC_CHUNK',
       tabId: 0,
       data: {
-        fetchUrl: "https://example.com",
+        fetchUrl: 'https://example.com',
         fetchHeaders: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         fetchStartTime: 0,
         chunkStartTime: 0,
@@ -63,13 +65,13 @@ function Viewer({ payload }: { payload: string }) {
         chunkValue: Array.from(new TextEncoder().encode(payload)),
       },
     } satisfies RscChunkMessage,
-  ];
+  ]
 
-  const flightResponse = createFlightResponse(messages);
+  const flightResponse = createFlightResponse(messages)
 
   return (
     <EndTimeContext.Provider value={Infinity}>
       <FlightResponse flightResponse={flightResponse} />
     </EndTimeContext.Provider>
-  );
+  )
 }

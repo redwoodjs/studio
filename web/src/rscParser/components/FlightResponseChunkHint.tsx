@@ -1,9 +1,9 @@
-import { HintChunk } from "../react/ReactFlightClient";
+import { HintChunk } from '../react/ReactFlightClient'
 
 export function FlightResponseChunkHint({
   data,
 }: {
-  data: HintChunk["value"];
+  data: HintChunk['value']
 }) {
   return (
     <div className="flex flex-col gap-3">
@@ -19,5 +19,5 @@ export function FlightResponseChunkHint({
         </p>
       ) : null}
     </div>
-  );
+  )
 }
