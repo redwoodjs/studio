@@ -1,5 +1,6 @@
 import type { APIGatewayEvent, Context } from 'aws-lambda'
 
+import { db } from 'src/lib/db'
 import { logger } from 'src/lib/logger'
 
 /**
@@ -21,24 +22,14 @@ import { logger } from 'src/lib/logger'
 export const handler = async (event: APIGatewayEvent, _context: Context) => {
   logger.info(`${event.httpMethod} ${event.path}: rscFlight function`)
 
-  const { body, headers } = event
+  const { body } = event
+  const { flight } = JSON.parse(body)
 
-  logger.info(
-    {
-      body,
-      headers,
+  const data = await db.flight.create({
+    data: {
+      ...flight,
     },
-    '>>>>>> rscFlight function body'
-  )
-
-  const { data } = JSON.parse(body)
-
-  logger.info(
-    {
-      data,
-    },
-    '>>>>>> rscFlight function data'
-  )
+  })
 
   return {
     statusCode: 200,
