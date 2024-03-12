@@ -1,3 +1,4 @@
+import { SearchSelect, SearchSelectItem } from '@tremor/react'
 import dagre from 'dagre'
 import ReactFlow, {
   ConnectionLineType,
@@ -12,6 +13,7 @@ import type {
 
 import 'reactflow/dist/style.css'
 
+import { navigate, routes } from '@redwoodjs/router'
 import type {
   CellSuccessProps,
   CellFailureProps,
@@ -23,6 +25,10 @@ export const QUERY: TypedDocumentNode<
   FindRenderGraphQueryVariables
 > = gql`
   query FindRenderGraphQuery($routeName: String!) {
+    renderGraphRoutes {
+      id
+      name
+    }
     renderGraph: renderGraph(routeName: $routeName) {
       id
       initialEdges
@@ -43,6 +49,7 @@ export const Failure = ({
 
 export const Success = ({
   renderGraph,
+  renderGraphRoutes,
 }: CellSuccessProps<FindRenderGraphQuery, FindRenderGraphQueryVariables>) => {
   const { initialNodes: n, initialEdges: e } = renderGraph
 
@@ -97,6 +104,20 @@ export const Success = ({
 
   return (
     <div className="h-screen w-full">
+      <div className="mb-4 mt-8 text-center font-mono text-sm text-slate-500">
+        Routes
+      </div>
+      <SearchSelect
+        onValueChange={(value) =>
+          navigate(routes.renderGraph({ routeName: value }))
+        }
+      >
+        {renderGraphRoutes.map((route) => (
+          <SearchSelectItem key={route.id} value={route.id}>
+            {route.name}
+          </SearchSelectItem>
+        ))}
+      </SearchSelect>
       <ReactFlowProvider>
         <ReactFlow
           nodes={nodes}

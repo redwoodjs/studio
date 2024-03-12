@@ -36,7 +36,7 @@
   # authImpersonation.jwtSecret = "secret"
 
 [experimental.rsc]
-  enabled = false
+  enabled = true
 
 [experimental.streamingSsr]
   enabled = true

@@ -10,7 +10,7 @@ const RenderGraphRoutesPage = () => {
         description="RenderGraphRoutes page"
       />
 
-      <h1>RenderGraphRoutesPage</h1>
+      <h1>Render Graph Routes Page</h1>
       <RenderGraphRoutesCell />
     </>
   )
