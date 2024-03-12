@@ -6,6 +6,7 @@ export const schema = gql`
     encodedPayload: String!
     encoding: String!
     payload: String!
+    preview: String!
   }
 
   type Query {

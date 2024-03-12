@@ -1,3 +1,5 @@
+import { Title } from '@tremor/react'
+
 import { Metadata } from '@redwoodjs/web'
 
 import FlightCell from 'src/components/FlightCell'
@@ -6,7 +8,8 @@ const FlightPage = ({ id }) => {
     <>
       <Metadata title="Flight" description="Flight page" />
 
-      <h1>Flight Page</h1>
+      <Title className="pb-4">Flight Preview</Title>
+
       <FlightCell id={id} />
     </>
   )

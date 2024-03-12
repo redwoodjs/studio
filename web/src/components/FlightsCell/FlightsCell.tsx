@@ -14,6 +14,7 @@ export const QUERY: TypedDocumentNode<
   query FlightsQuery {
     flights {
       id
+      preview
       createdAt
     }
   }
@@ -34,7 +35,7 @@ export const Success = ({ flights }: CellSuccessProps<FlightsQuery>) => {
         return (
           <li key={flight.id}>
             <Link to={routes.flight({ id: flight.id })}>
-              {flight.id} at {flight.createdAt}
+              {flight.id} - {flight.preview} at {flight.createdAt}
             </Link>
           </li>
         )
