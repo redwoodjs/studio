@@ -29,3 +29,6 @@
 
 [experimental.rsc]
   enabled = true
+
+[studio]
+  enabled = true

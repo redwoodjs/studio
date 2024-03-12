@@ -24,6 +24,8 @@ const Routes = () => {
         <Route path="/mailer/template-preview" page={MailerTemplatePreviewPage} name="mailerTemplatePreview" />
 
         <Route path="/rsc/cache" page={RscCachePage} name="rscCache" />
+        <Route path="/rsc/flights" page={FlightsPage} name="flights" />
+        <Route path="/rsc/flight/{id:String}" page={FlightPage} name="flight" />
 
         <Route path="/ssr/og-tag-preview" page={OGTagPreviewPage} name="ogTagPreview" />
         <Route path="/studio/settings" page={InfoPage} name="settings" />

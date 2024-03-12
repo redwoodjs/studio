@@ -11,6 +11,7 @@
     ]
   },
   "dependencies": {
+    "@ariakit/react": "0.4.3",
     "@dagrejs/dagre": "^1.0.4",
     "@graphiql/plugin-explorer": "0.1.22",
     "@graphiql/toolkit": "0.9.1",
@@ -21,6 +22,7 @@
     "@redwoodjs/forms": "8.4.0",
     "@redwoodjs/router": "8.4.0",
     "@redwoodjs/web": "8.4.0",
+    "@rsc-parser/core": "0.1.15",
     "@tremor/react": "3.13.2",
     "buffer": "6.0.3",
     "date-fns": "^3.3.1",
@@ -29,6 +31,7 @@
     "prop-types": "15.8.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-error-boundary": "^4.0.13",
     "reactflow": "11.8.3",
     "use-url-search-params": "2.5.1"
   },
