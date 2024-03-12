@@ -40,6 +40,7 @@ export {
   MapIcon,
   NewspaperIcon as ErdIcon,
   PaperClipIcon,
+  PaperAirplaneIcon as FlightIcon,
   PhotoIcon as OGTagPreviewIcon,
   RectangleStackIcon,
   SparklesIcon as PerformanceMetricIcon,

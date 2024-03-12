@@ -3,7 +3,7 @@ import type { QueryResolvers } from 'types/graphql'
 import { db } from 'src/lib/db'
 
 export const flights: QueryResolvers['flights'] = async () => {
-  const result = await db.flight.findMany()
+  const result = await db.flight.findMany({ orderBy: { createdAt: 'desc' } })
   return result.map((flight) => {
     return {
       ...flight,

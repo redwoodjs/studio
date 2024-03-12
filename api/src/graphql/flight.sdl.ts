@@ -1,6 +1,8 @@
 export const schema = gql`
   type Flight {
     id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
     encodedPayload: String!
     encoding: String!
     payload: String!

@@ -6,6 +6,7 @@ import {
   AboutIcon,
   DashboardIcon,
   ErdIcon,
+  FlightIcon,
   GraphQLIcon,
   InboxIcon,
   SettingsIcon,
@@ -79,6 +80,14 @@ export const NavigationMenu = () => {
       name: 'Templates',
       to: routes.mailerTemplatePreview(),
       icon: TemplatesIcon,
+    },
+  ]
+
+  const rscNavigation: TNavigationItem[] = [
+    {
+      name: 'Flight Viewer',
+      to: routes.flights(),
+      icon: FlightIcon,
     },
   ]
 
@@ -162,6 +171,18 @@ export const NavigationMenu = () => {
             </div>
             <ul className="-mx-2 mt-2 space-y-1">
               {mailerNavigation.map((item) => (
+                <li key={item.name}>
+                  <NavigationItem item={item} />
+                </li>
+              ))}
+            </ul>
+          </li>
+          <li>
+            <div className="text-xs font-semibold leading-6 text-gray-400">
+              RSC
+            </div>
+            <ul className="-mx-2 mt-2 space-y-1">
+              {rscNavigation.map((item) => (
                 <li key={item.name}>
                   <NavigationItem item={item} />
                 </li>
