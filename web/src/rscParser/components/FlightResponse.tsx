@@ -3,7 +3,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 
 import type { FlightResponse } from '../react/ReactFlightClient'
 
-import { FlightResponseTabNetwork } from './FlightResponseTabNetwork'
+// import { FlightResponseTabNetwork } from './FlightResponseTabNetwork'
 import { FlightResponseTabRaw } from './FlightResponseTabRaw'
 import { FlightResponseTabSplit } from './FlightResponseTabSplit'
 import { GenericErrorBoundaryFallback } from './GenericErrorBoundaryFallback'
@@ -46,12 +46,6 @@ export function FlightResponse({
             >
               Raw
             </Ariakit.Tab>
-            <Ariakit.Tab
-              id="network"
-              className="text-nowrap rounded-md px-2 py-0.5 aria-selected:bg-slate-300 dark:aria-selected:text-black"
-            >
-              Network (Beta)
-            </Ariakit.Tab>
           </Ariakit.TabList>
         </div>
         <div>
@@ -64,16 +58,6 @@ export function FlightResponse({
           <Ariakit.TabPanel store={tab}>
             <ErrorBoundary FallbackComponent={GenericErrorBoundaryFallback}>
               <FlightResponseTabRaw flightResponse={flightResponse} />
-            </ErrorBoundary>
-          </Ariakit.TabPanel>
-
-          <Ariakit.TabPanel store={tab}>
-            <ErrorBoundary FallbackComponent={GenericErrorBoundaryFallback}>
-              <FlightResponseTabNetwork
-                flightResponse={flightResponse}
-                // TODO: Find a way to remove this reseting key
-                key={flightResponse._chunks.length}
-              />
             </ErrorBoundary>
           </Ariakit.TabPanel>
         </div>

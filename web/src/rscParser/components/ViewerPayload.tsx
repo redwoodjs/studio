@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -10,33 +10,21 @@ import { GenericErrorBoundaryFallback } from './GenericErrorBoundaryFallback'
 import { EndTimeContext } from './ViewerStreams'
 
 export function ViewerPayload({ defaultPayload }: { defaultPayload: string }) {
-  const [payload, setPayload] = useState(defaultPayload)
-
-  useEffect(() => {
-    const previous = localStorage.getItem('payload')
-    setPayload(previous ?? defaultPayload)
-  }, [])
+  const [payload] = useState(defaultPayload)
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <form className="flex w-full flex-col gap-2">
-        <label htmlFor="payload" className="font-medium">
-          Payload
-        </label>
+      <div className="flex w-full flex-col gap-2">
+        <h3 className="font-medium">Payload</h3>
 
-        <textarea
-          name="payload"
-          placeholder="RCS payload"
+        <div
+          id="payload"
           className="resize-none rounded-md bg-slate-200 p-3 dark:bg-slate-800 dark:text-slate-200"
-          rows={12}
-          value={payload}
-          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-            setPayload(event.target.value)
-            localStorage.setItem('payload', event.target.value)
-          }}
           spellCheck="false"
-        />
-      </form>
+        >
+          {payload}
+        </div>
+      </div>
       <div className="w-full">
         <ErrorBoundary
           FallbackComponent={GenericErrorBoundaryFallback}

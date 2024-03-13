@@ -4,8 +4,10 @@ export const schema = gql`
     createdAt: DateTime!
     updatedAt: DateTime!
     encodedPayload: String!
+    encodedMetadata: String!
     encoding: String!
     payload: String!
+    metadata: JSON!
     preview: String!
   }
 

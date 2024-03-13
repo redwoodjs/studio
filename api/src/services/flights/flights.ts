@@ -6,6 +6,16 @@ import { db } from 'src/lib/db'
 
 import type { Flight } from '../../../db/client'
 
+const decodeFlightMetadata = (flight: Flight) => {
+  if (flight.encoding === 'base64') {
+    return JSON.parse(
+      Buffer.from(flight.encodedMetadata, 'base64').toString('utf-8')
+    )
+  }
+
+  throw new ValidationError(`Unsupported encoding type ${flight.encoding}`)
+}
+
 const decodeFlightPayload = (flight: Flight) => {
   if (flight.encoding === 'base64') {
     return Buffer.from(flight.encodedPayload, 'base64').toString('utf-8')
@@ -27,6 +37,7 @@ export const flights: QueryResolvers['flights'] = async () => {
       ...flight,
       payload: decodeFlightPayload(flight),
       preview: previewFlightPayload(flight),
+      metadata: decodeFlightMetadata(flight),
     }
   })
 }
@@ -40,5 +51,6 @@ export const flight: QueryResolvers['flight'] = async ({ id }) => {
     ...flight,
     payload: decodeFlightPayload(flight),
     preview: previewFlightPayload(flight),
+    metadata: decodeFlightMetadata(flight),
   }
 }

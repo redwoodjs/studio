@@ -7,6 +7,8 @@ import type {
   TypedDocumentNode,
 } from '@redwoodjs/web'
 
+import { ViewerStreams } from 'src/rscParser/main'
+import type { RscChunkMessage } from 'src/rscParser/types'
 export const QUERY: TypedDocumentNode<
   FlightsQuery,
   FlightsQueryVariables
@@ -15,6 +17,7 @@ export const QUERY: TypedDocumentNode<
     flights {
       id
       preview
+      payload
       createdAt
     }
   }
@@ -29,17 +32,45 @@ export const Failure = ({ error }: CellFailureProps) => (
 )
 
 export const Success = ({ flights }: CellSuccessProps<FlightsQuery>) => {
+  const fetchStartTime = 0
+  let chunkStartTime = 0
+  let chunkEndTime = 20
+  const messages = flights.map((flight) => {
+    const payload = flight.payload
+    return {
+      type: 'RSC_CHUNK',
+      tabId: 0,
+      data: {
+        fetchUrl: 'https://example.com',
+        fetchHeaders: {
+          'Content-Type': 'application/json',
+        },
+        fetchStartTime,
+        chunkStartTime,
+        chunkEndTime,
+        chunkValue: Array.from(new TextEncoder().encode(payload)),
+      },
+    } satisfies RscChunkMessage
+
+    const chunkTime = 10
+    chunkStartTime = chunkEndTime + chunkTime
+    chunkEndTime = chunkStartTime + chunkTime
+  })
+
   return (
-    <ul>
-      {flights.map((flight) => {
-        return (
-          <li key={flight.id}>
-            <Link to={routes.flight({ id: flight.id })}>
-              {flight.id} - {flight.preview} at {flight.createdAt}
-            </Link>
-          </li>
-        )
-      })}
-    </ul>
+    <>
+      <ViewerStreams messages={messages} />
+      <ul>
+        {flights.map((flight) => {
+          return (
+            <li key={flight.id}>
+              <Link to={routes.flight({ id: flight.id })}>
+                {flight.id} - {flight.preview} at {flight.createdAt}
+              </Link>
+            </li>
+          )
+        })}
+      </ul>
+    </>
   )
 }

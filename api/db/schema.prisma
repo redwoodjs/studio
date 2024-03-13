@@ -183,9 +183,10 @@ model OTelTraceSpanType {
 }
 
 model Flight {
-  id             String   @id @default(nanoid(24))
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  encodedPayload String
-  encoding       String
+  id              String   @id @default(nanoid(24))
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  encodedPayload  String
+  encoding        String
+  encodedMetadata String
 }
