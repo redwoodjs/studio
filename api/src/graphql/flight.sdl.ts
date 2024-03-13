@@ -1,4 +1,11 @@
 export const schema = gql`
+  type FlightPerformance {
+    startedAt: DateTime!
+    endedAt: DateTime!
+    duration: Float!
+    sizeInBytes: Float!
+  }
+
   type Flight {
     id: String!
     createdAt: DateTime!
@@ -9,6 +16,7 @@ export const schema = gql`
     payload: String!
     metadata: JSON!
     preview: String!
+    performance: FlightPerformance!
   }
 
   type Query {

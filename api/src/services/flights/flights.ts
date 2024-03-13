@@ -8,9 +8,12 @@ import type { Flight } from '../../../db/client'
 
 const decodeFlightMetadata = (flight: Flight) => {
   if (flight.encoding === 'base64') {
-    return JSON.parse(
+    const metadata = JSON.parse(
       Buffer.from(flight.encodedMetadata, 'base64').toString('utf-8')
     )
+
+    console.log(metadata)
+    return metadata
   }
 
   throw new ValidationError(`Unsupported encoding type ${flight.encoding}`)
@@ -24,10 +27,25 @@ const decodeFlightPayload = (flight: Flight) => {
   throw new ValidationError(`Unsupported encoding type ${flight.encoding}`)
 }
 
-const previewFlightPayload = (flight: Flight) => {
+const decodeFlightPerformance = (flight: Flight) => {
   const payload = decodeFlightPayload(flight)
+  const metadata = decodeFlightMetadata(flight)
+  const performance = {
+    startedAt: new Date(metadata?.['performance'].startedAt).toISOString(),
+    endedAt: new Date(metadata?.['performance'].endedAt).toISOString(),
+    duration: metadata?.['performance'].duration || 0,
+    sizeInBytes: Buffer.from(payload).length,
+  }
 
-  return payload.slice(0, 32)
+  return performance
+}
+
+const previewFlightPayload = (flight: Flight) => {
+  const metadata = decodeFlightMetadata(flight)
+  const url = metadata?.['request']?.['url']
+  const id = metadata?.['rsc']?.['rscId'] || metadata?.['rsc']?.['rsfId']
+  const duration = metadata?.['performance']?.['duration'] || 0
+  return `${id}#${url}-${duration}ms`
 }
 
 export const flights: QueryResolvers['flights'] = async () => {
@@ -38,6 +56,7 @@ export const flights: QueryResolvers['flights'] = async () => {
       payload: decodeFlightPayload(flight),
       preview: previewFlightPayload(flight),
       metadata: decodeFlightMetadata(flight),
+      performance: decodeFlightPerformance(flight),
     }
   })
 }
@@ -52,5 +71,6 @@ export const flight: QueryResolvers['flight'] = async ({ id }) => {
     payload: decodeFlightPayload(flight),
     preview: previewFlightPayload(flight),
     metadata: decodeFlightMetadata(flight),
+    performance: decodeFlightPerformance(flight),
   }
 }
