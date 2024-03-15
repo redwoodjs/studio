@@ -39,6 +39,6 @@ export const schema = gql`
   type Query {
     flight(id: String!): Flight @skipAuth
     flights: [Flight!]! @skipAuth
-    flightsPreview: FlightsPreview! @skipAuth
+    flightsPreview: FlightsPreview @skipAuth
   }
 `

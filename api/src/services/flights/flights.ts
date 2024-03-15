@@ -106,6 +106,10 @@ export const flightsPreview = async () => {
     take: 60,
   })
 
+  if (!result || result.length === 0) {
+    return null
+  }
+
   const enriched = result.map((flight) => {
     return enrichFlight(flight)
   })

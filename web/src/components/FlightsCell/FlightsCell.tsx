@@ -1,4 +1,12 @@
-import { Card, List, ListItem } from '@tremor/react'
+import {
+  Card,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from '@tremor/react'
 import { parseISO, formatDistanceToNow } from 'date-fns'
 import type {
   FlightsPreviewQuery,
@@ -62,9 +70,43 @@ export const QUERY: TypedDocumentNode<
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => (
+  <div className="flex h-screen items-center justify-center">
+    <Card className="sm:mx-auto sm:max-w-lg">
+      <div className="text-center">
+        <FlightIcon
+          className="mx-auto h-7 w-7 animate-pulse text-tremor-content-subtle dark:text-dark-tremor-content-subtle"
+          aria-hidden={true}
+        />
 
-export const Empty = () => <div>Empty</div>
+        <p className="mt-2 animate-pulse text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+          Loading ...
+        </p>
+      </div>
+    </Card>
+  </div>
+)
+
+export const Empty = () => (
+  <div className="flex h-screen items-center justify-center">
+    <Card className="sm:mx-auto sm:max-w-lg">
+      <div className="flex h-44 items-center justify-center rounded-tremor-small border border-dashed border-tremor-border p-4 dark:border-dark-tremor-border">
+        <div className="text-center">
+          <FlightIcon
+            className="mx-auto h-7 w-7 text-tremor-content-subtle dark:text-dark-tremor-content-subtle"
+            aria-hidden={true}
+          />
+          <p className="mt-2 text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+            No data to show
+          </p>
+          <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
+            Start sending data by using your RSC application
+          </p>
+        </div>
+      </div>
+    </Card>
+  </div>
+)
 
 export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
@@ -175,44 +217,64 @@ export const Success = ({
               )
             })}
           </div>
-          <h3 className="mt-6 text-tremor-default text-tremor-content-strong dark:text-dark-tremor-content-strong">
+          <h3 className="my-2 text-tremor-default text-tremor-content-strong dark:text-dark-tremor-content-strong">
             Flight overview ({messages.length})
           </h3>
 
-          <List>
-            {messages
-              .slice()
-              .reverse()
-              .map((message, idx) => {
-                const data = message?.['data']
+          <div className="mx-auto w-full">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableHeaderCell>View Details</TableHeaderCell>
+                  <TableHeaderCell className="text-right">When</TableHeaderCell>
+                  <TableHeaderCell className="text-right">
+                    Duration (ms)
+                  </TableHeaderCell>
+                  <TableHeaderCell className="text-right">
+                    Size (kb)
+                  </TableHeaderCell>
+                </TableRow>
+              </TableHead>
 
-                if (data === undefined) {
-                  return
-                }
+              <TableBody>
+                {messages
+                  .slice()
+                  .reverse()
+                  .map((message, idx) => {
+                    const data = message?.['data']
 
-                return (
-                  <ListItem key={idx}>
-                    <span className="align-left">
-                      <Link to={routes.flight({ id: data.id })}>
-                        {data.fetchUrl}
-                      </Link>
-                    </span>
-                    <span className="align-right">
-                      {formatDistanceToNow(data.chunkStartTime, {
-                        includeSeconds: true,
-                        addSuffix: true,
-                      })}
-                    </span>
-                    <span className="align-right">
-                      {data.chunkDuration.toFixed(3)}ms
-                    </span>
-                    <span className="align-right">
-                      {data.sizeInBytes.toFixed(3)}kB
-                    </span>
-                  </ListItem>
-                )
-              })}
-          </List>
+                    if (data === undefined) {
+                      return
+                    }
+
+                    return (
+                      <TableRow key={idx}>
+                        <TableCell>
+                          <Link
+                            to={routes.flight({ id: data.id })}
+                            className="text-tremor-brand hover:text-tremor-brand-emphasis"
+                          >
+                            {data.fetchUrl}
+                          </Link>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {formatDistanceToNow(data.chunkStartTime, {
+                            includeSeconds: true,
+                            addSuffix: true,
+                          })}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {data.chunkDuration.toFixed(3)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {data.sizeInBytes.toFixed(3)}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+              </TableBody>
+            </Table>
+          </div>
         </Card>
       </>
     </>
