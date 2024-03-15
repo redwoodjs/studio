@@ -230,9 +230,6 @@ export const Success = ({
               )
             })}
           </div>
-          <h3 className="my-2 text-tremor-default text-tremor-content-strong dark:text-dark-tremor-content-strong">
-            Flight overview ({messages.length})
-          </h3>
 
           <div className="mx-auto w-full">
             <Table>
@@ -265,7 +262,7 @@ export const Success = ({
                         <TableCell>
                           <Link
                             to={routes.flight({ id: data.id })}
-                            className="text-tremor-brand hover:text-tremor-brand-emphasis"
+                            className="font-semibold text-tremor-content hover:text-tremor-brand dark:text-tremor-content-emphasis dark:hover:text-dark-tremor-brand"
                           >
                             {data.fetchUrl}
                           </Link>

@@ -1,5 +1,5 @@
 import { logger } from '@prisma/internals'
-import type { QueryResolvers } from 'types/graphql'
+import type { FlightsPreview, QueryResolvers } from 'types/graphql'
 
 import { ValidationError } from '@redwoodjs/graphql-server'
 
@@ -97,6 +97,37 @@ export const flight: QueryResolvers['flight'] = async ({ id }) => {
     preview: previewFlightPayload(flight),
     metadata: decodeFlightMetadata(flight),
     performance: decodeFlightPerformance(flight),
+  }
+}
+
+export const flightPreview = async ({ id }) => {
+  const result = await db.flight.findUnique({
+    where: { id },
+  })
+
+  const enriched = enrichFlight(result)
+
+  let status = 'OK'
+
+  switch (enriched.metadata?.status) {
+    case 200:
+      status = 'OK'
+      break
+    case 500:
+      status = 'ERROR'
+      break
+    default:
+      status = 'WARNING'
+  }
+
+  return {
+    id: result.id,
+    flight: enriched,
+    status,
+    startedAt: enriched.performance?.startedAt || new Date().toISOString(),
+    endedAt: enriched.performance?.endedAt || new Date().toISOString(),
+    hostname: enriched.metadata?.['hostname'] || 'localhost',
+    caption: 'Flight Preview',
   }
 }
 

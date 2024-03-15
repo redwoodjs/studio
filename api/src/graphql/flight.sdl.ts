@@ -25,7 +25,16 @@ export const schema = gql`
     ERROR
   }
 
-  type FlightsPreview {
+  interface FlightPreviewInfo {
+    id: String!
+    status: FlightStatus!
+    startedAt: DateTime!
+    endedAt: DateTime!
+    hostname: String!
+    caption: String!
+  }
+
+  type FlightsPreview implements FlightPreviewInfo {
     id: String!
     flights: [Flight!]!
     status: FlightStatus!
@@ -36,9 +45,20 @@ export const schema = gql`
     caption: String!
   }
 
+  type FlightPreview implements FlightPreviewInfo {
+    id: String!
+    flight: Flight!
+    status: FlightStatus!
+    startedAt: DateTime!
+    endedAt: DateTime!
+    hostname: String!
+    caption: String!
+  }
+
   type Query {
     flight(id: String!): Flight @skipAuth
     flights: [Flight!]! @skipAuth
+    flightPreview(id: String!): FlightPreview @skipAuth
     flightsPreview: FlightsPreview @skipAuth
   }
 `
