@@ -85,7 +85,7 @@ export const NavigationMenu = () => {
 
   const rscNavigation: TNavigationItem[] = [
     {
-      name: 'Flight Viewer',
+      name: 'Flight Previews',
       to: routes.flights(),
       icon: FlightIcon,
     },

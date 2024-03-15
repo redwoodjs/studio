@@ -19,8 +19,26 @@ export const schema = gql`
     performance: FlightPerformance!
   }
 
+  enum FlightStatus {
+    OK
+    WARNING
+    ERROR
+  }
+
+  type FlightsPreview {
+    id: String!
+    flights: [Flight!]!
+    status: FlightStatus!
+    statuses: [FlightStatus!]!
+    startedAt: DateTime!
+    endedAt: DateTime!
+    hostname: String!
+    caption: String!
+  }
+
   type Query {
     flight(id: String!): Flight @skipAuth
     flights: [Flight!]! @skipAuth
+    flightsPreview: FlightsPreview! @skipAuth
   }
 `

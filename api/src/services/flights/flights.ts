@@ -63,23 +63,26 @@ const decodeFlightPerformance = (flight: Flight) => {
 
 const previewFlightPayload = (flight: Flight) => {
   const metadata = decodeFlightMetadata(flight)
-  const performance = decodeFlightPerformance(flight)
-  const url = metadata?.['request']?.['url']
-  const id = metadata?.['rsc']?.['rscId'] || metadata?.['rsc']?.['rsfId']
+  const id =
+    metadata?.['rsc']?.['rscId'] || metadata?.['rsc']?.['rsfId'] || flight.id
 
-  return `${id}#${url} at ${performance.startedAt} for (${performance.duration}ms)`
+  return id
+}
+
+const enrichFlight = (flight: Flight) => {
+  return {
+    ...flight,
+    payload: decodeFlightPayload(flight),
+    preview: previewFlightPayload(flight),
+    metadata: decodeFlightMetadata(flight),
+    performance: decodeFlightPerformance(flight),
+  }
 }
 
 export const flights: QueryResolvers['flights'] = async () => {
-  const result = await db.flight.findMany({ orderBy: { createdAt: 'desc' } })
+  const result = await db.flight.findMany({ orderBy: { createdAt: 'asc' } })
   return result.map((flight) => {
-    return {
-      ...flight,
-      payload: decodeFlightPayload(flight),
-      preview: previewFlightPayload(flight),
-      metadata: decodeFlightMetadata(flight),
-      performance: decodeFlightPerformance(flight),
-    }
+    return enrichFlight(flight)
   })
 }
 
@@ -94,5 +97,66 @@ export const flight: QueryResolvers['flight'] = async ({ id }) => {
     preview: previewFlightPayload(flight),
     metadata: decodeFlightMetadata(flight),
     performance: decodeFlightPerformance(flight),
+  }
+}
+
+export const flightsPreview = async () => {
+  const result = await db.flight.findMany({
+    orderBy: { createdAt: 'asc' },
+    take: 60,
+  })
+
+  const enriched = result.map((flight) => {
+    return enrichFlight(flight)
+  })
+
+  const firstPerformance = enriched[0]?.performance
+  const lastPerformance = enriched[enriched?.length - 1]?.performance
+  const firstMetadata = enriched[0]?.metadata
+  const lastMetadata = enriched[enriched?.length - 1]?.metadata
+
+  const overallStatus = lastMetadata?.['status'] || 200
+
+  let status = 'OK'
+
+  switch (overallStatus) {
+    case 200:
+      status = 'OK'
+      break
+    case 500:
+      status = 'ERROR'
+      break
+    default:
+      status = 'WARNING'
+  }
+
+  const statuses = new Set()
+
+  enriched.forEach((flight) => {
+    const metadata = flight.metadata
+    const theStatus = metadata?.['status'] || 200
+    switch (theStatus) {
+      case 200:
+        statuses.add('OK')
+        break
+      case 500:
+        statuses.add('ERROR')
+        break
+      default:
+        statuses.add('WARNING')
+    }
+  })
+
+  const uniqueStatuses = Array.from(statuses).sort((a, b) => (a > b ? 1 : -1))
+
+  return {
+    id: 'flights-preview',
+    flights: enriched,
+    status,
+    statuses: uniqueStatuses,
+    startedAt: firstPerformance?.startedAt || new Date().toISOString(),
+    endedAt: lastPerformance?.endedAt || new Date().toISOString(),
+    hostname: firstMetadata?.['hostname'] || 'localhost',
+    caption: 'Flights Preview',
   }
 }
