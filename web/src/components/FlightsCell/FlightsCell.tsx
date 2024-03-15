@@ -1,11 +1,11 @@
 import { Card, List, ListItem } from '@tremor/react'
-import { parse, parseISO, formatDistanceToNow } from 'date-fns'
+import { parseISO, formatDistanceToNow } from 'date-fns'
 import type {
   FlightsPreviewQuery,
   FlightsPreviewQueryVariables,
 } from 'types/graphql'
 
-import { routes } from '@redwoodjs/router'
+import { Link, routes } from '@redwoodjs/router'
 import type {
   CellSuccessProps,
   CellFailureProps,
@@ -17,6 +17,7 @@ import { FlightIcon } from 'src/icons/Icons'
 import type { RscChunkMessage } from 'src/rscParser/types'
 
 interface RscChunkMessageDataExtended {
+  id: string
   fetchUrl: string
   fetchHeaders: Record<string, string | undefined>
   fetchStartTime: number
@@ -82,6 +83,7 @@ export const Success = ({
       type: 'RSC_CHUNK',
       tabId: 0,
       data: {
+        id: flight.id,
         fetchUrl: metadata?.['request']?.['url'] || '',
         fetchHeaders: metadata?.['request']?.['headers'] || {},
         fetchStartTime: 0,
@@ -190,15 +192,23 @@ export const Success = ({
 
                 return (
                   <ListItem key={idx}>
-                    <span>{data.fetchUrl}</span>
-                    <span>
+                    <span className="align-left">
+                      <Link to={routes.flight({ id: data.id })}>
+                        {data.fetchUrl}
+                      </Link>
+                    </span>
+                    <span className="align-right">
                       {formatDistanceToNow(data.chunkStartTime, {
                         includeSeconds: true,
                         addSuffix: true,
                       })}
                     </span>
-                    <span>{data.chunkDuration.toFixed(3)}msec</span>
-                    <span>{data.sizeInBytes.toFixed(3)}kB</span>
+                    <span className="align-right">
+                      {data.chunkDuration.toFixed(3)}ms
+                    </span>
+                    <span className="align-right">
+                      {data.sizeInBytes.toFixed(3)}kB
+                    </span>
                   </ListItem>
                 )
               })}
