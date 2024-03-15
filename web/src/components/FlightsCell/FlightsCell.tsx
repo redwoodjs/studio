@@ -21,7 +21,7 @@ import type {
 } from '@redwoodjs/web'
 
 import Tracker from 'src/components/Vizualization/Tracker/Tracker'
-import { FlightIcon } from 'src/icons/Icons'
+import { ErrorIcon, FlightIcon } from 'src/icons/Icons'
 import type { RscChunkMessage } from 'src/rscParser/types'
 
 interface RscChunkMessageDataExtended {
@@ -75,7 +75,7 @@ export const Loading = () => (
     <Card className="sm:mx-auto sm:max-w-lg">
       <div className="text-center">
         <FlightIcon
-          className="mx-auto h-7 w-7 animate-pulse text-tremor-content-subtle dark:text-dark-tremor-content-subtle"
+          className="mx-auto h-7 w-7 animate-bounce text-tremor-content-subtle dark:text-dark-tremor-content-subtle"
           aria-hidden={true}
         />
 
@@ -109,7 +109,20 @@ export const Empty = () => (
 )
 
 export const Failure = ({ error }: CellFailureProps) => (
-  <div style={{ color: 'red' }}>Error: {error?.message}</div>
+  <div className="flex h-screen items-center justify-center">
+    <Card className="sm:mx-auto sm:max-w-lg">
+      <div className="text-center">
+        <ErrorIcon
+          className="mx-auto h-7 w-7 animate-pulse text-tremor-content-subtle dark:text-dark-tremor-content-subtle"
+          aria-hidden={true}
+        />
+
+        <p className="mt-2 animate-pulse text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+          {error?.message}
+        </p>
+      </div>
+    </Card>
+  </div>
 )
 
 export const Success = ({
