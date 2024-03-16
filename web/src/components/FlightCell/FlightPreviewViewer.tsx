@@ -46,6 +46,8 @@ type Props = {
 
 export const FlightPreviewViewer = ({ preview }: Props) => {
   const payload = preview.flight.payload
+  const performance = preview.flight.performance
+  const metadata = preview.flight.metadata
   const messages = [
     {
       type: 'RSC_CHUNK',
@@ -144,12 +146,34 @@ export const FlightPreviewViewer = ({ preview }: Props) => {
 
   return (
     <div className="space-y-4">
-      <FlightBreakdownOverview data={data} />
-      <div className="m-4">
+      <div className="grid grid-cols-2 gap-4">
+        <FlightBreakdownOverview data={data} />
+        <Card>
+          <h3 className="mb-4 text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+            Flight Payload - {performance?.sizeInBytes || 0} bytes -{' '}
+            {performance?.duration || 0} ms
+          </h3>
+          <div
+            className="border-1 rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring"
+            style={{ whiteSpace: 'pre-wrap' }}
+          >
+            {payload}
+          </div>
+        </Card>
+      </div>
+      <div className="my-4">
+        <h2 className="text-md mb-4 font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+          Chunk Breakdown and Details -{' '}
+          {metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'}
+        </h2>
         {flightResponse._chunks?.map((chunk: Chunk, idx) => {
           return (
             <Card key={idx} className="my-4 space-y-4">
-              <h3 className="text-lg font-semibold">{chunk.type}</h3>
+              <h3
+                className={`space-x-2 text-lg font-semibold ${data[idx].color}`}
+              >
+                {chunk.type}
+              </h3>
               <div
                 key={idx}
                 className="border-1 rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring"
@@ -188,51 +212,49 @@ const FlightBreakdownOverview = ({ data }) => {
   const colors = extractColors(data)
 
   return (
-    <>
-      <Card className="sm:mx-auto sm:max-w-lg">
-        <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-          Flight overview by chunk
-        </h3>
-        <DonutChart
-          className="mt-8"
-          data={data}
-          category="amount"
-          index="name"
-          valueFormatter={kilobyteFormatter}
-          showTooltip={true}
-          colors={colors}
-        />
-        <p className="mt-8 flex items-center justify-between text-tremor-label text-tremor-content dark:text-dark-tremor-content">
-          <span>Chunk</span>
-          <span>Size / Share</span>
-        </p>
-        <List className="mt-2">
-          {data.map((item) => (
-            <ListItem key={item.name} className="space-x-6">
-              <div className="flex items-center space-x-2.5 truncate">
-                <span
-                  className={classNames(
-                    item.color,
-                    'h-2.5 w-2.5 shrink-0 rounded-sm'
-                  )}
-                  aria-hidden={true}
-                />
-                <span className="truncate dark:text-dark-tremor-content-emphasis">
-                  {item.name}
-                </span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="font-medium tabular-nums text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                  {kilobyteFormatter(item.amount)}
-                </span>
-                <span className="rounded-tremor-small bg-tremor-background-subtle px-1.5 py-0.5 text-tremor-label font-medium tabular-nums text-tremor-content-emphasis dark:bg-dark-tremor-background-subtle dark:text-dark-tremor-content-emphasis">
-                  {item.share}
-                </span>
-              </div>
-            </ListItem>
-          ))}
-        </List>
-      </Card>
-    </>
+    <Card>
+      <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+        Flight overview by chunk
+      </h3>
+      <DonutChart
+        className="mt-8"
+        data={data}
+        category="amount"
+        index="name"
+        valueFormatter={kilobyteFormatter}
+        showTooltip={true}
+        colors={colors}
+      />
+      <p className="mt-8 flex items-center justify-between text-tremor-label text-tremor-content dark:text-dark-tremor-content">
+        <span>Chunk</span>
+        <span>Size / Share</span>
+      </p>
+      <List className="mt-2">
+        {data.map((item) => (
+          <ListItem key={item.name} className="space-x-6">
+            <div className="flex items-center space-x-2.5 truncate">
+              <span
+                className={classNames(
+                  item.color,
+                  'h-2.5 w-2.5 shrink-0 rounded-sm'
+                )}
+                aria-hidden={true}
+              />
+              <span className="truncate dark:text-dark-tremor-content-emphasis">
+                {item.name}
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="font-medium tabular-nums text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                {kilobyteFormatter(item.amount)}
+              </span>
+              <span className="rounded-tremor-small bg-tremor-background-subtle px-1.5 py-0.5 text-tremor-label font-medium tabular-nums text-tremor-content-emphasis dark:bg-dark-tremor-background-subtle dark:text-dark-tremor-content-emphasis">
+                {item.share}
+              </span>
+            </div>
+          </ListItem>
+        ))}
+      </List>
+    </Card>
   )
 }

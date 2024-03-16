@@ -1,5 +1,6 @@
 import { Card } from '@tremor/react'
 import type {
+  FlightPreview,
   FindFlightPreviewQuery,
   FindFlightPreviewQueryVariables,
 } from 'types/graphql'
@@ -19,7 +20,7 @@ export const QUERY: TypedDocumentNode<
   FindFlightPreviewQueryVariables
 > = gql`
   query FindFlightPreviewQuery($id: String!) {
-    flightPreview(id: $id) {
+    preview: flightPreview(id: $id) {
       id
       status
       startedAt
@@ -99,14 +100,14 @@ export const Failure = ({ error }: CellFailureProps) => (
 )
 
 export const Success = ({
-  flightPreview,
+  preview,
 }: CellSuccessProps<
   FindFlightPreviewQuery,
   FindFlightPreviewQueryVariables
 >) => {
   return (
     <div>
-      <FlightPreviewViewer preview={flightPreview} />
+      <FlightPreviewViewer preview={preview as FlightPreview} />
     </div>
   )
 }
