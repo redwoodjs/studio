@@ -12,7 +12,7 @@ import type {
 
 import { ErrorIcon, FlightIcon } from 'src/icons/Icons'
 
-import { FlightPayloadViewer } from './FlightPayloadViewer'
+import { FlightPreviewViewer } from './FlightPreviewViewer'
 
 export const QUERY: TypedDocumentNode<
   FindFlightPreviewQuery,
@@ -21,8 +21,23 @@ export const QUERY: TypedDocumentNode<
   query FindFlightPreviewQuery($id: String!) {
     flightPreview(id: $id) {
       id
+      status
+      startedAt
+      endedAt
+      hostname
+      caption
       flight {
+        id
+        preview
         payload
+        createdAt
+        metadata
+        performance {
+          startedAt
+          endedAt
+          duration
+          sizeInBytes
+        }
       }
     }
   }
@@ -91,7 +106,7 @@ export const Success = ({
 >) => {
   return (
     <div>
-      <FlightPayloadViewer payload={flightPreview.flight.payload} />
+      <FlightPreviewViewer preview={flightPreview} />
     </div>
   )
 }
