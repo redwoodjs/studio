@@ -1,4 +1,4 @@
-import { Card, DonutChart, List, ListItem } from '@tremor/react'
+import { Card, DonutChart, Icon, Flex, List, ListItem } from '@tremor/react'
 import type { FlightPreview } from 'types/graphql'
 
 import { FlightResponseChunkDebugInfo } from 'src/components/RscParser/components/FlightResponseChunkDebugInfo'
@@ -11,6 +11,7 @@ import { FlightResponseChunkUnknown } from 'src/components/RscParser/components/
 import { createFlightResponse } from 'src/components/RscParser/createFlightResponse'
 import type { Chunk } from 'src/components/RscParser/react/ReactFlightClient'
 import type { RscChunkMessage } from 'src/components/RscParser/types'
+import { FlightIcon } from 'src/icons/Icons'
 
 const ChunkComponent = ({ chunk }: { chunk: Chunk }) => {
   switch (chunk.type) {
@@ -144,6 +145,10 @@ export const FlightPreviewViewer = ({ preview }: Props) => {
     }
   })
 
+  const caption = `Flight Payload - ${(
+    (performance?.sizeInBytes || 0) / 1_024.0
+  ).toFixed(3)} kb`
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
@@ -153,10 +158,17 @@ export const FlightPreviewViewer = ({ preview }: Props) => {
           performance={performance}
         />
         <Card>
-          <h3 className="mb-4 text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-            Flight Payload -{' '}
-            {((performance?.sizeInBytes || 0) / 1_024.0).toFixed(3)} kb
-          </h3>
+          <Flex
+            alignItems="center"
+            justifyContent="start"
+            className="space-x-2"
+          >
+            <Icon icon={FlightIcon} variant="solid" tooltip={caption} />
+            <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+              {caption}
+            </h3>
+          </Flex>
+
           <div
             className="border-1 rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring"
             style={{ whiteSpace: 'pre-wrap' }}
@@ -220,11 +232,17 @@ const FlightBreakdownOverview = ({ data, metadata, performance }) => {
 
   const colors = extractColors(data)
 
+  const caption = `Preview for ${
+    metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'
+  }`
   return (
     <Card>
-      <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-        Preview for {metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'}
-      </h3>
+      <Flex alignItems="center" justifyContent="start" className="space-x-2">
+        <Icon icon={FlightIcon} variant="solid" tooltip={caption} />
+        <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+          {caption}
+        </h3>
+      </Flex>
       <DonutChart
         className="mt-8"
         data={data}

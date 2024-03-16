@@ -58,30 +58,32 @@ export interface TrackerProps extends React.HTMLAttributes<HTMLDivElement> {
   data: TrackerBlockProps[]
 }
 
-const Tracker = React.forwardRef<HTMLDivElement, TrackerProps>((props, ref) => {
-  const { data = [], className, ...other } = props
-  return (
-    <div
-      ref={ref}
-      className={tremorTwMerge(
-        makeTrackerClassName('root'),
-        'flex h-10 items-center space-x-0.5',
-        className
-      )}
-      {...other}
-    >
-      {data.map((item, idx) => (
-        <TrackerBlock
-          key={item.key ?? idx}
-          color={item.color}
-          tooltip={item.tooltip}
-          to={item.to}
-        />
-      ))}
-    </div>
-  )
-})
+const FlightTracker = React.forwardRef<HTMLDivElement, TrackerProps>(
+  (props, ref) => {
+    const { data = [], className, ...other } = props
+    return (
+      <div
+        ref={ref}
+        className={tremorTwMerge(
+          makeTrackerClassName('root'),
+          'flex h-10 items-center space-x-0.5',
+          className
+        )}
+        {...other}
+      >
+        {data.map((item, idx) => (
+          <TrackerBlock
+            key={item.key ?? idx}
+            color={item.color}
+            tooltip={item.tooltip}
+            to={item.to}
+          />
+        ))}
+      </div>
+    )
+  }
+)
 
-Tracker.displayName = 'Tracker'
+FlightTracker.displayName = 'Tracker'
 
-export default Tracker
+export default FlightTracker

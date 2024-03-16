@@ -20,9 +20,9 @@ import type {
   TypedDocumentNode,
 } from '@redwoodjs/web'
 
-import Tracker from 'src/components/Vizualization/Tracker/Tracker'
-import { ErrorIcon, FlightIcon } from 'src/icons/Icons'
+import Tracker from 'src/components/FlightsCell/FlightTracker/FlightTracker'
 import type { RscChunkMessage } from 'src/components/RscParser/types'
+import { ErrorIcon, FlightIcon } from 'src/icons/Icons'
 
 interface RscChunkMessageDataExtended {
   id: string
