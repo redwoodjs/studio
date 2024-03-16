@@ -22,7 +22,7 @@ import type {
 
 import Tracker from 'src/components/Vizualization/Tracker/Tracker'
 import { ErrorIcon, FlightIcon } from 'src/icons/Icons'
-import type { RscChunkMessage } from 'src/rscParser/types'
+import type { RscChunkMessage } from 'src/components/RscParser/types'
 
 interface RscChunkMessageDataExtended {
   id: string

@@ -1,16 +1,16 @@
 import { Card, DonutChart, List, ListItem } from '@tremor/react'
 import type { FlightPreview } from 'types/graphql'
 
-import { FlightResponseChunkDebugInfo } from 'src/rscParser/components/FlightResponseChunkDebugInfo'
-import { FlightResponseChunkHint } from 'src/rscParser/components/FlightResponseChunkHint'
-import { FlightResponseChunkModel } from 'src/rscParser/components/FlightResponseChunkModel'
-import { FlightResponseChunkModule } from 'src/rscParser/components/FlightResponseChunkModule'
-import { FlightResponseChunkRaw } from 'src/rscParser/components/FlightResponseChunkRaw'
-import { FlightResponseChunkText } from 'src/rscParser/components/FlightResponseChunkText'
-import { FlightResponseChunkUnknown } from 'src/rscParser/components/FlightResponseChunkUnknown'
-import { createFlightResponse } from 'src/rscParser/createFlightResponse'
-import type { Chunk } from 'src/rscParser/react/ReactFlightClient'
-import type { RscChunkMessage } from 'src/rscParser/types'
+import { FlightResponseChunkDebugInfo } from 'src/components/RscParser/components/FlightResponseChunkDebugInfo'
+import { FlightResponseChunkHint } from 'src/components/RscParser/components/FlightResponseChunkHint'
+import { FlightResponseChunkModel } from 'src/components/RscParser/components/FlightResponseChunkModel'
+import { FlightResponseChunkModule } from 'src/components/RscParser/components/FlightResponseChunkModule'
+import { FlightResponseChunkRaw } from 'src/components/RscParser/components/FlightResponseChunkRaw'
+import { FlightResponseChunkText } from 'src/components/RscParser/components/FlightResponseChunkText'
+import { FlightResponseChunkUnknown } from 'src/components/RscParser/components/FlightResponseChunkUnknown'
+import { createFlightResponse } from 'src/components/RscParser/createFlightResponse'
+import type { Chunk } from 'src/components/RscParser/react/ReactFlightClient'
+import type { RscChunkMessage } from 'src/components/RscParser/types'
 
 const ChunkComponent = ({ chunk }: { chunk: Chunk }) => {
   switch (chunk.type) {
