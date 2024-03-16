@@ -15,7 +15,7 @@ export function FlightResponseChunkModule({
 }) {
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="text-xl font-semibold">
+      <h3 className="text-lg font-semibold">
         <p>Import {data?.['id'] === '' ? 'unknown' : data?.['id']}</p>
       </h3>
       <p>Id: {data?.['id']}</p>

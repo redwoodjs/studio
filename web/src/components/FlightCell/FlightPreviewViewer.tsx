@@ -147,11 +147,15 @@ export const FlightPreviewViewer = ({ preview }: Props) => {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
-        <FlightBreakdownOverview data={data} />
+        <FlightBreakdownOverview
+          data={data}
+          metadata={metadata}
+          performance={performance}
+        />
         <Card>
           <h3 className="mb-4 text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-            Flight Payload - {performance?.sizeInBytes || 0} bytes -{' '}
-            {performance?.duration || 0} ms
+            Flight Payload -{' '}
+            {((performance?.sizeInBytes || 0) / 1_024.0).toFixed(3)} kb
           </h3>
           <div
             className="border-1 rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring"
@@ -159,6 +163,9 @@ export const FlightPreviewViewer = ({ preview }: Props) => {
           >
             {payload}
           </div>
+          <h4 className="font-small mt-4 text-tremor-default text-tremor-content-strong dark:text-dark-tremor-content-strong">
+            Flight render duration: {performance?.duration.toFixed(3) || 0} ms
+          </h4>
         </Card>
       </div>
       <div className="my-4">
@@ -170,7 +177,9 @@ export const FlightPreviewViewer = ({ preview }: Props) => {
           return (
             <Card key={idx} className="my-4 space-y-4">
               <h3
-                className={`space-x-2 text-lg font-semibold ${data[idx].color}`}
+                className={`space-x-2 border-l-4 pl-2 text-lg font-semibold ${data[
+                  idx
+                ].color.replace('bg', 'border')}`}
               >
                 {chunk.type}
               </h3>
@@ -199,7 +208,7 @@ const kilobyteFormatter = (number) => {
   return `${(number / 1_024).toFixed(3)} KB`
 }
 
-const FlightBreakdownOverview = ({ data }) => {
+const FlightBreakdownOverview = ({ data, metadata, performance }) => {
   function extractColors(data) {
     return data
       .map((item) => {
@@ -214,7 +223,7 @@ const FlightBreakdownOverview = ({ data }) => {
   return (
     <Card>
       <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-        Flight overview by chunk
+        Preview for {metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'}
       </h3>
       <DonutChart
         className="mt-8"
@@ -255,6 +264,10 @@ const FlightBreakdownOverview = ({ data }) => {
           </ListItem>
         ))}
       </List>
+
+      <h4 className="font-small mt-4 text-tremor-default text-tremor-content-strong dark:text-dark-tremor-content-strong">
+        Flight requested at: {performance?.startedAt}
+      </h4>
     </Card>
   )
 }
