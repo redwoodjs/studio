@@ -192,6 +192,6 @@ export const flightsPreview = async () => {
     startedAt: firstPerformance?.startedAt || new Date().toISOString(),
     endedAt: lastPerformance?.endedAt || new Date().toISOString(),
     hostname: firstMetadata?.['hostname'] || 'localhost',
-    caption: 'Flights Preview',
+    caption: `Flights (${enriched.length})`,
   }
 }

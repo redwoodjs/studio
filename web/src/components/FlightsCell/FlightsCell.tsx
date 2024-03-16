@@ -1,5 +1,7 @@
 import {
   Card,
+  Flex,
+  Icon,
   Table,
   TableBody,
   TableCell,
@@ -22,7 +24,7 @@ import type {
 
 import Tracker from 'src/components/FlightsCell/FlightTracker/FlightTracker'
 import type { RscChunkMessage } from 'src/components/RscParser/types'
-import { ErrorIcon, FlightIcon } from 'src/icons/Icons'
+import { ErrorIcon, FlightIcon, FlightHostIcon } from 'src/icons/Icons'
 
 interface RscChunkMessageDataExtended {
   id: string
@@ -177,9 +179,17 @@ export const Success = ({
       <>
         <Card>
           <div className="flex items-center justify-between">
-            <h3 className="font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-              Flight Previews
-            </h3>
+            <Flex
+              alignItems="center"
+              justifyContent="start"
+              className="space-x-2"
+            >
+              <Icon icon={FlightIcon} variant="solid" tooltip={caption} />
+
+              <h3 className="font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                Flight Previews
+              </h3>
+            </Flex>
             <span className="inline-flex shrink-0 items-center gap-2 rounded-tremor-full px-3 py-1 text-tremor-default text-tremor-content-emphasis ring-1 ring-inset ring-tremor-ring dark:text-dark-tremor-content-emphasis dark:ring-dark-tremor-ring">
               <span
                 className="-ml-0.5 h-2 w-2 rounded-tremor-full bg-emerald-500"
@@ -190,7 +200,7 @@ export const Success = ({
           </div>
           <div className="mt-8 flex items-center justify-between">
             <div className="flex items-center space-x-1.5">
-              <FlightIcon
+              <FlightHostIcon
                 className="h-5 w-5 shrink-0 text-emerald-500"
                 aria-hidden={true}
               />

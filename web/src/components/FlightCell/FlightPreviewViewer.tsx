@@ -11,7 +11,7 @@ import { FlightResponseChunkUnknown } from 'src/components/RscParser/components/
 import { createFlightResponse } from 'src/components/RscParser/createFlightResponse'
 import type { Chunk } from 'src/components/RscParser/react/ReactFlightClient'
 import type { RscChunkMessage } from 'src/components/RscParser/types'
-import { FlightIcon } from 'src/icons/Icons'
+import { FlightIcon, FlightPayloadIcon } from 'src/icons/Icons'
 
 const ChunkComponent = ({ chunk }: { chunk: Chunk }) => {
   switch (chunk.type) {
@@ -145,25 +145,20 @@ export const FlightPreviewViewer = ({ preview }: Props) => {
     }
   })
 
-  const caption = `Flight Payload - ${(
-    (performance?.sizeInBytes || 0) / 1_024.0
-  ).toFixed(3)} kb`
-
+  const caption = `Flight Payload for ${
+    metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'
+  }`
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
-        <FlightBreakdownOverview
-          data={data}
-          metadata={metadata}
-          performance={performance}
-        />
+        <FlightBreakdownOverview data={data} metadata={metadata} />
         <Card>
           <Flex
             alignItems="center"
             justifyContent="start"
-            className="space-x-2"
+            className="mb-4 space-x-2"
           >
-            <Icon icon={FlightIcon} variant="solid" tooltip={caption} />
+            <Icon icon={FlightPayloadIcon} variant="solid" tooltip={caption} />
             <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
               {caption}
             </h3>
@@ -178,11 +173,18 @@ export const FlightPreviewViewer = ({ preview }: Props) => {
           <h4 className="font-small mt-4 text-tremor-default text-tremor-content-strong dark:text-dark-tremor-content-strong">
             Flight render duration: {performance?.duration.toFixed(3) || 0} ms
           </h4>
+          <h4 className="font-small mt-4 text-tremor-default text-tremor-content-strong dark:text-dark-tremor-content-strong">
+            Flight requested at: {performance?.startedAt}
+          </h4>
+          <h4 className="font-small mt-4 text-tremor-default text-tremor-content-strong dark:text-dark-tremor-content-strong">
+            Flight payload size:{' '}
+            {((performance?.sizeInBytes || 0) / 1_024.0).toFixed(3)} kb
+          </h4>
         </Card>
       </div>
       <div className="my-4">
         <h2 className="text-md mb-4 font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-          Chunk Breakdown and Details -{' '}
+          Chunk Breakdown and Details for{' '}
           {metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'}
         </h2>
         {flightResponse._chunks?.map((chunk: Chunk, idx) => {
@@ -220,7 +222,7 @@ const kilobyteFormatter = (number) => {
   return `${(number / 1_024).toFixed(3)} KB`
 }
 
-const FlightBreakdownOverview = ({ data, metadata, performance }) => {
+const FlightBreakdownOverview = ({ data, metadata }) => {
   function extractColors(data) {
     return data
       .map((item) => {
@@ -282,10 +284,6 @@ const FlightBreakdownOverview = ({ data, metadata, performance }) => {
           </ListItem>
         ))}
       </List>
-
-      <h4 className="font-small mt-4 text-tremor-default text-tremor-content-strong dark:text-dark-tremor-content-strong">
-        Flight requested at: {performance?.startedAt}
-      </h4>
     </Card>
   )
 }
