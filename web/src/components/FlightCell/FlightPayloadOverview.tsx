@@ -2,6 +2,7 @@ import { Card, Flex, Icon } from '@tremor/react'
 import type { FlightPreview } from 'types/graphql'
 
 import { FlightPayloadIcon } from 'src/icons/Icons'
+
 type Props = {
   preview: FlightPreview
 }
