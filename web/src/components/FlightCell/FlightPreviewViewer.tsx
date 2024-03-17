@@ -64,7 +64,11 @@ const buildFlightPreviewData = ({ preview }) => {
     }
 
     switch (chunk.type) {
-      case 'model' || 'module' || 'hint' || 'text' || 'debugInfo': {
+      case 'model':
+      case 'module':
+      case 'hint':
+      case 'text':
+      case 'debugInfo': {
         amount = calculateAmount(chunk)
         break
       }
