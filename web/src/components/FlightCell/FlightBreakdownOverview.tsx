@@ -2,37 +2,62 @@ import { Card, DonutChart, Flex, Icon, List, ListItem } from '@tremor/react'
 
 import { FlightIcon } from 'src/icons/Icons'
 
+import { kilobyteFormatter } from './utils/formatters'
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const kilobyteFormatter = (number) => {
-  return `${(number / 1_024).toFixed(3)} KB`
+const Caption = ({ metadata }) => {
+  const text = metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'
+
+  return (
+    <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+      Overview for {text}
+    </h3>
+  )
+}
+const Heading = ({ metadata }) => {
+  const tooltip = metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'
+
+  return (
+    <Flex alignItems="center" justifyContent="start" className="space-x-2">
+      <Icon icon={FlightIcon} variant="solid" tooltip={tooltip} />
+      <Caption metadata={metadata} />
+    </Flex>
+  )
 }
 
+const Kilobytes = ({ amount }) => {
+  return (
+    <span className="font-medium tabular-nums text-tremor-content-strong dark:text-dark-tremor-content-strong">
+      {kilobyteFormatter(amount)}
+    </span>
+  )
+}
+
+const Share = ({ share }) => {
+  return (
+    <span className="rounded-tremor-small bg-tremor-background-subtle px-1.5 py-0.5 text-tremor-label font-medium tabular-nums text-tremor-content-emphasis dark:bg-dark-tremor-background-subtle dark:text-dark-tremor-content-emphasis">
+      {share}
+    </span>
+  )
+}
 export const FlightBreakdownOverview = ({ data, metadata }) => {
-  function extractColors(data) {
+  const extractColors = (data) => {
     return data
       .map((item) => {
         const match = item.color.match(/bg-(.*?)-\d+/)
         return match ? match[1] : null
       })
-      .filter((color) => color !== null) // This line removes any null values if a match wasn't found
+      .filter((color) => color !== null)
   }
 
   const colors = extractColors(data)
 
-  const caption = `Preview for ${
-    metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'
-  }`
   return (
     <Card>
-      <Flex alignItems="center" justifyContent="start" className="space-x-2">
-        <Icon icon={FlightIcon} variant="solid" tooltip={caption} />
-        <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-          {caption}
-        </h3>
-      </Flex>
+      <Heading metadata={metadata} />
       <DonutChart
         className="mt-8"
         data={data}
@@ -62,12 +87,8 @@ export const FlightBreakdownOverview = ({ data, metadata }) => {
               </span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="font-medium tabular-nums text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                {kilobyteFormatter(item.amount)}
-              </span>
-              <span className="rounded-tremor-small bg-tremor-background-subtle px-1.5 py-0.5 text-tremor-label font-medium tabular-nums text-tremor-content-emphasis dark:bg-dark-tremor-background-subtle dark:text-dark-tremor-content-emphasis">
-                {item.share}
-              </span>
+              <Kilobytes amount={item.amount} />
+              <Share share={item.share} />
             </div>
           </ListItem>
         ))}

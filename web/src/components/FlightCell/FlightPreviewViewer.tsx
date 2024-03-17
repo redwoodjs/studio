@@ -7,6 +7,19 @@ import { ChunkBreakdownDetails } from './ChunkBreakdownDetails'
 import { FlightBreakdownOverview } from './FlightBreakdownOverview'
 import { FlightPayloadOverview } from './FlightPayloadOverview'
 
+const COLORS = [
+  'indigo',
+  'sky',
+  'cyan',
+  'purple',
+  'teal',
+  'rose',
+  'amber',
+  'lime',
+]
+
+const COLOR_VARIANTS = [500, 400, 300]
+
 type Props = {
   preview: FlightPreview
 }
@@ -51,66 +64,35 @@ const buildFlightPreviewData = ({ preview }) => {
     }
 
     switch (chunk.type) {
-      case 'model': {
+      case 'model' || 'module' || 'hint' || 'text' || 'debugInfo': {
         amount = calculateAmount(chunk)
         break
       }
-      case 'module': {
-        amount = calculateAmount(chunk)
-        break
-      }
-      case 'hint': {
-        amount = calculateAmount(chunk)
-        break
-      }
-      case 'text':
-        amount = calculateAmount(chunk)
-        break
-      case 'debugInfo':
-        amount = calculateAmount(chunk)
-        break
       default: {
         amount = 0
         break
       }
     }
 
-    function getColorForIndex(index) {
-      // Define the arrays for colors and number values.
-      const colors = [
-        'indigo',
-        'sky',
-        'cyan',
-        'purple',
-        'teal',
-        'rose',
-        'amber',
-        'lime',
-      ]
-      const values = [500, 400, 300]
+    const getColorForIndex = (index) => {
+      const totalCombinations = COLORS.length * COLOR_VARIANTS.length
+      const cycleIndex = index % totalCombinations // Subtract 1 to make it 0-based.
+      const valueIndex = Math.floor(cycleIndex / COLORS.length)
+      const colorIndex = cycleIndex % COLORS.length
 
-      // Calculate the total combinations of colors and values.
-      const totalCombinations = colors.length * values.length
-
-      // Use modular arithmetic to ensure the index cycles through the combinations.
-      const cycleIndex = (index - 1) % totalCombinations // Subtract 1 to make it 0-based.
-
-      // Calculate the current value and color index based on the new requirements.
-      const valueIndex = Math.floor(cycleIndex / colors.length)
-      const colorIndex = cycleIndex % colors.length
-
-      // Return the color string.
-      return `bg-${colors[colorIndex]}-${values[valueIndex]}`
+      return `bg-${COLORS[colorIndex]}-${COLOR_VARIANTS[valueIndex]}`
     }
+
+    const share = `${(
+      (amount / preview.flight.performance.sizeInBytes) *
+      100
+    ).toFixed(2)}%`
 
     return {
       name: chunk.type,
       amount,
-      share: `${(
-        (amount / preview.flight.performance.sizeInBytes) *
-        100
-      ).toFixed(2)}%`,
-      color: getColorForIndex(idx + 1),
+      share,
+      color: getColorForIndex(idx),
     }
   })
 
