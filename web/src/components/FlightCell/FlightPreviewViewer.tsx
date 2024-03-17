@@ -109,7 +109,7 @@ export const FlightPreviewViewer = ({ preview }: Props) => {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <FlightBreakdownOverview data={data} metadata={metadata} />
         <FlightPayloadOverview preview={preview} />
       </div>
