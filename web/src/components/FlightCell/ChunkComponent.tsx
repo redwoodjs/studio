@@ -6,15 +6,30 @@ import { FlightResponseChunkText } from 'src/components/RscParser/components/Fli
 import { FlightResponseChunkUnknown } from 'src/components/RscParser/components/FlightResponseChunkUnknown'
 import type { Chunk } from 'src/components/RscParser/react/ReactFlightClient'
 
-export const ChunkComponent = ({ chunk }: { chunk: Chunk }) => {
+import type { ComponentRefs } from './ChunkBreakdownDetails'
+
+export const ChunkComponent = ({
+  chunk,
+  componentRefs,
+}: {
+  chunk: Chunk
+  componentRefs: ComponentRefs
+}) => {
+  console.log(componentRefs)
+  const onClickID = (id) => {
+    const element = componentRefs[id]
+
+    if (element && element.scrollIntoView) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   switch (chunk.type) {
     case 'model': {
       return (
         <FlightResponseChunkModel
           data={chunk.value}
-          onClickID={(id) => {
-            alert(id)
-          }}
+          onClickID={(id) => onClickID(id)}
         />
       )
     }

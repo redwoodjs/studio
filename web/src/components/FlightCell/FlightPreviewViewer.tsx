@@ -89,7 +89,7 @@ const buildFlightPreviewData = ({ preview }) => {
     ).toFixed(2)}%`
 
     return {
-      name: chunk.type,
+      name: `${chunk.type} ${chunk.id}`,
       amount,
       share,
       color: getColorForIndex(idx),
