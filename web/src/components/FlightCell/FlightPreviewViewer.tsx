@@ -1,54 +1,19 @@
-import { Card, DonutChart, Icon, Flex, List, ListItem } from '@tremor/react'
 import type { FlightPreview } from 'types/graphql'
 
-import { FlightResponseChunkDebugInfo } from 'src/components/RscParser/components/FlightResponseChunkDebugInfo'
-import { FlightResponseChunkHint } from 'src/components/RscParser/components/FlightResponseChunkHint'
-import { FlightResponseChunkModel } from 'src/components/RscParser/components/FlightResponseChunkModel'
-import { FlightResponseChunkModule } from 'src/components/RscParser/components/FlightResponseChunkModule'
-import { FlightResponseChunkRaw } from 'src/components/RscParser/components/FlightResponseChunkRaw'
-import { FlightResponseChunkText } from 'src/components/RscParser/components/FlightResponseChunkText'
-import { FlightResponseChunkUnknown } from 'src/components/RscParser/components/FlightResponseChunkUnknown'
 import { createFlightResponse } from 'src/components/RscParser/createFlightResponse'
-import type { Chunk } from 'src/components/RscParser/react/ReactFlightClient'
 import type { RscChunkMessage } from 'src/components/RscParser/types'
-import { FlightIcon, FlightPayloadIcon } from 'src/icons/Icons'
 
-const ChunkComponent = ({ chunk }: { chunk: Chunk }) => {
-  switch (chunk.type) {
-    case 'model': {
-      return (
-        <FlightResponseChunkModel
-          data={chunk.value}
-          onClickID={(id) => {
-            alert(id)
-          }}
-        />
-      )
-    }
-    case 'module': {
-      return <FlightResponseChunkModule data={chunk.value} />
-    }
-    case 'hint': {
-      return <FlightResponseChunkHint data={chunk.value} />
-    }
-    case 'text':
-      return <FlightResponseChunkText data={chunk.value} />
-    case 'debugInfo':
-      return <FlightResponseChunkDebugInfo data={chunk.value} />
-    default: {
-      return <FlightResponseChunkUnknown chunk={chunk} />
-    }
-  }
-}
+import { ChunkBreakdownDetails } from './ChunkBreakdownDetails'
+import { FlightBreakdownOverview } from './FlightBreakdownOverview'
+import { FlightPayloadOverview } from './FlightPayloadOverview'
 
 type Props = {
   preview: FlightPreview
 }
 
-export const FlightPreviewViewer = ({ preview }: Props) => {
+const createFlightResponseFromPreview = (preview: FlightPreview) => {
   const payload = preview.flight.payload
-  const performance = preview.flight.performance
-  const metadata = preview.flight.metadata
+
   const messages = [
     {
       type: 'RSC_CHUNK',
@@ -66,7 +31,11 @@ export const FlightPreviewViewer = ({ preview }: Props) => {
     } satisfies RscChunkMessage,
   ]
 
-  const flightResponse = createFlightResponse(messages)
+  return createFlightResponse(messages)
+}
+
+const buildFlightPreviewData = ({ preview }) => {
+  const flightResponse = createFlightResponseFromPreview(preview)
 
   const data = flightResponse._chunks?.map((chunk, idx) => {
     let amount = 0
@@ -145,145 +114,26 @@ export const FlightPreviewViewer = ({ preview }: Props) => {
     }
   })
 
-  const caption = `Flight Payload for ${
-    metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'
-  }`
+  return { flightResponse, data }
+}
+
+export const FlightPreviewViewer = ({ preview }: Props) => {
+  const metadata = preview.flight.metadata
+  const { flightResponse, data } = buildFlightPreviewData({ preview })
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <FlightBreakdownOverview data={data} metadata={metadata} />
-        <Card>
-          <Flex
-            alignItems="center"
-            justifyContent="start"
-            className="mb-4 space-x-2"
-          >
-            <Icon icon={FlightPayloadIcon} variant="solid" tooltip={caption} />
-            <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-              {caption}
-            </h3>
-          </Flex>
-
-          <div
-            className="border-1 rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring"
-            style={{ whiteSpace: 'pre-wrap' }}
-          >
-            {payload}
-          </div>
-          <h4 className="font-small mt-4 text-tremor-default text-tremor-content-strong dark:text-dark-tremor-content-strong">
-            Flight render duration: {performance?.duration.toFixed(3) || 0} ms
-          </h4>
-          <h4 className="font-small mt-4 text-tremor-default text-tremor-content-strong dark:text-dark-tremor-content-strong">
-            Flight requested at: {performance?.startedAt}
-          </h4>
-          <h4 className="font-small mt-4 text-tremor-default text-tremor-content-strong dark:text-dark-tremor-content-strong">
-            Flight payload size:{' '}
-            {((performance?.sizeInBytes || 0) / 1_024.0).toFixed(3)} kb
-          </h4>
-        </Card>
+        <FlightPayloadOverview preview={preview} />
       </div>
       <div className="my-4">
-        <h2 className="text-md mb-4 font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-          Chunk Breakdown and Details for{' '}
-          {metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'}
-        </h2>
-        {flightResponse._chunks?.map((chunk: Chunk, idx) => {
-          return (
-            <Card key={idx} className="my-4 space-y-4">
-              <h3
-                className={`space-x-2 border-l-4 pl-2 text-lg font-semibold ${data[
-                  idx
-                ].color.replace('bg', 'border')}`}
-              >
-                {chunk.type}
-              </h3>
-              <div
-                key={idx}
-                className="border-1 rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring"
-              >
-                <FlightResponseChunkRaw data={chunk} />
-              </div>
-              <div className="relative mt-3 rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring">
-                <ChunkComponent chunk={chunk} />
-              </div>
-            </Card>
-          )
-        })}
+        <ChunkBreakdownDetails
+          preview={preview}
+          flightResponse={flightResponse}
+          data={data}
+        />
       </div>
     </div>
-  )
-}
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
-const kilobyteFormatter = (number) => {
-  return `${(number / 1_024).toFixed(3)} KB`
-}
-
-const FlightBreakdownOverview = ({ data, metadata }) => {
-  function extractColors(data) {
-    return data
-      .map((item) => {
-        const match = item.color.match(/bg-(.*?)-\d+/)
-        return match ? match[1] : null
-      })
-      .filter((color) => color !== null) // This line removes any null values if a match wasn't found
-  }
-
-  const colors = extractColors(data)
-
-  const caption = `Preview for ${
-    metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'
-  }`
-  return (
-    <Card>
-      <Flex alignItems="center" justifyContent="start" className="space-x-2">
-        <Icon icon={FlightIcon} variant="solid" tooltip={caption} />
-        <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-          {caption}
-        </h3>
-      </Flex>
-      <DonutChart
-        className="mt-8"
-        data={data}
-        category="amount"
-        index="name"
-        valueFormatter={kilobyteFormatter}
-        showTooltip={true}
-        colors={colors}
-      />
-      <p className="mt-8 flex items-center justify-between text-tremor-label text-tremor-content dark:text-dark-tremor-content">
-        <span>Chunk</span>
-        <span>Size / Share</span>
-      </p>
-      <List className="mt-2">
-        {data.map((item) => (
-          <ListItem key={item.name} className="space-x-6">
-            <div className="flex items-center space-x-2.5 truncate">
-              <span
-                className={classNames(
-                  item.color,
-                  'h-2.5 w-2.5 shrink-0 rounded-sm'
-                )}
-                aria-hidden={true}
-              />
-              <span className="truncate dark:text-dark-tremor-content-emphasis">
-                {item.name}
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="font-medium tabular-nums text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                {kilobyteFormatter(item.amount)}
-              </span>
-              <span className="rounded-tremor-small bg-tremor-background-subtle px-1.5 py-0.5 text-tremor-label font-medium tabular-nums text-tremor-content-emphasis dark:bg-dark-tremor-background-subtle dark:text-dark-tremor-content-emphasis">
-                {item.share}
-              </span>
-            </div>
-          </ListItem>
-        ))}
-      </List>
-    </Card>
   )
 }
