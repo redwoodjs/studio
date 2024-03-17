@@ -6,9 +6,9 @@ import { FlightPayloadIcon } from 'src/icons/Icons'
 const Heading = ({ preview }) => {
   const metadata = preview.flight.metadata
 
-  const caption = `Flight Payload for ${
+  const caption = `${
     metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'
-  }`
+  } Flight Payload`
 
   return (
     <Flex alignItems="center" justifyContent="start" className="mb-4 space-x-2">
@@ -24,11 +24,13 @@ const Payload = ({ preview }) => {
   const payload = preview.flight.payload
 
   return (
-    <div
-      className="border-1 rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring"
-      style={{ whiteSpace: 'pre-wrap' }}
-    >
-      {payload}
+    <div>
+      <div
+        className="border-1 rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring"
+        style={{ whiteSpace: 'pre-wrap' }}
+      >
+        {payload}
+      </div>
     </div>
   )
 }

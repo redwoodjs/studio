@@ -13,7 +13,7 @@ const Caption = ({ metadata }) => {
 
   return (
     <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-      Overview for {text}
+      {text} Overview
     </h3>
   )
 }
