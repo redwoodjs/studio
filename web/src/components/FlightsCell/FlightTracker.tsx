@@ -46,7 +46,7 @@ const TrackerBlock = React.forwardRef<HTMLDivElement, TrackerBlockProps>(
         {...other}
         {...getReferenceProps}
       >
-        <Tooltip text={`${tooltip}-${to}`} {...tooltipProps} />
+        <Tooltip text={tooltip} {...tooltipProps} />
       </div>
     )
   }

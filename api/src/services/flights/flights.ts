@@ -1,5 +1,5 @@
 import { logger } from '@prisma/internals'
-import type { FlightsPreview, QueryResolvers } from 'types/graphql'
+import type { QueryResolvers } from 'types/graphql'
 
 import { ValidationError } from '@redwoodjs/graphql-server'
 
