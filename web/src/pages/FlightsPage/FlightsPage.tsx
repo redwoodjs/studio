@@ -8,7 +8,10 @@ import FlightsCell from 'src/components/FlightsCell'
 const FlightsPage = () => {
   return (
     <>
-      <Metadata title="Flights" description="Flights" />
+      <Metadata
+        title="Flight Previews"
+        description="Track RSC Flight Payload status and view details."
+      />
       <div className="mb-4 flex items-center space-x-2">
         <Link
           to={routes.flights()}

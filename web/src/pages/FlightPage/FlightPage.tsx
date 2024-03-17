@@ -9,7 +9,10 @@ import FlightCell from 'src/components/FlightCell'
 const FlightPage = ({ id }) => {
   return (
     <>
-      <Metadata title="Flight" description="Flight Preview" />
+      <Metadata
+        title="Flight Preview"
+        description="Preview the RSC Payload and chunk breakdown."
+      />
       <div className="flex items-center space-x-2">
         <Link
           to={routes.flights()}

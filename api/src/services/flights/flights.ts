@@ -7,6 +7,8 @@ import { db } from 'src/lib/db'
 
 import type { Flight } from '../../../db/client'
 
+const LAST_FLIGHTS_PREVIEW_COUNT = 60
+
 const decodeFlightMetadata = (flight: Flight) => {
   if (flight.encoding === 'base64') {
     try {
@@ -134,7 +136,7 @@ export const flightPreview = async ({ id }) => {
 export const flightsPreview = async () => {
   const result = await db.flight.findMany({
     orderBy: { createdAt: 'asc' },
-    take: 60,
+    take: LAST_FLIGHTS_PREVIEW_COUNT,
   })
 
   if (!result || result.length === 0) {
@@ -184,6 +186,12 @@ export const flightsPreview = async () => {
 
   const uniqueStatuses = Array.from(statuses).sort((a, b) => (a > b ? 1 : -1))
 
+  const caption = `Flights (${
+    enriched.length >= LAST_FLIGHTS_PREVIEW_COUNT
+      ? `last ${LAST_FLIGHTS_PREVIEW_COUNT}`
+      : enriched.length
+  })`
+
   return {
     id: 'flights-preview',
     flights: enriched,
@@ -192,6 +200,6 @@ export const flightsPreview = async () => {
     startedAt: firstPerformance?.startedAt || new Date().toISOString(),
     endedAt: lastPerformance?.endedAt || new Date().toISOString(),
     hostname: firstMetadata?.['hostname'] || 'localhost',
-    caption: `Flights (${enriched.length})`,
+    caption,
   }
 }
