@@ -43,16 +43,23 @@ const getColorForIndex = (index) => {
 
 type Props = {
   route: Route
+  componentCount?: number | null
+  currentRoute?: string | null
   index: number
 }
 
-export const RouteCardItem = ({ route, index }: Props) => {
+export const RouteCardItem = ({
+  route,
+  componentCount,
+  currentRoute,
+  index,
+}: Props) => {
   const routeItem = {
     name: route.name,
     icon: RouteIcon,
     bgColor: getColorForIndex(index),
     to: routes.renderGraph({ routeName: route.name }),
-    members: 16,
+    componentCount: componentCount,
   }
   return (
     <li key={routeItem.name} className="col-span-1 flex rounded-md shadow-sm">
@@ -70,11 +77,18 @@ export const RouteCardItem = ({ route, index }: Props) => {
         <div className="flex-1 truncate px-4 py-2 text-sm">
           <Link
             to={routeItem.to}
-            className="font-medium text-gray-900 hover:text-gray-600"
+            className={classNames(
+              currentRoute === routeItem.name ? 'font-bold' : 'font-medium',
+              'text-gray-900 hover:text-gray-600'
+            )}
           >
             {routeItem.name}
           </Link>
-          <p className="text-gray-500">{routeItem.members} Members</p>
+          <p className="text-gray-500">
+            {routeItem.componentCount && routeItem.componentCount > 0 && (
+              <>{routeItem.componentCount} Components</>
+            )}
+          </p>
         </div>
         <div className="flex-shrink-0 pr-2">
           <button

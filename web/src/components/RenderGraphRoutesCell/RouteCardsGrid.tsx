@@ -8,12 +8,16 @@ const classNames = (...classes) => {
 
 type Props = {
   renderGraphRoutes: Route[]
+  componentCount?: number | null
+  currentRoute?: string | null
   isWide?: boolean
 }
 
 export const RouteCardsGrid = ({
   renderGraphRoutes,
   isWide = false,
+  componentCount,
+  currentRoute,
 }: Props) => {
   return (
     <div>
@@ -25,7 +29,13 @@ export const RouteCardsGrid = ({
         )}
       >
         {renderGraphRoutes.map((route, index) => (
-          <RouteCardItem key={route.id} route={route} index={index} />
+          <RouteCardItem
+            key={route.id}
+            route={route}
+            index={index}
+            currentRoute={currentRoute}
+            componentCount={currentRoute == route.name ? componentCount : null}
+          />
         ))}
       </ul>
     </div>

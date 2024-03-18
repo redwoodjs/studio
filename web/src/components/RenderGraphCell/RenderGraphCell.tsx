@@ -16,6 +16,10 @@ import { RouteGraph } from 'src/components/RenderGraphCell/RouteGraph'
 import { RouteCardsGrid } from 'src/components/RenderGraphRoutesCell/RouteCardsGrid'
 import { ErrorIcon, RoutesIcon } from 'src/icons/Icons'
 
+export const beforeQuery = (props: FindRenderGraphQueryVariables) => {
+  return { variables: props, fetchPolicy: 'network-only' }
+}
+
 export const QUERY: TypedDocumentNode<
   FindRenderGraphQuery,
   FindRenderGraphQueryVariables
@@ -98,7 +102,6 @@ export const Success = ({
 }: CellSuccessProps<FindRenderGraphQuery, FindRenderGraphQueryVariables>) => {
   return (
     <>
-      {' '}
       <Subtitle className="mb-4">
         The render component tree for the{' '}
         <span className="font-semibold">{renderGraph.route.name}</span> route.
@@ -110,7 +113,11 @@ export const Success = ({
 
         <div className="mx-4 h-full w-full overflow-auto rounded-md border bg-white md:w-1/3">
           <div className="h-screen p-4">
-            <RouteCardsGrid renderGraphRoutes={renderGraphRoutes} />
+            <RouteCardsGrid
+              renderGraphRoutes={renderGraphRoutes}
+              currentRoute={renderGraph.route.name}
+              componentCount={renderGraph.initialNodes.length - 1}
+            />
           </div>
         </div>
       </div>

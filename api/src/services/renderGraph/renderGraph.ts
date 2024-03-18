@@ -543,8 +543,14 @@ export const renderGraph = async ({ routeName }) => {
 
   determineRenderContext(nodes, edges, pageNodes[0])
 
-  return {
+  const idData = {
     id: generateId(routeName),
+    route: { id: generateId(routeName), name: routeName },
+    initialNodes: nodes,
+    initialEdges: edges,
+  }
+  return {
+    id: generateId(JSON.stringify(idData)),
     route: { id: generateId(routeName), name: routeName },
     initialNodes: nodes,
     initialEdges: edges,
