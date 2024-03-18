@@ -19,6 +19,18 @@ export const RouteCardsGrid = ({
   componentCount,
   currentRoute,
 }: Props) => {
+  const isCurrentRoute = (routeName: string) => {
+    return currentRoute === routeName
+  }
+
+  const currentRouteItems = renderGraphRoutes.filter((route) =>
+    isCurrentRoute(route.name)
+  )
+
+  const otherRouteItems = renderGraphRoutes
+    .filter((route) => !isCurrentRoute(route.name))
+    .sort((a, b) => a.name.localeCompare(b.name))
+
   return (
     <div>
       <h2 className="text-sm font-medium text-gray-500">Project Routes</h2>
@@ -28,13 +40,21 @@ export const RouteCardsGrid = ({
           'mt-3 grid grid-cols-1 gap-5'
         )}
       >
-        {renderGraphRoutes.map((route, index) => (
+        {currentRouteItems.map((route, index) => (
+          <RouteCardItem
+            key={route.id}
+            route={route}
+            index={index}
+            componentCount={componentCount}
+          />
+        ))}
+        {otherRouteItems.map((route, index) => (
           <RouteCardItem
             key={route.id}
             route={route}
             index={index}
             currentRoute={currentRoute}
-            componentCount={currentRoute == route.name ? componentCount : null}
+            componentCount={isCurrentRoute(route.name) ? componentCount : null}
           />
         ))}
       </ul>

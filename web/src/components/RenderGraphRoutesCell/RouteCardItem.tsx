@@ -11,6 +11,9 @@ const classNames = (...classes) => {
 }
 
 const getColorForIndex = (index) => {
+  if (index === 0) {
+    return 'bg-tremor-brand'
+  }
   const colors = [
     'rose',
     'fuchsia',
@@ -84,11 +87,15 @@ export const RouteCardItem = ({
           >
             {routeItem.name}
           </Link>
-          <p className="text-gray-500">
-            {routeItem.componentCount && routeItem.componentCount > 0 && (
-              <>{routeItem.componentCount} Components</>
-            )}
-          </p>
+          {routeItem.componentCount && routeItem.componentCount > 0 && (
+            <p className="text-gray-500">
+              {routeItem.componentCount} Components
+            </p>
+          )}
+          {!routeItem.componentCount ||
+            (routeItem.componentCount === 0 && (
+              <p className="text-gray-500"></p>
+            ))}
         </div>
         <div className="flex-shrink-0 pr-2">
           <button
