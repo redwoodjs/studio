@@ -45,6 +45,7 @@ export {
   RectangleStackIcon,
   SparklesIcon as PerformanceMetricIcon,
   Square2StackIcon as DashboardIcon,
+  TicketIcon as RouteIcon,
   TableCellsIcon,
   VariableIcon,
   ViewColumnsIcon as PlaygroundIcon,

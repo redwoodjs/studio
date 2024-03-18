@@ -6,6 +6,7 @@ export const schema = gql`
 
   type RenderGraph {
     id: ID!
+    route: Route!
     initialNodes: JSON
     initialEdges: JSON
   }

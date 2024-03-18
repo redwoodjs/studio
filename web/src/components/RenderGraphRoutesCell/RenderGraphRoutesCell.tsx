@@ -9,6 +9,12 @@ import type {
   TypedDocumentNode,
 } from '@redwoodjs/web'
 
+import {
+  Loading as LoadingComponent,
+  Empty as EmptyComponent,
+  Failure as FailureComponent,
+} from 'src/components/RenderGraphCell/RenderGraphCell'
+
 import { RouteCardsGrid } from './RouteCardsGrid'
 
 export const QUERY: TypedDocumentNode<
@@ -23,13 +29,13 @@ export const QUERY: TypedDocumentNode<
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => <LoadingComponent />
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => <EmptyComponent />
 
-export const Failure = ({ error }: CellFailureProps) => (
-  <div style={{ color: 'red' }}>Error: {error?.message}</div>
-)
+export const Failure = ({ error }: CellFailureProps) => {
+  return <FailureComponent error={error} />
+}
 
 export const Success = ({
   renderGraphRoutes,

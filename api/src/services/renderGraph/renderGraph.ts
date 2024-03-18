@@ -545,6 +545,7 @@ export const renderGraph = async ({ routeName }) => {
 
   return {
     id: generateId(routeName),
+    route: { id: generateId(routeName), name: routeName },
     initialNodes: nodes,
     initialEdges: edges,
   }
