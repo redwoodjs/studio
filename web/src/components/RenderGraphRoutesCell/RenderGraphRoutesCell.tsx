@@ -34,5 +34,5 @@ export const Failure = ({ error }: CellFailureProps) => (
 export const Success = ({
   renderGraphRoutes,
 }: CellSuccessProps<RenderGraphRoutesQuery>) => {
-  return <RouteCardsGrid renderGraphRoutes={renderGraphRoutes} />
+  return <RouteCardsGrid renderGraphRoutes={renderGraphRoutes} isWide={true} />
 }

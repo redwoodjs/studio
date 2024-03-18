@@ -47,16 +47,14 @@ export const Success = ({
 }: CellSuccessProps<FindRenderGraphQuery, FindRenderGraphQueryVariables>) => {
   return (
     <div className="flex h-screen flex-col md:flex-row">
-      {/* Left Column */}
-      <div className="h-screen w-full p-4 md:w-4/5">
-        {/* Your content here */}
+      <div className="h-screen w-full p-4 md:w-2/3">
         <RouteGraph renderGraph={renderGraph} />
       </div>
 
-      {/* Right Column */}
-      <div className="h-screen w-full p-4 md:w-1/5">
-        {/* Your content here */}
-        <RouteCardsGrid renderGraphRoutes={renderGraphRoutes} />
+      <div className="h-screen w-full overflow-auto border-l border-dashed border-slate-500 bg-white pl-4 md:w-1/3">
+        <div className="h-full p-4">
+          <RouteCardsGrid renderGraphRoutes={renderGraphRoutes} />
+        </div>
       </div>
     </div>
   )

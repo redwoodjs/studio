@@ -37,7 +37,7 @@ const getColorForIndex = (index) => {
   return `bg-${colors[colorIndex]}-${values[valueIndex]}`
 }
 
-export const RouteCardsGrid = ({ renderGraphRoutes }) => {
+export const RouteCardsGrid = ({ renderGraphRoutes, isWide = false }) => {
   const projectRoutes = renderGraphRoutes.map((route, idx) => {
     return {
       name: route.name,
@@ -51,7 +51,12 @@ export const RouteCardsGrid = ({ renderGraphRoutes }) => {
   return (
     <div>
       <h2 className="text-sm font-medium text-gray-500">Project Routes</h2>
-      <ul className="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+      <ul
+        className={classNames(
+          isWide ? 'sm:grid-cols-2 sm:gap-6 lg:grid-cols-4' : '',
+          'mt-3 grid grid-cols-1 gap-5'
+        )}
+      >
         {projectRoutes.map((route) => (
           <li key={route.name} className="col-span-1 flex rounded-md shadow-sm">
             <div
