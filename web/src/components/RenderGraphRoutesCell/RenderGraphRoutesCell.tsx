@@ -3,12 +3,13 @@ import type {
   RenderGraphRoutesQueryVariables,
 } from 'types/graphql'
 
-import { Link, routes } from '@redwoodjs/router'
 import type {
   CellSuccessProps,
   CellFailureProps,
   TypedDocumentNode,
 } from '@redwoodjs/web'
+
+import { RouteCardsGrid } from './RouteCardsGrid'
 
 export const QUERY: TypedDocumentNode<
   RenderGraphRoutesQuery,
@@ -33,17 +34,5 @@ export const Failure = ({ error }: CellFailureProps) => (
 export const Success = ({
   renderGraphRoutes,
 }: CellSuccessProps<RenderGraphRoutesQuery>) => {
-  return (
-    <ul>
-      {renderGraphRoutes.map((item) => {
-        return (
-          <li key={item.id}>
-            <Link to={routes.renderGraph({ routeName: item.name })}>
-              {item.name}
-            </Link>
-          </li>
-        )
-      })}
-    </ul>
-  )
+  return <RouteCardsGrid renderGraphRoutes={renderGraphRoutes} />
 }

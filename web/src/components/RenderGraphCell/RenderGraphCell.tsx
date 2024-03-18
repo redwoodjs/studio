@@ -1,11 +1,3 @@
-import { SearchSelect, SearchSelectItem } from '@tremor/react'
-import dagre from 'dagre'
-import ReactFlow, {
-  ConnectionLineType,
-  useNodesState,
-  useEdgesState,
-  ReactFlowProvider,
-} from 'reactflow'
 import type {
   FindRenderGraphQuery,
   FindRenderGraphQueryVariables,
@@ -13,12 +5,14 @@ import type {
 
 import 'reactflow/dist/style.css'
 
-import { navigate, routes } from '@redwoodjs/router'
 import type {
   CellSuccessProps,
   CellFailureProps,
   TypedDocumentNode,
 } from '@redwoodjs/web'
+
+import { RouteGraph } from 'src/components/RenderGraphCell/RouteGraph'
+import { RouteCardsGrid } from 'src/components/RenderGraphRoutesCell/RouteCardsGrid'
 
 export const QUERY: TypedDocumentNode<
   FindRenderGraphQuery,
@@ -51,81 +45,19 @@ export const Success = ({
   renderGraph,
   renderGraphRoutes,
 }: CellSuccessProps<FindRenderGraphQuery, FindRenderGraphQueryVariables>) => {
-  const { initialNodes: n, initialEdges: e } = renderGraph
-
-  // since we are mutating the nodes and edges, we need to make a deep copy
-  // for the positioning to work correctly
-  const initialNodes = JSON.parse(JSON.stringify(n))
-  const initialEdges = JSON.parse(JSON.stringify(e))
-
-  const dagreGraph = new dagre.graphlib.Graph()
-  dagreGraph.setDefaultEdgeLabel(() => ({}))
-
-  const nodeWidth = 172
-  const nodeHeight = 36
-
-  const getPositionedElements = (nodes, edges, direction = 'TB') => {
-    const isHorizontal = direction === 'LR'
-    dagreGraph.setGraph({ rankdir: direction })
-
-    nodes.forEach((node) => {
-      dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight })
-    })
-
-    edges.forEach((edge) => {
-      dagreGraph.setEdge(edge.source, edge.target)
-    })
-
-    dagre.layout(dagreGraph)
-
-    nodes.forEach((node) => {
-      const nodeWithPosition = dagreGraph.node(node.id)
-      node.targetPosition = isHorizontal ? 'left' : 'top'
-      node.sourcePosition = isHorizontal ? 'right' : 'bottom'
-
-      // We are shifting the dagre node position (anchor=center center) to the top left
-      // so it matches the React Flow node anchor point (top left).
-      node.position = {
-        x: nodeWithPosition.x - nodeWidth / 2,
-        y: nodeWithPosition.y - nodeHeight / 2,
-      }
-
-      return node
-    })
-
-    return { nodes, edges }
-  }
-
-  const { nodes: positionedNodes, edges: positionedEdges } =
-    getPositionedElements(initialNodes, initialEdges)
-
-  const [nodes] = useNodesState(positionedNodes)
-  const [edges] = useEdgesState(positionedEdges)
-
   return (
-    <div className="h-screen w-full">
-      <div className="mb-4 mt-8 text-center font-mono text-sm text-slate-500">
-        Routes
+    <div className="flex h-screen flex-col md:flex-row">
+      {/* Left Column */}
+      <div className="h-screen w-full p-4 md:w-4/5">
+        {/* Your content here */}
+        <RouteGraph renderGraph={renderGraph} />
       </div>
-      <SearchSelect
-        onValueChange={(value) =>
-          navigate(routes.renderGraph({ routeName: value }))
-        }
-      >
-        {renderGraphRoutes.map((route) => (
-          <SearchSelectItem key={route.id} value={route.id}>
-            {route.name}
-          </SearchSelectItem>
-        ))}
-      </SearchSelect>
-      <ReactFlowProvider>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          connectionLineType={ConnectionLineType.SmoothStep}
-          fitView
-        ></ReactFlow>
-      </ReactFlowProvider>
+
+      {/* Right Column */}
+      <div className="h-screen w-full p-4 md:w-1/5">
+        {/* Your content here */}
+        <RouteCardsGrid renderGraphRoutes={renderGraphRoutes} />
+      </div>
     </div>
   )
 }
