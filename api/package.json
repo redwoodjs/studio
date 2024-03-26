@@ -9,7 +9,7 @@
     "@graphql-inspector/core": "5.0.1",
     "@prisma/internals": "5.2.0",
     "@redwoodjs/api": "8.0.0-canary.346",
-    "@redwoodjs/api-server": "8.0.0-canary.346",
+    "@redwoodjs/api-server": "8.0.0-canary.160",
     "@redwoodjs/auth-dbauth-api": "8.0.0-canary.346",
     "@redwoodjs/graphql-server": "8.0.0-canary.346",
     "@redwoodjs/project-config": "8.0.0-canary.346",
