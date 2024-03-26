@@ -29,8 +29,8 @@
     "graphiql": "3.0.10",
     "json-bigint-patch": "0.0.8",
     "prop-types": "15.8.1",
-    "react": "0.0.0-experimental-e5205658f-20230913",
-    "react-dom": "0.0.0-experimental-e5205658f-20230913",
+    "react": "18.3.0-canary-a870b2d54-20240314",
+    "react-dom": "18.3.0-canary-a870b2d54-20240314",
     "react-error-boundary": "^4.0.13",
     "reactflow": "11.8.3",
     "use-url-search-params": "2.5.1"
