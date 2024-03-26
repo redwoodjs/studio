@@ -7,7 +7,7 @@
     ]
   },
   "devDependencies": {
-    "@redwoodjs/core": "8.0.0-canary.160",
+    "@redwoodjs/core": "8.0.0-canary.346",
     "@redwoodjs/studio": "11"
   },
   "eslintConfig": {
@@ -25,6 +25,6 @@
     "@redwoodjs/studio": "./../../packaged.tgz"
   },
   "dependencies": {
-    "@redwoodjs/realtime": "8.0.0-canary.160"
+    "@redwoodjs/realtime": "8.0.0-canary.346"
   }
 }

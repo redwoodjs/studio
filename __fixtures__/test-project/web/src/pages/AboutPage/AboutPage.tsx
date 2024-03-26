@@ -1,9 +1,16 @@
+import { AboutCounter } from 'src/components/Counter/AboutCounter'
+
+import './AboutPage.css'
+
 const AboutPage = () => {
   return (
-    <p className="font-light">
-      This site was created to demonstrate my mastery of Redwood: Look on my
-      works, ye mighty, and despair!
-    </p>
+    <div className="about-page">
+      <div style={{ border: '3px red dashed', margin: '1em', padding: '1em' }}>
+        <h1>About Redwood</h1>
+        <AboutCounter />
+        <p>RSC on server: {globalThis.RWJS_EXP_RSC ? 'enabled' : 'disabled'}</p>
+      </div>
+    </div>
   )
 }
 
