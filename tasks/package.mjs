@@ -204,13 +204,13 @@ async function main() {
       description: "Redwood's development studio",
       repository: {
         type: 'git',
-        url: 'https://github.com/redwoodjs/studio.git',
+        url: 'git+https://github.com/redwoodjs/studio.git',
       },
       license: 'MIT',
       main: 'api/dist/server.js',
       files: ['api', 'web', 'redwood.toml'],
       bin: {
-        'rw-studio': './api/dist/bin/rw-studio.js',
+        'rw-studio': 'api/dist/bin/rw-studio.js',
       },
       dependencies: {
         // Filter out @redwoodjs packages
