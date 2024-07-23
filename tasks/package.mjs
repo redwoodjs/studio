@@ -264,6 +264,11 @@ async function main() {
   // test-project, otherwise yarn will walk up the directory tree and find the
   // yarn.lock file in the root of the Studio project and get confused
   await $`touch yarn.lock`
+  // This can fail/hang if the user doesn't have the yarn version installed
+  // that's specified in the test project's package.json. Yarn will ask to
+  // download it, but the prompt isn't visible unless you run with --verbose
+  // TODO: pipe the output and check for the prompt. And/or detect that it's
+  // "stuck" (no change in 5 seconds?) and print a message to the user.
   await $`yarn`
   if (!verbose) {
     spinner.succeed("Yarn'd!")
