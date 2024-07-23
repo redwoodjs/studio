@@ -31,14 +31,14 @@ If you have to generate migrations because you have altered the database schema 
 If you want to try out any Studio GraphQL queries, you may access the Studio GraphQL Playground at:
 
 `http://localhost:4318/.redwood/functions/graphql`
-p
+
 If you want to make ad hoc queries against the SQLite database, you can find it in `.redwood/studio/prisma.sqlite` in the project that sends data to Studio
 
 ### Troubleshooting
 
 If you run into any migration issues, run `yarn studio:reset` to remove the database so that migrations can be rerun.
 
- `yarn studio:reset` Can also be used to reset and clear out the studio db.
+`yarn studio:reset` Can also be used to reset and clear out the studio db.
 
 If you do not see any traces or spans, check that your `redwood.toml` points to the correct path, for example:
 
