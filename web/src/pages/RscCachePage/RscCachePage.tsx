@@ -1,12 +1,13 @@
 import { useEffect, useState, useRef } from 'react'
 
-import { Title } from '@tremor/react'
+import { Switch, Title } from '@tremor/react'
 
 import { Metadata } from '@redwoodjs/web'
 
 const RscCachePage = () => {
   const webSocket = useRef<WebSocket>(null)
   const [rscCache, setRscCache] = useState<Record<string, any>>({})
+  const [fullPageCacheEnabled, setFullPageCacheEnabled] = useState(true)
   const [lastUpdatedKey, setLastUpdatedKey] = useState('')
 
   useEffect(() => {
@@ -47,7 +48,25 @@ const RscCachePage = () => {
         title="Rsc Cache Introspection"
         description="View and manage the Rsc Cache."
       />
-      <Title>Full-page Cache Entries</Title>
+      <Title className="flex">
+        Full-page Cache Entries
+        <Switch
+          checked={fullPageCacheEnabled}
+          onChange={(value: boolean) => {
+            const ws = webSocket.current
+
+            if (value) {
+              ws?.send(JSON.stringify({ id: 'rsc-cache-enable' }))
+            } else {
+              ws?.send(JSON.stringify({ id: 'rsc-cache-disable' }))
+              ws?.send(JSON.stringify({ id: 'rsc-cache-clear' }))
+            }
+
+            setFullPageCacheEnabled(value)
+          }}
+          className="ml-4 leading-3"
+        />
+      </Title>
 
       <dl className="pt-4 text-xs text-white">
         {Object.entries(rscCache).map(([key, value]) => {
