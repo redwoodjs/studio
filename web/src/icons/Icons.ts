@@ -5,6 +5,8 @@ export {
   ArrowsUpDownIcon as VerticalIcon,
   Bars3Icon as MenuIcon,
   BoltIcon as MonitoringIcon,
+  ChevronRightIcon as MenuClosedIcon,
+  ChevronDownIcon as MenuOpenIcon,
   CircleStackIcon as DatabaseIcon,
   CircleStackIcon as DatabasePerformanceIcon,
   ClockIcon,
