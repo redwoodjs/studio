@@ -37,3 +37,6 @@
 
 [experimental.streamingSsr]
   enabled = true
+
+[experimental.rsc]
+  enabled = true
