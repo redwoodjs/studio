@@ -16,6 +16,7 @@ import {
   SqlStatementsIcon,
   TemplatesIcon,
   TracesIcon,
+  CacheIcon,
 } from 'src/icons/Icons'
 
 import type { TNavigationItem } from './NavigationItem'
@@ -98,6 +99,14 @@ export function useNavigationStructure(routes: AvailableRoutes) {
     },
   ]
 
+  const rscNavigation: TNavigationItem[] = [
+    {
+      name: 'Cache',
+      to: routes.rscCache(),
+      icon: CacheIcon,
+    },
+  ]
+
   const ssrNavigation: TNavigationItem[] = [
     {
       name: 'OG Tag Preview',
@@ -141,6 +150,12 @@ export function useNavigationStructure(routes: AvailableRoutes) {
       title: 'Mailer',
       items: mailerNavigation,
       closed: closedGroups.has('mailer'),
+    },
+    {
+      id: 'rsc',
+      title: 'RSC',
+      items: rscNavigation,
+      closed: closedGroups.has('rsc'),
     },
     {
       id: 'ssr',
