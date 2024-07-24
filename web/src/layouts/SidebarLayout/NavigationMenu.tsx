@@ -22,7 +22,6 @@ import {
 import { ConnectionStatusIndicator } from './ConnectionStatusIndicator'
 import type { TNavigationItem } from './NavigationItem'
 import { NavigationItem } from './NavigationItem'
-import { OrbitSearch } from './OrbitSearch'
 
 export const NavigationMenu = () => {
   const navigation: TNavigationItem[] = [
@@ -108,9 +107,6 @@ export const NavigationMenu = () => {
       </Flex>
       <nav className="flex flex-1 flex-col">
         <ul className="flex flex-1 flex-col gap-y-7">
-          <li>
-            <OrbitSearch />
-          </li>
           <li>
             <ul className="-mx-2 space-y-1">
               {navigation.map((item) => (
