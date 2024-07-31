@@ -48,6 +48,7 @@ export {
   SparklesIcon as PerformanceMetricIcon,
   Square2StackIcon as DashboardIcon,
   TableCellsIcon,
+  TrashIcon,
   VariableIcon,
   ViewColumnsIcon as PlaygroundIcon,
   XMarkIcon as CloseIcon,
