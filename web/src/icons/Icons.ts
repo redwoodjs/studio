@@ -7,6 +7,7 @@ export {
   BoltIcon as MonitoringIcon,
   ChevronRightIcon as MenuClosedIcon,
   ChevronDownIcon as MenuOpenIcon,
+  CircleStackIcon as CacheIcon,
   CircleStackIcon as DatabaseIcon,
   CircleStackIcon as DatabasePerformanceIcon,
   ClockIcon,

@@ -26,6 +26,26 @@
 
 If you have to generate migrations because you have altered the database schema please use `yarn studio:migrate` as this will set the appropriate configuration above the default `yarn rw prisma migrate dev`.
 
+### Test packaged version with a different project
+
+#### Initial setup
+1. Run `yarn rwfw project:tarsync` in the project you want to test with.
+2. Run `yarn studio:package` - this will rebuild the project and package it locally.
+3. Edit `./package.json` in the project you want to test with to include a
+   resolution for Studio pointing to the local Studio package. For example:
+   `"@redwoodjs/studio": "/Users/tobbe/dev/redwood/studio/packaged.tgz"`
+4. Run `yarn install` in the project you want to test with to install the new version of Studio.
+5. Run the test project (`yarn rw serve`)
+6. Run `yarn rw studio` from within the test project.
+
+#### Subsequent Runs
+1. Make your changes to the Studio source code.
+2. Run `yarn studio:package` in the Studio project.
+3. Run `yarn install` in the test project
+4. Run the test project (`yarn rw serve`)
+5. Run `yarn rw studio` from within the test project.
+
+
 ### Development
 
 If you want to try out any Studio GraphQL queries, you may access the Studio GraphQL Playground at:
