@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react'
 
-import { Switch, Title } from '@tremor/react'
+import { Button, Switch, Title } from '@tremor/react'
 
 import { Metadata } from '@redwoodjs/web'
+import { TrashIcon } from 'src/icons/Icons'
 
 const RscCachePage = () => {
   const webSocket = useRef<WebSocket>(null)
@@ -16,6 +17,12 @@ const RscCachePage = () => {
     // Connection opened
     socket.addEventListener('open', () => {
       socket.send('Connection established')
+
+      // This timeout might not be needed, but just giving things a moment to
+      // settle
+      setTimeout(() => {
+        socket.send(JSON.stringify({ id: 'rsc-cache-read' }))
+      }, 200)
     })
 
     // Listen for messages
@@ -48,25 +55,48 @@ const RscCachePage = () => {
         title="Rsc Cache Introspection"
         description="View and manage the Rsc Cache."
       />
-      <Title className="flex">
-        Full-page Cache Entries
-        <Switch
-          checked={fullPageCacheEnabled}
-          onChange={(value: boolean) => {
-            const ws = webSocket.current
+      <h1 className="mb-4 flex text-2xl text-white">Full-page Cache Entries</h1>
+      <div className="flex justify-between">
+        <div className="flex flex-row">
+          <Switch
+            checked={fullPageCacheEnabled}
+            onChange={(value: boolean) => {
+              const ws = webSocket.current
 
-            if (value) {
-              ws?.send(JSON.stringify({ id: 'rsc-cache-enable' }))
-            } else {
-              ws?.send(JSON.stringify({ id: 'rsc-cache-disable' }))
-              ws?.send(JSON.stringify({ id: 'rsc-cache-clear' }))
-            }
+              if (value) {
+                ws?.send(JSON.stringify({ id: 'rsc-cache-enable' }))
+              } else {
+                ws?.send(JSON.stringify({ id: 'rsc-cache-disable' }))
+                ws?.send(JSON.stringify({ id: 'rsc-cache-clear' }))
+              }
 
-            setFullPageCacheEnabled(value)
+              setFullPageCacheEnabled(value)
+            }}
+            className="leading-3"
+          />
+          {fullPageCacheEnabled ? (
+            <div className="ml-4">
+              <div className="text-white">Full-Page Caching Enabled</div>
+              <div className="text-xs italic text-white">
+                Disabling clears the cache
+              </div>
+            </div>
+          ) : (
+            <div className="ml-4 flex flex-col justify-center">
+              <div className="text-white">Full-Page Caching Disabled</div>
+            </div>
+          )}
+        </div>
+        <Button
+          variant="secondary"
+          icon={TrashIcon}
+          onClick={() => {
+            webSocket.current?.send(JSON.stringify({ id: 'rsc-cache-clear' }))
           }}
-          className="ml-4 leading-3"
-        />
-      </Title>
+        >
+          Clear Cache
+        </Button>
+      </div>
 
       <dl className="pt-4 text-xs text-white">
         {Object.entries(rscCache).map(([key, value]) => {
