@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from 'react'
 
-import { Button, Switch, Title } from '@tremor/react'
+import { Button, Switch } from '@tremor/react'
 
 import { Metadata } from '@redwoodjs/web'
+
 import { TrashIcon } from 'src/icons/Icons'
 
 const RscCachePage = () => {
   const webSocket = useRef<WebSocket>(null)
-  const [rscCache, setRscCache] = useState<Record<string, any>>({})
+  const [rscCache, setRscCache] = useState<Record<string, string>>({})
   const [fullPageCacheEnabled, setFullPageCacheEnabled] = useState(true)
   const [lastUpdatedKey, setLastUpdatedKey] = useState('')
 
