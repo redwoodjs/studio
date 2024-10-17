@@ -40,7 +40,12 @@ const ContactUsPage = () => {
   return (
     <>
       <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
-      <Form onSubmit={onSubmit} config={{ mode: 'onBlur' }} error={error}>
+      <Form
+        onSubmit={onSubmit}
+        formMethods={formMethods}
+        config={{ mode: 'onBlur' }}
+        error={error}
+      >
         <Label
           name="name"
           className="block text-sm uppercase text-gray-700"

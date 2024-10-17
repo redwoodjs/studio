@@ -21,8 +21,8 @@
   versionUpdates = ["latest"]
 
 [experimental.opentelemetry]
-	enabled = true
-	apiSdk = "/Users/dthyresson/Dropbox/Code/redwoodjs/studio/__fixtures__/test-project/api/dist/opentelemetry.js"
+  enabled = true
+  apiSdk = "/Users/tobbe/dev/redwood/studio/__fixtures__/test-project/api/dist/opentelemetry.js"
 
 [studio]
   basePort = 4318
@@ -34,6 +34,3 @@
   # authImpersonation.email = "foo@example.com"
   # Secret is used by Netlify
   # authImpersonation.jwtSecret = "secret"
-
-[experimental.streamingSsr]
-  enabled = true

@@ -13,8 +13,7 @@ import {
 } from '@react-email/components'
 
 export function ExampleEmail(
-  // { when }: { when: string } = { when: new Date().toLocaleString() }
-  props: any
+  { when }: { when: string } = { when: new Date().toLocaleString() }
 ) {
   return (
     <Html lang="en">
@@ -31,7 +30,7 @@ export function ExampleEmail(
             </Text>
             <Hr className="mx-0 my-[26px] w-full border border-solid border-[#eaeaea]" />
             <Text className="text-[12px] leading-[24px] text-[#666666]">
-              Message was sent on {props.when}
+              Message was sent on {when}
             </Text>
           </Container>
         </Body>
