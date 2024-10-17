@@ -13,7 +13,7 @@ export const NavigationItem = ({ item }: { item: TNavigationItem }) => {
       <NavLink
         to={item.to}
         className="dark:text-dark-tremor group flex grow gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-tremor-content hover:bg-gray-50 hover:text-tremor-brand dark:hover:bg-gray-950"
-        activeClassName="grow text-tremor-brand dark:text-dark-tremor-brand bg-gray-50 dark:bg-gray-950 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+        activeClassName="grow text-tremor-brand dark:text-dark-tremor-brand bg-gray-50 dark:bg-gray-950 group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 hover:bg-gray-50 hover:text-tremor-brand dark:hover:bg-gray-950"
       >
         <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
         {item.name}

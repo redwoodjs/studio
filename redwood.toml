@@ -24,7 +24,3 @@
 [generate]
   tests = false
   stories = false
-[experimental.serverFile]
-	enabled = true
-[experimental.realtime]
-	enabled = true

@@ -7,10 +7,10 @@
     ]
   },
   "devDependencies": {
-    "@redwoodjs/core": "7.7.4",
-    "@redwoodjs/project-config": "7.7.4",
+    "@redwoodjs/core": "8.4.0",
+    "@redwoodjs/project-config": "8.4.0",
     "@redwoodjs/studio": "12",
-    "prettier-plugin-tailwindcss": "0.4.1"
+    "prettier-plugin-tailwindcss": "0.5.12"
   },
   "eslintConfig": {
     "extends": "@redwoodjs/eslint-config",
@@ -22,8 +22,8 @@
   "prisma": {
     "seed": "yarn rw exec seed"
   },
-  "packageManager": "yarn@4.3.0",
+  "packageManager": "yarn@4.4.0",
   "dependencies": {
-    "@redwoodjs/realtime": "7.7.4"
+    "@redwoodjs/realtime": "8.4.0"
   }
 }
