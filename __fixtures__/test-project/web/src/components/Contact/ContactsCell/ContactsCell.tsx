@@ -1,39 +1,46 @@
-import type { FindContacts } from 'types/graphql'
+import type { FindContacts, FindContactsVariables } from 'types/graphql'
 
 import { Link, routes } from '@redwoodjs/router'
-import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
+import type {
+  CellSuccessProps,
+  CellFailureProps,
+  TypedDocumentNode,
+} from '@redwoodjs/web'
 
 import Contacts from 'src/components/Contact/Contacts'
 
-export const QUERY = gql`
-  query FindContacts {
-    contacts {
-      id
-      name
-      email
-      message
-      createdAt
+export const QUERY: TypedDocumentNode<FindContacts, FindContactsVariables> =
+  gql`
+    query FindContacts {
+      contacts {
+        id
+        name
+        email
+        message
+        createdAt
+      }
     }
-  }
-`
+  `
 
 export const Loading = () => <div>Loading...</div>
 
 export const Empty = () => {
   return (
     <div className="rw-text-center">
-      {'No contacts yet. '}
+      No contacts yet.{' '}
       <Link to={routes.newContact()} className="rw-link">
-        {'Create one?'}
+        Create one?
       </Link>
     </div>
   )
 }
 
-export const Failure = ({ error }: CellFailureProps) => (
+export const Failure = ({ error }: CellFailureProps<FindContacts>) => (
   <div className="rw-cell-error">{error?.message}</div>
 )
 
-export const Success = ({ contacts }: CellSuccessProps<FindContacts>) => {
+export const Success = ({
+  contacts,
+}: CellSuccessProps<FindContacts, FindContactsVariables>) => {
   return <Contacts contacts={contacts} />
 }

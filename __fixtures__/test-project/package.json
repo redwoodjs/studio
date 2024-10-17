@@ -7,8 +7,10 @@
     ]
   },
   "devDependencies": {
-    "@redwoodjs/core": "8.0.0-canary.160",
-    "@redwoodjs/studio": "11"
+    "@redwoodjs/core": "7.7.4",
+    "@redwoodjs/project-config": "7.7.4",
+    "@redwoodjs/studio": "12",
+    "prettier-plugin-tailwindcss": "0.4.1"
   },
   "eslintConfig": {
     "extends": "@redwoodjs/eslint-config",
@@ -20,11 +22,8 @@
   "prisma": {
     "seed": "yarn rw exec seed"
   },
-  "packageManager": "yarn@4.3.1",
-  "resolutions": {
-    "@redwoodjs/studio": "./../../packaged.tgz"
-  },
+  "packageManager": "yarn@4.3.0",
   "dependencies": {
-    "@redwoodjs/realtime": "8.0.0-canary.160"
+    "@redwoodjs/realtime": "7.7.4"
   }
 }
