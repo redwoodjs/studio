@@ -6,6 +6,7 @@ import {
   AboutIcon,
   DashboardIcon,
   ErdIcon,
+  FlightIcon,
   GraphQLIcon,
   InboxIcon,
   SettingsIcon,
@@ -104,6 +105,11 @@ export function useNavigationStructure(routes: AvailableRoutes) {
       name: 'Cache',
       to: routes.rscCache(),
       icon: CacheIcon,
+    },
+    {
+      name: 'Flight Previews',
+      to: routes.flights(),
+      icon: FlightIcon,
     },
   ]
 
