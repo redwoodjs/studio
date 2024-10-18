@@ -8,8 +8,8 @@ import ora from 'ora'
 import { chalk, fs, path, $ } from 'zx'
 
 async function parseArgs() {
-  const { values } = nodeUtilParseArgs({
-    allowPositionals: false,
+  const { values, positionals } = nodeUtilParseArgs({
+    allowPositionals: true,
     options: {
       verbose: {
         type: 'boolean',
@@ -27,6 +27,7 @@ async function parseArgs() {
   return {
     verbose: values.verbose,
     release: values.release,
+    testProjectName: positionals[0],
   }
 }
 
@@ -45,6 +46,8 @@ async function main() {
 
   const { verbose, release } = options
   $.verbose = verbose
+
+  const testProjectName = options.testProjectName || 'test-project'
   const studioPath = path.join(__dirname, '..')
   const rootPackageJson = fs.readJSONSync(path.join(studioPath, 'package.json'))
   const studioRwVersion = rootPackageJson.devDependencies['@redwoodjs/core']
@@ -52,8 +55,24 @@ async function main() {
     __dirname,
     '..',
     '__fixtures__',
-    'test-project'
+    testProjectName
   )
+  const testProjectRootPackageJson = fs.readJSONSync(
+    path.join(testProjectPath, 'package.json')
+  )
+  const testProjectRwVersion =
+    testProjectRootPackageJson.devDependencies['@redwoodjs/core']
+
+  if (testProjectName !== 'test-project') {
+    console.log()
+    console.log(
+      chalk.yellow(
+        'Support for testing against other projects is still a work in ' +
+          'progress.'
+      )
+    )
+    console.log()
+  }
 
   const spinner = ora()
 
@@ -67,7 +86,9 @@ async function main() {
   console.log(chalk.blue('~'.repeat(process.stdout.columns)))
   console.log()
 
-  if (!release) {
+  // TODO: Don't just skip this for non test-project projects. We should have
+  // a better way to handle this.
+  if (!release && testProjectName === 'test-project') {
     spinner.start('Asserting matching RW versions...')
     // exits on mismatched versions
     assertMatchingRwVersions(testProjectPath, studioPath, studioRwVersion)
@@ -301,15 +322,21 @@ async function main() {
     spinner.succeed("Yarn'd!")
   }
 
-  if (packageJson.dependencies?.['@redwoodjs/realtime'] !== studioRwVersion) {
+  // TODO: This used to check against `studioRwVersion` but since for the
+  // rsc-test-project project we're using RW canary we couldn't do that anymore.
+  // Make sure this is good enough. Do we need to do something more clever?
+  if (
+    packageJson.dependencies?.['@redwoodjs/realtime'] !== testProjectRwVersion
+  ) {
     if (!verbose) {
       // Studio needs @redwoodjs/realtime. The test project doesn't use it itself,
       // so we manually install it. Normally this is handled by `yarn rw studio`
+      // TODO: Why can't we just let `yarn rw studio` do it then?
       spinner.start("Adding @redwoodjs/realtime, as it's used by Studio...")
     }
-    await $`yarn add @redwoodjs/realtime@${studioRwVersion}`
+    await $`yarn add @redwoodjs/realtime@${testProjectRwVersion}`
     if (!verbose) {
-      spinner.succeed(`@redwoodjs/realtime@${studioRwVersion} added!`)
+      spinner.succeed(`@redwoodjs/realtime@${testProjectRwVersion} added!`)
     }
   }
 
@@ -334,6 +361,7 @@ function assertMatchingRwVersions(
     testProjectRootPackageJSON.devDependencies['@redwoodjs/core'] !==
     studioRwVersion
   ) {
+    console.log()
     console.log(chalk.redBright('RedwoodJS version mismatch!'))
     console.log()
     console.log(
