@@ -101,15 +101,20 @@ const RscCachePage = () => {
 
       <dl className="pt-4 text-xs text-white">
         {Object.entries(rscCache).map(([key, value]) => {
-          const keyLocation = JSON.parse(key).location
-          const displayKey =
-            keyLocation.pathname +
-            (keyLocation.search ? `?${keyLocation.search}` : '')
+          // key will be something like
+          // __rwjs__pathname=/&__rwjs__search=
+          // __rwjs__pathname=/blog/hello-world&__rwjs__search=?foo=bar&baz=qux
+          const splitKey = key.split('&')
+          const keyLocation = splitKey[0].replace('__rwjs__pathname=', '')
+          const keySearch = splitKey
+            .slice(1)
+            .join('&')
+            .replace(/^__rwjs__search=/, '')
           const isLastUpdated = key === lastUpdatedKey
           return (
             <div key={key + isLastUpdated.toString()} className="pb-1">
               <dt className={'font-bold' + (isLastUpdated ? ' italic' : '')}>
-                {displayKey}:
+                {keyLocation + keySearch}:
                 <button
                   className="ml-2 inline-block text-red-700"
                   onClick={() => {
