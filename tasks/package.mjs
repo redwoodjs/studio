@@ -257,6 +257,33 @@ async function main() {
   // Yarn install in the test-project
   $.cwd = testProjectPath
 
+  const packageJsonString = fs.readFileSync(
+    path.join(testProjectPath, 'package.json'),
+    'utf-8'
+  )
+
+  const packageJson = JSON.parse(packageJsonString)
+
+  if (!packageJson.resolutions?.['@redwoodjs/studio']) {
+    if (!verbose) {
+      spinner.start('Adding yarn resolution for Studio...')
+    }
+
+    packageJson.resolutions = {
+      ...packageJson.resolutions,
+      '@redwoodjs/studio': './../../packaged.tgz',
+    }
+
+    fs.writeFileSync(
+      path.join(testProjectPath, 'package.json'),
+      JSON.stringify(packageJson, null, 2) + '\n'
+    )
+
+    if (!verbose) {
+      spinner.succeed('Added yarn resolution for Studio!')
+    }
+  }
+
   if (!verbose) {
     spinner.start('Running yarn...')
   }
@@ -274,13 +301,7 @@ async function main() {
     spinner.succeed("Yarn'd!")
   }
 
-  const packageJson = fs.readFileSync(
-    path.join(testProjectPath, 'package.json'),
-    'utf-8'
-  )
-
-  // This is quick-and-dirty. Might need to be more robust in the future.
-  if (!packageJson.includes(`"@redwoodjs/realtime": "${studioRwVersion}"`)) {
+  if (packageJson.dependencies?.['@redwoodjs/realtime'] !== studioRwVersion) {
     if (!verbose) {
       // Studio needs @redwoodjs/realtime. The test project doesn't use it itself,
       // so we manually install it. Normally this is handled by `yarn rw studio`

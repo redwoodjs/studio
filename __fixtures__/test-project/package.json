@@ -23,6 +23,9 @@
     "seed": "yarn rw exec seed"
   },
   "packageManager": "yarn@4.4.0",
+  "resolutions": {
+    "@redwoodjs/studio": "./../../packaged.tgz"
+  },
   "dependencies": {
     "@redwoodjs/realtime": "8.4.0"
   }
