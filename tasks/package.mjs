@@ -274,14 +274,22 @@ async function main() {
     spinner.succeed("Yarn'd!")
   }
 
-  // Studio needs @redwoodjs/realtime. The test project doesn't use it itself,
-  // so we manually install it. Normally this is handled by `yarn rw studio`
-  if (!verbose) {
-    spinner.start("Adding @redwoodjs/realtime, as it's used by Studio...")
-  }
-  await $`yarn add @redwoodjs/realtime@${studioRwVersion}`
-  if (!verbose) {
-    spinner.succeed(`@redwoodjs/realtime@${studioRwVersion} added!`)
+  const packageJson = fs.readFileSync(
+    path.join(testProjectPath, 'package.json'),
+    'utf-8'
+  )
+
+  // This is quick-and-dirty. Might need to be more robust in the future.
+  if (!packageJson.includes(`"@redwoodjs/realtime": "${studioRwVersion}"`)) {
+    if (!verbose) {
+      // Studio needs @redwoodjs/realtime. The test project doesn't use it itself,
+      // so we manually install it. Normally this is handled by `yarn rw studio`
+      spinner.start("Adding @redwoodjs/realtime, as it's used by Studio...")
+    }
+    await $`yarn add @redwoodjs/realtime@${studioRwVersion}`
+    if (!verbose) {
+      spinner.succeed(`@redwoodjs/realtime@${studioRwVersion} added!`)
+    }
   }
 
   $.cwd = undefined
