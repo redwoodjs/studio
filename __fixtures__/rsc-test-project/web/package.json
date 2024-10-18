@@ -1,0 +1,31 @@
+{
+  "name": "web",
+  "version": "0.0.0",
+  "private": true,
+  "browserslist": {
+    "development": [
+      "last 1 version"
+    ],
+    "production": [
+      "defaults"
+    ]
+  },
+  "dependencies": {
+    "@apollo/client-react-streaming": "0.10.0",
+    "@jtoar/throw-on-client": "0.0.1",
+    "@redwoodjs/auth-dbauth-middleware": "9.0.0-canary.234",
+    "@redwoodjs/auth-dbauth-web": "9.0.0-canary.234",
+    "@redwoodjs/forms": "9.0.0-canary.234",
+    "@redwoodjs/router": "9.0.0-canary.234",
+    "@redwoodjs/web": "9.0.0-canary.234",
+    "@tobbe.dev/rsc-test": "0.0.5",
+    "client-only": "0.0.1",
+    "react": "19.0.0-rc-f2df5694-20240916",
+    "react-dom": "19.0.0-rc-f2df5694-20240916"
+  },
+  "devDependencies": {
+    "@redwoodjs/vite": "9.0.0-canary.234",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19"
+  }
+}
