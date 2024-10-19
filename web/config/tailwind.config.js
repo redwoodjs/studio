@@ -16,31 +16,31 @@ module.exports = {
         // light mode
         tremor: {
           brand: {
-            faint: '#f5f3ff', // violet-50
-            muted: '#ddd6fe', // violet-200
-            subtle: '##a78bfa', // violet-400
-            DEFAULT: '#8b5cf6', // violet-500
-            emphasis: '#6d28d9', // violet-700
-            inverted: '#ffffff', // white
+            faint: colors.violet[50],
+            muted: colors.violet[200],
+            subtle: colors.violet[400],
+            DEFAULT: colors.violet[500],
+            emphasis: colors.violet[700],
+            inverted: colors.white,
           },
           background: {
-            muted: '#f9fafb', // gray-50
-            subtle: '#f3f4f6', // gray-100
-            DEFAULT: '#ffffff', // white
-            emphasis: '#374151', // gray-700
+            muted: colors.gray[50],
+            subtle: colors.gray[100],
+            DEFAULT: colors.white,
+            emphasis: colors.gray[700],
           },
           border: {
-            DEFAULT: '#e5e7eb', // gray-200
+            DEFAULT: colors.gray[200],
           },
           ring: {
-            DEFAULT: '#e5e7eb', // gray-200
+            DEFAULT: colors.gray[200],
           },
           content: {
-            subtle: '#9ca3af', // gray-400
-            DEFAULT: '#6b7280', // gray-500
-            emphasis: '#374151', // gray-700
-            strong: '#111827', // gray-900
-            inverted: '#ffffff', // white
+            subtle: colors.gray[400],
+            DEFAULT: colors.gray[500],
+            emphasis: colors.gray[700],
+            strong: colors.gray[900],
+            inverted: colors.white,
           },
         },
         // dark mode
