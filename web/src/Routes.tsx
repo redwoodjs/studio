@@ -26,6 +26,8 @@ const Routes = () => {
         <Route path="/rsc/cache" page={RscCachePage} name="rscCache" />
         <Route path="/rsc/flights" page={FlightsPage} name="flights" />
         <Route path="/rsc/flight/{id:String}" page={FlightPage} name="flight" />
+        <Route path="/rsc/routes" page={RenderGraphRoutesPage} name="renderGraphRoutes" />
+        <Route path="/rsc/render-graph/{routeName:String}" page={RenderGraphPage} name="renderGraph" />
 
         <Route path="/ssr/og-tag-preview" page={OGTagPreviewPage} name="ogTagPreview" />
         <Route path="/studio/settings" page={InfoPage} name="settings" />
