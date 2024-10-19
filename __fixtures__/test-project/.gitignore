@@ -15,6 +15,7 @@ web/types/graphql.d.ts
 api/types/graphql.d.ts
 api/src/lib/generateGraphiQLHeader.*
 .pnp.*
+yarn.lock
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

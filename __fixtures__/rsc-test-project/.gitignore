@@ -14,6 +14,7 @@ web/public/mockServiceWorker.js
 web/types/graphql.d.ts
 api/types/graphql.d.ts
 api/src/lib/generateGraphiQLHeader.*
+yarn.lock
 .pnp.*
 .yarn/*
 !.yarn/patches
