@@ -21,5 +21,11 @@
     "reactflow",
     "STARTTLS",
     "zoomable"
+  ],
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "activeClassName",
+    "errorClassName"
   ]
 }

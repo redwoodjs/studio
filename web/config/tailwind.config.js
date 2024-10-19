@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors')
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   // darkMode: 'class',
@@ -14,61 +16,61 @@ module.exports = {
         // light mode
         tremor: {
           brand: {
-            faint: '#f5f3ff', // violet-50
-            muted: '#ddd6fe', // violet-200
-            subtle: '##a78bfa', // violet-400
-            DEFAULT: '#8b5cf6', // violet-500
-            emphasis: '#6d28d9', // violet-700
-            inverted: '#ffffff', // white
+            faint: colors.violet[50],
+            muted: colors.violet[200],
+            subtle: colors.violet[400],
+            DEFAULT: colors.violet[500],
+            emphasis: colors.violet[700],
+            inverted: colors.white,
           },
           background: {
-            muted: '#f9fafb', // gray-50
-            subtle: '#f3f4f6', // gray-100
-            DEFAULT: '#ffffff', // white
-            emphasis: '#374151', // gray-700
+            muted: colors.gray[50],
+            subtle: colors.gray[100],
+            DEFAULT: colors.white,
+            emphasis: colors.gray[700],
           },
           border: {
-            DEFAULT: '#e5e7eb', // gray-200
+            DEFAULT: colors.gray[200],
           },
           ring: {
-            DEFAULT: '#e5e7eb', // gray-200
+            DEFAULT: colors.gray[200],
           },
           content: {
-            subtle: '#9ca3af', // gray-400
-            DEFAULT: '#6b7280', // gray-500
-            emphasis: '#374151', // gray-700
-            strong: '#111827', // gray-900
-            inverted: '#ffffff', // white
+            subtle: colors.gray[400],
+            DEFAULT: colors.gray[500],
+            emphasis: colors.gray[700],
+            strong: colors.gray[900],
+            inverted: colors.white,
           },
         },
         // dark mode
         'dark-tremor': {
           brand: {
-            faint: '#1e1b4b', // indigo-950
-            muted: '#2e1065', // violet-950
-            subtle: '#5b21b6', // violet-800
-            DEFAULT: '#8b5cf6', // violet-500
-            emphasis: '#a78bfa', // violet-400
-            inverted: '#030712', // gray-950
+            faint: colors.indigo[950],
+            muted: colors.violet[950],
+            subtle: colors.violet[800],
+            DEFAULT: colors.violet[500],
+            emphasis: colors.violet[400],
+            inverted: colors.gray[950],
           },
           background: {
-            muted: '#131A2B', // custom
-            subtle: '#1f2937', // gray-800
-            DEFAULT: '#111827', // gray-900
-            emphasis: '#d1d5db', // gray-300
+            muted: '#131A2B', // custom, close to gray-900
+            subtle: colors.gray[800],
+            DEFAULT: colors.gray[900],
+            emphasis: colors.gray[300],
           },
           border: {
-            DEFAULT: '#374151', // gray-700
+            DEFAULT: colors.gray[700],
           },
           ring: {
-            DEFAULT: '#1f2937', // gray-800
+            DEFAULT: colors.gray[800],
           },
           content: {
-            subtle: '#4b5563', // gray-600
-            DEFAULT: '#6b7280', // gray-600
-            emphasis: '#e5e7eb', // gray-200
-            strong: '#f9fafb', // gray-50
-            inverted: '#000000', // black
+            subtle: colors.gray[600],
+            DEFAULT: colors.gray[500],
+            emphasis: colors.gray[200],
+            strong: colors.gray[50],
+            inverted: colors.black,
           },
         },
       },
