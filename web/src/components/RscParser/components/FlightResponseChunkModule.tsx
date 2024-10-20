@@ -13,11 +13,16 @@ export function FlightResponseChunkModule({
 }: {
   data: ModuleChunk['value']
 }) {
+  const importName = data[2] == '' ? 'unknown' : data[2]
+  const formattedName = /[A-Z]/.test(importName[0]) ? (
+    <code>&lt;{importName}&gt;</code>
+  ) : (
+    importName
+  )
+
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="text-xl font-semibold">
-        Import {data[2] == "" ? "unknown" : data[2]}
-      </h3>
+      <h3 className="text-lg font-semibold">Import {formattedName}</h3>
       <p>Id: {data[0]}</p>
       <div>
         <h4 className="font-medium">Chunks</h4>
