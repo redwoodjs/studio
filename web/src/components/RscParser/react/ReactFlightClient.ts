@@ -39,6 +39,16 @@ export type ModuleChunk = {
   _response: FlightResponse
 }
 
+export type ActionChunk = {
+  type: 'action'
+  id: string
+  value: unknown
+  originalValue: string
+  startTime: number
+  endTime: number
+  _response: FlightResponse
+}
+
 export type ModelChunk = {
   type: 'model'
   id: string
@@ -125,6 +135,7 @@ export type Chunk =
   | ModuleChunk
   | HintChunk
   | ModelChunk
+  | ActionChunk
   | ErrorDevChunk
   | ErrorProdChunk
   | PostponeDevChunk
@@ -426,15 +437,33 @@ function resolveModel(
 
   const value = parseModel(response, model)
 
-  chunks.push({
-    type: 'model',
-    id: new Number(id).toString(16),
-    value: value,
-    originalValue: model,
-    startTime: response._currentStartTime,
-    endTime: response._currentEndTime,
-    _response: response,
-  })
+  // If there is a `value.id` and it ends with #name, then it's an action.
+  if (
+    typeof value === 'object' &&
+    'id' in value &&
+    typeof value.id === 'string' &&
+    /#\w+$/.test(value.id)
+  ) {
+    chunks.push({
+      type: 'action',
+      id: new Number(id).toString(16),
+      value: value,
+      originalValue: model,
+      startTime: response._currentStartTime,
+      endTime: response._currentEndTime,
+      _response: response,
+    })
+  } else {
+    chunks.push({
+      type: 'model',
+      id: new Number(id).toString(16),
+      value: value,
+      originalValue: model,
+      startTime: response._currentStartTime,
+      endTime: response._currentEndTime,
+      _response: response,
+    })
+  }
 }
 
 function resolveText(response: FlightResponse, id: number, text: string): void {

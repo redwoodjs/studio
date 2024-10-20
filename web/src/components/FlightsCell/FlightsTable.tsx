@@ -83,7 +83,7 @@ export const FlightsTable = ({ flightsPreview }: FlightsPreviewQuery) => {
                   <TableCell>
                     <Link
                       to={routes.flight({ id: data.id })}
-                      className="font-semibold text-tremor-content hover:text-tremor-brand dark:text-tremor-content-emphasis dark:hover:text-dark-tremor-brand"
+                      className="font-semibold text-tremor-content hover:text-tremor-brand dark:text-dark-tremor-content-emphasis dark:hover:text-dark-tremor-brand"
                     >
                       {data.preview} - {data.fetchUrl}
                     </Link>

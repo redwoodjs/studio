@@ -73,24 +73,26 @@ export const FlightBreakdownOverview = ({ data, metadata }) => {
       </p>
       <List className="mt-2">
         {data.map((item) => (
-          <ListItem key={item.name} className="space-x-6">
-            <div className="flex items-center space-x-2.5 truncate">
-              <span
-                className={classNames(
-                  item.color,
-                  'h-2.5 w-2.5 shrink-0 rounded-sm'
-                )}
-                aria-hidden={true}
-              />
-              <span className="truncate dark:text-dark-tremor-content-emphasis">
-                {item.name}
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Kilobytes amount={item.amount} />
-              <Share share={item.share} />
-            </div>
-          </ListItem>
+          <a href={'#chunk-' + item.name.replaceAll(' ', '-')} key={item.name}>
+            <ListItem className="space-x-6">
+              <div className="flex items-center space-x-2.5 truncate">
+                <span
+                  className={classNames(
+                    item.color,
+                    'h-2.5 w-2.5 shrink-0 rounded-sm'
+                  )}
+                  aria-hidden={true}
+                />
+                <span className="truncate dark:text-dark-tremor-content-emphasis">
+                  {item.name}
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Kilobytes amount={item.amount} />
+                <Share share={item.share} />
+              </div>
+            </ListItem>
+          </a>
         ))}
       </List>
     </Card>

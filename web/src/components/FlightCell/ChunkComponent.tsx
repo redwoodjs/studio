@@ -25,6 +25,7 @@ export const ChunkComponent = ({
   }
 
   switch (chunk.type) {
+    case 'action':
     case 'model': {
       return (
         <FlightResponseChunkModel

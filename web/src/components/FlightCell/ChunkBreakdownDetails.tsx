@@ -22,18 +22,24 @@ export const ChunkBreakdownDetails = ({ preview, flightResponse, data }) => {
         {text} Chunk Preview
       </h2>
 
-      {flightResponse._chunks?.map((chunk: Chunk, idx) => {
+      {flightResponse._chunks?.map((chunk: Chunk, index: number) => {
+        // Normally you're not allowed to dynamically build up class names like
+        // this in Tailwind. The TW compiler would not find the class names and
+        // thus remove them from the final CSS. However, we've added these
+        // classes to the safelist in tailwind.config.js so that they'll always
+        // be included in the final CSS.
+        const borderColor = data[index].color.replace('bg', 'border')
+
         return (
           <Card
-            key={idx}
-            className="my-4 space-y-4"
+            key={index}
+            className="my-4 space-y-4 text-tremor-content dark:text-dark-tremor-content"
             ref={(el) => (componentRefs[chunk.id] = el)}
             id={chunk.id}
           >
             <h3
-              className={`space-x-2 border-l-4 pl-2 text-lg font-semibold ${data[
-                idx
-              ].color.replace('bg', 'border')}`}
+              className={`space-x-2 border-l-4 pl-2 text-lg font-semibold ${borderColor} scroll-mt-24 text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis`}
+              id={'chunk-' + data[index].name.replaceAll(' ', '-')}
             >
               {chunk.type} {chunk.id}
             </h3>
@@ -42,7 +48,7 @@ export const ChunkBreakdownDetails = ({ preview, flightResponse, data }) => {
                 Raw
               </h3>
               <div
-                key={idx}
+                key={index}
                 className="border-1 rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring"
               >
                 <FlightResponseChunkRaw data={chunk} />
@@ -52,7 +58,7 @@ export const ChunkBreakdownDetails = ({ preview, flightResponse, data }) => {
               <h3 className="text-md mb-3 text-tremor-default font-semibold dark:text-tremor-content">
                 Pretty
               </h3>
-              <div className="relative rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring">
+              <div className="relative rounded-md bg-tremor-background-muted p-4 text-xs ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring">
                 <ChunkComponent chunk={chunk} componentRefs={componentRefs} />
               </div>
             </div>

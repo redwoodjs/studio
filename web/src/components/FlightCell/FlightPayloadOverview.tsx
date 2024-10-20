@@ -24,15 +24,26 @@ const Heading = ({ preview }: Props) => {
 }
 
 const Payload = ({ preview }: Props) => {
-  const payload = preview.flight.payload
+  const payloadArray = preview.flight.payload.split('\n')
+
+  const payload = payloadArray.reduce((acc, line, index) => {
+    if (index === 0) {
+      return line
+    }
+
+    if (!/^\d+:/.test(line)) {
+      return acc + '\\n' + line
+    }
+
+    return acc + '\n' + line
+  }, '')
 
   return (
     <div>
-      <div
-        className="border-1 rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:ring-dark-tremor-ring"
-        style={{ whiteSpace: 'pre-wrap' }}
-      >
-        {payload}
+      <div className="border-1 text-nowrap overflow-auto rounded-md bg-tremor-background-muted p-4 ring-1 ring-inset ring-tremor-ring dark:bg-dark-tremor-background-subtle dark:text-tremor-content dark:ring-dark-tremor-ring">
+        <pre>
+          <samp className="text-xs">{payload}</samp>
+        </pre>
       </div>
     </div>
   )
