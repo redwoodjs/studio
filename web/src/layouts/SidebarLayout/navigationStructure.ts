@@ -13,6 +13,7 @@ import {
   OGTagPreviewIcon,
   OperationsIcon,
   PlaygroundIcon,
+  RoutesIcon,
   SpansIcon,
   SqlStatementsIcon,
   TemplatesIcon,
@@ -114,7 +115,7 @@ export function useNavigationStructure(routes: AvailableRoutes) {
     {
       name: 'Render Routes',
       to: routes.renderGraphRoutes(),
-      icon: FlightIcon,
+      icon: RoutesIcon,
     },
   ]
 
