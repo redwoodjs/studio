@@ -9,7 +9,7 @@ function classNames(...classes) {
 }
 
 const Caption = ({ metadata }) => {
-  const text = metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'
+  const text = metadata?.rsc?.rscId || metadata?.rsc?.rsaId || 'Unknown'
 
   return (
     <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
@@ -18,7 +18,7 @@ const Caption = ({ metadata }) => {
   )
 }
 const Heading = ({ metadata }) => {
-  const tooltip = metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'
+  const tooltip = metadata?.rsc?.rscId || metadata?.rsc?.rsaId || 'Unknown'
 
   return (
     <Flex alignItems="center" justifyContent="start" className="space-x-2">

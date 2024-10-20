@@ -65,8 +65,7 @@ const decodeFlightPerformance = (flight: Flight) => {
 
 const previewFlightPayload = (flight: Flight) => {
   const metadata = decodeFlightMetadata(flight)
-  const id =
-    metadata?.['rsc']?.['rscId'] || metadata?.['rsc']?.['rsfId'] || flight.id
+  const id = metadata?.rsc?.rscId || metadata?.rsc?.rsaId || flight.id
 
   return id
 }

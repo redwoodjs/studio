@@ -7,9 +7,8 @@ import { FlightPayloadIcon, InfoIcon } from 'src/icons/Icons'
 const Heading = ({ preview }) => {
   const metadata = preview.flight.metadata
 
-  const caption = `${
-    metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'
-  } Flight Payload`
+  const id = metadata?.rsc?.rscId || metadata?.rsc?.rsaId || 'Unknown'
+  const caption = `${id} Flight Payload`
 
   return (
     <Flex alignItems="center" justifyContent="start" className="mb-4 space-x-2">

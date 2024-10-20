@@ -15,7 +15,7 @@ export const ChunkBreakdownDetails = ({ preview, flightResponse, data }) => {
   const componentRefs = useRef<ComponentRefs>({}).current
 
   const metadata = preview.flight?.metadata
-  const text = metadata?.rsc?.rscId || metadata?.rsc?.rsfId || 'Unknown'
+  const text = metadata?.rsc?.rscId || metadata?.rsc?.rsaId || 'Unknown'
   return (
     <>
       <h2 className="text-md mb-4 font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
