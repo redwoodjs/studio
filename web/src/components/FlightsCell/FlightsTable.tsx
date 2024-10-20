@@ -8,6 +8,7 @@ import {
   TableRow,
 } from '@tremor/react'
 import { formatDistanceToNow, parseISO } from 'date-fns'
+import type { FlightsPreviewQuery } from 'types/graphql'
 
 import { Link, routes } from '@redwoodjs/router'
 
@@ -30,7 +31,7 @@ interface RscChunkMessageExtended extends RscChunkMessage {
   data: RscChunkMessageDataExtended
 }
 
-export const FlightsTable = ({ flightsPreview }) => {
+export const FlightsTable = ({ flightsPreview }: FlightsPreviewQuery) => {
   const messages = flightsPreview.flights.map((flight) => {
     const { preview, payload, metadata, performance } = flight
 

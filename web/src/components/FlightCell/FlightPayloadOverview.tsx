@@ -4,9 +4,12 @@ import type { FlightPreview } from 'types/graphql'
 
 import { FlightPayloadIcon, InfoIcon } from 'src/icons/Icons'
 
-const Heading = ({ preview }) => {
-  const metadata = preview.flight.metadata
+interface Props {
+  preview: FlightPreview
+}
 
+const Heading = ({ preview }: Props) => {
+  const metadata = preview.flight.metadata
   const id = metadata?.rsc?.rscId || metadata?.rsc?.rsaId || 'Unknown'
   const caption = `${id} Flight Payload`
 
@@ -20,7 +23,7 @@ const Heading = ({ preview }) => {
   )
 }
 
-const Payload = ({ preview }) => {
+const Payload = ({ preview }: Props) => {
   const payload = preview.flight.payload
 
   return (
@@ -54,7 +57,7 @@ const Size = ({ performance }) => {
   return <>{performance?.sizeInBytes || 0} bytes</>
 }
 
-const PerformanceDetails = ({ preview }) => {
+const PerformanceDetails = ({ preview }: Props) => {
   const performance = preview.flight.performance
 
   return (
@@ -87,10 +90,6 @@ const PerformanceDetails = ({ preview }) => {
       </h4>
     </div>
   )
-}
-
-type Props = {
-  preview: FlightPreview
 }
 
 export const FlightPayloadOverview = ({ preview }: Props) => {
