@@ -608,7 +608,7 @@ function JSContainer({ children }: { children: ReactNode }) {
 const ObjectContext = createContext(false)
 
 function isLetter(letter: string) {
-  return RegExp(/^\p{L}/, 'u').test(letter)
+  return /^\p{L}/u.test(letter)
 }
 
 function JSObjectValue({ value }: { value: object }) {
