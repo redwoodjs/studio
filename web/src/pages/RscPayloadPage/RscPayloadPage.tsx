@@ -6,11 +6,11 @@ import { Metadata } from '@redwoodjs/web'
 
 import FlightCell from 'src/components/FlightCell'
 
-const FlightPage = ({ id }) => {
+const RscPayloadPage = ({ id }) => {
   return (
     <>
       <Metadata
-        title="Flight Preview"
+        title="RSC Payload"
         description="Preview the RSC Payload and chunk breakdown."
       />
       <div className="flex items-center space-x-2">
@@ -18,7 +18,7 @@ const FlightPage = ({ id }) => {
           to={routes.flights()}
           className="text-tremor-link hover:text-tremor-brand"
         >
-          <Title>Flight Previews</Title>
+          <Title>RSC Payload</Title>
         </Link>
         <ChevronRightIcon className="h-4 w-4" />
         <Title>Overview</Title>
@@ -31,4 +31,4 @@ const FlightPage = ({ id }) => {
   )
 }
 
-export default FlightPage
+export default RscPayloadPage

@@ -128,7 +128,7 @@ export const flightPreview = async ({ id }) => {
     startedAt: enriched.performance?.startedAt || new Date().toISOString(),
     endedAt: enriched.performance?.endedAt || new Date().toISOString(),
     hostname: enriched.metadata?.['hostname'] || 'localhost',
-    caption: 'Flight Preview',
+    caption: 'RSC Payload',
   }
 }
 

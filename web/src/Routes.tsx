@@ -24,8 +24,8 @@ const Routes = () => {
         <Route path="/mailer/template-preview" page={MailerTemplatePreviewPage} name="mailerTemplatePreview" />
 
         <Route path="/rsc/cache" page={RscCachePage} name="rscCache" />
-        <Route path="/rsc/flights" page={FlightsPage} name="flights" />
-        <Route path="/rsc/flight/{id:String}" page={FlightPage} name="flight" />
+        <Route path="/rsc/flights" page={RscPayloadsPage} name="flights" />
+        <Route path="/rsc/flight/{id:String}" page={RscPayloadPage} name="flight" />
         <Route path="/rsc/routes" page={RenderGraphRoutesPage} name="renderGraphRoutes" />
         <Route path="/rsc/render-graph/{routeName:String}" page={RenderGraphPage} name="renderGraph" />
 

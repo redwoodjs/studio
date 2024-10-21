@@ -108,7 +108,7 @@ export function useNavigationStructure(routes: AvailableRoutes) {
       icon: CacheIcon,
     },
     {
-      name: 'Flight Previews',
+      name: 'RSC Payloads',
       to: routes.flights(),
       icon: FlightIcon,
     },
