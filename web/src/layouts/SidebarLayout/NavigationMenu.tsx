@@ -30,7 +30,7 @@ export const NavigationMenu = () => {
             <li key={group.id}>
               {group.title && (
                 <button
-                  className="w-full text-left text-xs font-semibold leading-6 text-gray-400 hover:text-gray-50"
+                  className="w-full text-left text-xs font-semibold leading-6 text-gray-400 hover:text-tremor-content-strong dark:hover:text-dark-tremor-content-strong"
                   onClick={() => toggleGroup(group.id)}
                 >
                   {group.closed ? (

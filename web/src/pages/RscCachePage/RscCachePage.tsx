@@ -56,7 +56,9 @@ const RscCachePage = () => {
         title="Rsc Cache Introspection"
         description="View and manage the Rsc Cache."
       />
-      <h1 className="mb-4 flex text-2xl text-white">Full-page Cache Entries</h1>
+      <h1 className="mb-4 flex text-2xl text-tremor-content-strong dark:text-dark-tremor-content-strong">
+        Full-page Cache Entries
+      </h1>
       <div className="flex justify-between">
         <div className="flex flex-row">
           <Switch
@@ -76,15 +78,13 @@ const RscCachePage = () => {
             className="leading-3"
           />
           {fullPageCacheEnabled ? (
-            <div className="ml-4">
-              <div className="text-white">Full-Page Caching Enabled</div>
-              <div className="text-xs italic text-white">
-                Disabling clears the cache
-              </div>
+            <div className="ml-4 text-tremor-content dark:text-dark-tremor-content">
+              <div>Full-Page Caching Enabled</div>
+              <div className="text-xs italic">Disabling clears the cache</div>
             </div>
           ) : (
-            <div className="ml-4 flex flex-col justify-center">
-              <div className="text-white">Full-Page Caching Disabled</div>
+            <div className="ml-4 flex flex-col justify-center text-tremor-content dark:text-dark-tremor-content">
+              <div>Full-Page Caching Disabled</div>
             </div>
           )}
         </div>
@@ -99,7 +99,7 @@ const RscCachePage = () => {
         </Button>
       </div>
 
-      <dl className="pt-4 text-xs text-white">
+      <dl className="pt-4 text-xs text-tremor-content dark:text-dark-tremor-content">
         {Object.entries(rscCache).map(([key, value]) => {
           // key will be something like
           // __rwjs__pathname=/&__rwjs__search=
