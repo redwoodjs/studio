@@ -20,7 +20,7 @@ import ScaffoldLayout from './layouts/ScaffoldLayout/ScaffoldLayout'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
-      <Set wrap={NavigationLayout} rnd={0.7}>
+      <Set wrap={NavigationLayout}>
         <Route path="/" page={HomePage} name="home" />
         <Route path="/about" page={AboutPage} name="about" />
         <Route path="/multi-cell" page={MultiCellPage} name="multiCell" />
