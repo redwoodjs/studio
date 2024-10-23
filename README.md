@@ -94,6 +94,10 @@ Then ...
 * Deleted __fixtures__/test-project/.redwood/studio/prisma.sqlite to make sure migrate deploy really updated
 * Run studio via: yarn rw-studio to apply migrations
 
+### Running Prisma Studio
+
+RW_STUDIO_DATABASE_URL=file:/Users/tobbe/dev/redwood/studio/__fixtures__/rsc-test-project/.redwood/studio/prisma.sqlite npx prisma studio --schema ../../api/db/schema.prisma
+
 
 ## Releasing
 
