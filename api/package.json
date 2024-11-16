@@ -14,7 +14,6 @@
     "@redwoodjs/graphql-server": "8.4.0",
     "@redwoodjs/project-config": "8.4.0",
     "@redwoodjs/realtime": "8.4.0",
-    "better-sqlite3": "8.6.0",
     "chalk": "4.1.2",
     "chokidar": "3.5.3",
     "dotenv-defaults": "5.0.2",
@@ -32,7 +31,6 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "7.6.4",
     "@types/mailparser": "3.4.0",
     "@types/smtp-server": "3.5.7",
     "ts-proto": "^1.162.1"
