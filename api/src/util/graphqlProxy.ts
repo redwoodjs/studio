@@ -1,16 +1,16 @@
 import httpProxy from '@fastify/http-proxy'
-import type { FastifyInstance, HookHandlerDoneFunction } from 'fastify'
+import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
 
 import { getUserProjectConfig } from './project'
 
 /**
  * Graphql Proxy - Takes studio "/proxies/graphql" and forwards to the projects
  * graphql endpoint
+ * done() has been removed from the signature as fastify/fastify#5141 PR changed the signature
  */
 export async function graphqlProxy(
   fastify: FastifyInstance,
-  _options: never,
-  done: HookHandlerDoneFunction
+  _options: FastifyPluginOptions
 ) {
   const webConfig = getUserProjectConfig().web
   const webHost = webConfig.host ?? 'localhost'
@@ -25,6 +25,4 @@ export async function graphqlProxy(
     rewritePrefix: '/' + graphqlEndpoint.split('/').slice(3).join('/'),
     disableCache: true,
   })
-
-  done()
 }
